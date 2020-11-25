@@ -241,6 +241,8 @@ optional arguments:
 
 Compiles and copies the content of bibtex files in a similar way to `run_markdown_pipeline`. A [CSL](https://citationstyles.org/) can be provided.
 
+Please refer to https://git.opencarp.org/openCARP/publications for an example setup.
+
 ```
 usage: run_bibtex_pipeline [-h] [--grav-path GRAV_PATH] [--pipeline PIPELINE]
                            [--pipeline-source PIPELINE_SOURCE]
@@ -257,6 +259,45 @@ optional arguments:
                         Path to the source directory for the pipeline.
   --pipeline-csl PIPELINE_CSL
                         Path to the source directory for the pipeline.
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
+
+### run_docstring_pipeline
+
+Extracts and copies the content of [reStructuredText](https://docutils.sourceforge.io/) docstrings of Python scripts. Contrary to the other pipelines, this script does not copy one file to one page in GRAV, but creates a tree of pages below one page (given by the `pipeline` header). it processes all `run.py` and `__init__.py` files.
+
+The `PIPELINE` and `PIPELINE_SOURCE` optiones are used in the same way as in `rum_markdown_pipeline`. In addition, `PIPELINE_IMAGES` specifies a directory where the images from the docstrings are located and `PIPELINE_HEADER` and `PIPELINE_FOOTER` options point to templates which are prepended and appended to each page. With the `PIPELINE_REFS` YML file, you can specifie replacements for the references in the rst code.
+
+Please refer to https://git.opencarp.org/openCARP/experiments for an example setup.
+
+```
+usage: run_docstring_pipeline [-h] [--grav-path GRAV_PATH]
+                              [--pipeline PIPELINE]
+                              [--pipeline-source PIPELINE_SOURCE]
+                              [--pipeline-images PIPELINE_IMAGES]
+                              [--pipeline-header PIPELINE_HEADER]
+                              [--pipeline-footer PIPELINE_FOOTER]
+                              [--pipeline-refs PIPELINE_REFS]
+                              [--log-level LOG_LEVEL] [--log-file LOG_FILE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --grav-path GRAV_PATH
+                        Path to the grav repository directory.
+  --pipeline PIPELINE   Name of the pipeline as specified in the GRAV
+                        metadata.
+  --pipeline-source PIPELINE_SOURCE
+                        Path to the source directory for the pipeline.
+  --pipeline-images PIPELINE_IMAGES
+                        Path to the images directory for the pipeline.
+  --pipeline-header PIPELINE_HEADER
+                        Path to the header template.
+  --pipeline-footer PIPELINE_FOOTER
+                        Path to the footer template.
+  --pipeline-refs PIPELINE_REFS
+                        Path to the refs yaml file.
   --log-level LOG_LEVEL
                         Log level (ERROR, WARN, INFO, or DEBUG)
   --log-file LOG_FILE   Path to the log file
