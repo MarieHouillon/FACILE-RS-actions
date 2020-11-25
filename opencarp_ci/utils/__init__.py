@@ -4,6 +4,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+logger = logging.getLogger(__file__)
+
 
 class Settings(object):
 
@@ -48,16 +50,18 @@ class Settings(object):
             setattr(self, attr, attr_value)
 
         # setup logs
-        self.LOG_LEVEL = self.LOG_LEVEL.upper()
-        self.LOG_FILE = Path(self.LOG_FILE).expanduser().as_posix() if self.LOG_FILE else None
-        logging.basicConfig(level=self.LOG_LEVEL, filename=self.LOG_FILE,
-                            format='[%(asctime)s] %(levelname)s %(name)s: %(message)s')
+        log_level = self.LOG_LEVEL.upper()
+        log_file = Path(self.LOG_FILE).expanduser().as_posix() if self.LOG_FILE else None
+        logging.basicConfig(level=log_level, filename=log_file, format='[%(asctime)s] %(levelname)s %(name)s: %(message)s')
 
+        # log settings
+        logger.debug('settings = %s', self)
+
+        # validate settings
         errors = []
         for key in validate:
             if getattr(self, key) is None:
                 errors.append(key)
-
         if len(errors) == 1:
             parser.error('{} is missing.'.format(errors[0]))
         elif len(errors) >= 1:
