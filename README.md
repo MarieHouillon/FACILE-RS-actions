@@ -236,3 +236,28 @@ optional arguments:
                         Log level (ERROR, WARN, INFO, or DEBUG)
   --log-file LOG_FILE   Path to the log file
 ```
+
+### run_bibtex_pipeline
+
+Compiles and copies the content of bibtex files in a similar way to `run_markdown_pipeline`. A [CSL](https://citationstyles.org/) can be provided.
+
+```
+usage: run_bibtex_pipeline [-h] [--grav-path GRAV_PATH] [--pipeline PIPELINE]
+                           [--pipeline-source PIPELINE_SOURCE]
+                           [--pipeline-csl PIPELINE_CSL]
+                           [--log-level LOG_LEVEL] [--log-file LOG_FILE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --grav-path GRAV_PATH
+                        Path to the grav repository directory.
+  --pipeline PIPELINE   Name of the pipeline as specified in the GRAV
+                        metadata.
+  --pipeline-source PIPELINE_SOURCE
+                        Path to the source directory for the pipeline.
+  --pipeline-csl PIPELINE_CSL
+                        Path to the source directory for the pipeline.
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
