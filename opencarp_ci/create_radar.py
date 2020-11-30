@@ -80,8 +80,12 @@ def main():
     creators = fetch_list(settings.CREATORS_LOCATIONS)
     contributors = fetch_list(settings.CONTRIBUTORS_LOCATIONS)
 
-    metadata['creators'] = sorted(creators, key=lambda item: item.get('family_name') or item.get('name'))
-    metadata['contributors'] = sorted(contributors, key=lambda item: item.get('family_name') or item.get('name'))
+    if creators:
+        metadata['creators'] = sorted(creators, key=lambda item: item.get('family_name') or item.get('name'))
+
+    if contributors:
+        metadata['contributors'] = sorted(contributors, key=lambda item: item.get('family_name') or item.get('name'))
+
     metadata['issued'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     metadata['version'] = settings.VERSION
 
