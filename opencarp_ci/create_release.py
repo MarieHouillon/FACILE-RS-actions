@@ -31,7 +31,6 @@ def main():
 
     settings.setup(parser, validate=[
         'RELEASE_TAG',
-        'RELEASE_DESCRIPTION',
         'RELEASE_API_URL',
         'PRIVATE_TOKEN'
     ])
@@ -45,9 +44,11 @@ def main():
 
     release_json = {
         'name': settings.RELEASE_TAG,
-        'tag_name': settings.RELEASE_TAG,
-        'description': settings.RELEASE_DESCRIPTION.strip(),
+        'tag_name': settings.RELEASE_TAG
     }
+
+    if settings.RELEASE_DESCRIPTION:
+        release_json['description'] = settings.RELEASE_DESCRIPTION.strip()
 
     if assets:
         release_json['assets'] = {
