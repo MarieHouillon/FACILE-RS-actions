@@ -20,7 +20,7 @@ To use the scripts whithin the GitLab CI, add the following to your job:
   - pip install git+https://git.opencarp.org/openCARP/openCARP-CI
 ```
 
-In order to run the scripts on the command line, we recomment to use a [virtual environment](https://docs.python.org/3/library/venv.html):
+In order to run the scripts on the command line, we recommend to use a [virtual environment](https://docs.python.org/3/library/venv.html):
 
 ```bash
 python -m venv env
