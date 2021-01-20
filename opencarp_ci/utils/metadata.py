@@ -33,7 +33,11 @@ class RadarMetadata(object):
                 "archiveDate": int(archive_date.timestamp()),
                 "publishDate": int(publish_date.timestamp()),
                 "responsibleEmail": self.responsible_email,
-                "publicationBacklink": self.publication_backlink
+                "publicationBacklink": self.publication_backlink,
+                "schema": {
+                    "key": "RDDM",
+                    "version": "09"
+                }
             },
             'descriptiveMetadata': {
                 'title': self.data['title'],
