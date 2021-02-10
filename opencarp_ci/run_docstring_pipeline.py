@@ -21,6 +21,7 @@ FIGURE_PATTERN = r'\.\. figure\:\:\s(.+?)\s'
 REF_PATTERN = r'\:ref\:\`(.+?)\s\<(.+?)\>\`'
 
 METADATA_PATTERN = r'__(.*)__ = [\']([^\']*)[\']'
+METADATA_RUN_PATTERN = r'EXAMPLE_(.*) = [\']([^\']*)[\']'
 
 
 def main():
@@ -97,6 +98,14 @@ def main():
                     # read the __init__.py file and obtain the metadata
                     with open(init_path) as f:
                         metadata = dict(re.findall(METADATA_PATTERN, f.read()))
+                    
+                    # read the run.py file and obtain the metadata
+                    with open(run_path) as f:                    
+                        metadata_run = dict(re.findall(METADATA_RUN_PATTERN, f.read()))
+                    if 'DESCRIPTIVE_NAME' in metadata_run.keys():
+                        header = header + '<h1>' + metadata_run.get('DESCRIPTIVE NAME') + '</h1>\n'
+                    if 'AUTHOR' in metadata_run.keys():
+                        header = header + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
 
                     # read the run.py file and obtain the docstring
                     with open(run_path) as f:
@@ -129,7 +138,7 @@ def main():
                         images.append(image)
 
                     # create content from the docstring using pandoc
-                    content = header + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax']) + footer
+                    content = header + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax', '--shift-heading-level-by=1']) + footer
 
                     # create directories in the grav tree
                     md_path.parent.mkdir(parents=True, exist_ok=True)
