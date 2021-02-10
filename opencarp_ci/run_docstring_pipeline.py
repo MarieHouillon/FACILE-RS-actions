@@ -114,6 +114,10 @@ def main():
                         module = ast.parse(py_string)
                         docstring = ast.get_docstring(module)
 
+                    # convert RST section headers to level 2 headings
+                    docstring.replace('<h1>','<h2>')
+                    docstring.replace('</h1>','</h2>')
+
                     # search for :ref:
                     for m in ref_pattern.finditer(docstring):
                         text, ref = m.group(1), m.group(2)
