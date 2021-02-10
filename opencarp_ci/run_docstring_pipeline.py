@@ -114,10 +114,6 @@ def main():
                         module = ast.parse(py_string)
                         docstring = ast.get_docstring(module)
 
-                    # convert RST section headers to level 2 headings
-                    docstring.replace('<h1>','<h2>')
-                    docstring.replace('</h1>','</h2>')
-
                     # search for :ref:
                     for m in ref_pattern.finditer(docstring):
                         text, ref = m.group(1), m.group(2)
@@ -144,7 +140,12 @@ def main():
 
                     # create content from the docstring using pandoc
                     # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
-                    content = header + titleString + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax']) + footer
+                    body = pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax'])
+                    
+                    # convert RST section headers to level 2 headings
+                    body = body.replace('<h1 id=', '<h2 id=')
+                    body = body.replace('</h1>', '</h2>')
+                    content = header + titleString + body + footer
 
                     # create directories in the grav tree
                     md_path.parent.mkdir(parents=True, exist_ok=True)
