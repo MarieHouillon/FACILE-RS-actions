@@ -102,10 +102,11 @@ def main():
                     # read the run.py file and obtain the metadata
                     with open(run_path) as f:                    
                         metadata_run = dict(re.findall(METADATA_RUN_PATTERN, f.read()))
+                    titleString = ''
                     if 'DESCRIPTIVE_NAME' in metadata_run.keys():
-                        header = header + '<h1>' + metadata_run.get('DESCRIPTIVE_NAME') + '</h1>\n'
+                        titleString = titleString + '<h1>' + metadata_run.get('DESCRIPTIVE_NAME') + '</h1>\n'
                     if 'AUTHOR' in metadata_run.keys():
-                        header = header + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
+                        titleString = titleString + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
 
                     # read the run.py file and obtain the docstring
                     with open(run_path) as f:
@@ -139,7 +140,7 @@ def main():
 
                     # create content from the docstring using pandoc
                     # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
-                    content = header + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax']) + footer
+                    content = header + titleString + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax']) + footer
 
                     # create directories in the grav tree
                     md_path.parent.mkdir(parents=True, exist_ok=True)
