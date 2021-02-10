@@ -103,7 +103,7 @@ def main():
                     with open(run_path) as f:                    
                         metadata_run = dict(re.findall(METADATA_RUN_PATTERN, f.read()))
                     if 'DESCRIPTIVE_NAME' in metadata_run.keys():
-                        header = header + '<h1>' + metadata_run.get('DESCRIPTIVE NAME') + '</h1>\n'
+                        header = header + '<h1>' + metadata_run.get('DESCRIPTIVE_NAME') + '</h1>\n'
                     if 'AUTHOR' in metadata_run.keys():
                         header = header + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
 
