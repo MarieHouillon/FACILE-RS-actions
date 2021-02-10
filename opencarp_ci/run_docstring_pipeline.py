@@ -138,7 +138,8 @@ def main():
                         images.append(image)
 
                     # create content from the docstring using pandoc
-                    content = header + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax', '--shift-heading-level-by=1']) + footer
+                    # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
+                    content = header + pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax']) + footer
 
                     # create directories in the grav tree
                     md_path.parent.mkdir(parents=True, exist_ok=True)
