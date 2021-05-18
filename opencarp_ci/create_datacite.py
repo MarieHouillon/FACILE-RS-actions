@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .utils import settings
 from .utils.http import fetch_dict, fetch_list
-from .utils.metadata import DataciteMetadata
+from .utils.metadata import DataciteMetadata, sort_persons
 
 
 def main():
@@ -33,11 +33,8 @@ def main():
     ])
 
     metadata = fetch_dict(settings.METADATA_LOCATIONS)
-    creators = fetch_list(settings.CREATORS_LOCATIONS)
-    contributors = fetch_list(settings.CONTRIBUTORS_LOCATIONS)
-
-    metadata['creators'] = sorted(creators, key=lambda item: item.get('family_name') or item.get('name'))
-    metadata['contributors'] = sorted(contributors, key=lambda item: item.get('family_name') or item.get('name'))
+    metadata['creators'] = sort_persons(fetch_list(settings.CREATORS_LOCATIONS))
+    metadata['contributors'] = sort_persons(fetch_list(settings.CONTRIBUTORS_LOCATIONS))
     metadata['issued'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     metadata['version'] = settings.VERSION
 

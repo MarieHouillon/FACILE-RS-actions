@@ -9,6 +9,23 @@ from xml.sax.saxutils import XMLGenerator
 logger = logging.getLogger(__file__)
 
 
+def sort_persons(persons):
+    def get_key(item):
+        key = item.get('family_name', item.get('name', ''))
+
+        if item.get('name_type') == 'Organizational':
+            # put organzations last
+            key = '~' + key
+
+        if item.get('first'):
+            # put first things first
+            key = '!' + key
+
+        return key
+
+    return sorted(persons, key=get_key)
+
+
 class RadarMetadata(object):
 
     def __init__(self, data, responsible_email, publication_backlink):
@@ -76,10 +93,14 @@ class RadarMetadata(object):
 
             for creator in self.data['creators']:
                 radar_creator = {
-                    'creatorName': creator['name'],
-                    'givenName': creator['given_name'],
-                    'familyName': creator['family_name']
+                    'creatorName': creator['name']
                 }
+
+                if 'given_name' in creator:
+                    radar_creator['givenName'] = creator['given_name']
+
+                if 'family_name' in creator:
+                    radar_creator['familyName'] = creator['family_name']
 
                 if 'orcid' in creator:
                     radar_creator['nameIdentifier'] = [{
@@ -104,7 +125,7 @@ class RadarMetadata(object):
                     'contributorType': self.radar_value(contributor['contributor_type'])
                 }
 
-                if contributor.get('name_type') != 'Organisational':
+                if contributor.get('name_type') != 'Organizational':
                     radar_contributor['givenName'] = contributor['given_name']
                     radar_contributor['familyName'] = contributor['family_name']
 
@@ -243,9 +264,15 @@ class DataciteMetadata(object):
             self.xml.startElement('creators', {})
             for creator in self.data['creators']:
                 self.xml.startElement('creator', {})
-                self.render_node('creatorName', {'nameType': 'Personal'}, creator['name'])
-                self.render_node('givenName', {}, creator.get('given_name'))
-                self.render_node('familyName', {}, creator.get('family_name'))
+                self.render_node('creatorName', {
+                    'nameType': creator.get('name_type', 'Personal')
+                }, creator['name'])
+
+                if 'given_name' in creator:
+                    self.render_node('givenName', {}, creator['given_name'])
+
+                if 'family_name' in creator:
+                    self.render_node('familyName', {}, creator['family_name'])
 
                 if 'orcid' in creator:
                     self.render_node('nameIdentifier', {
