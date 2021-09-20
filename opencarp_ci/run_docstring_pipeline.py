@@ -105,7 +105,7 @@ def main():
                     titleString = ''
                     if 'DESCRIPTIVE_NAME' in metadata_run.keys():
                         titleString = titleString + '<h1>' + metadata_run.get('DESCRIPTIVE_NAME') + '</h1>\n'
-                    titleString = titleString + '<i>See <a href="https://git.opencarp.org/openCARP/experiments/-/blob/master/tutorials/' + run_path + '" target="_blank">code</a> in GitLab.</i>\n'    
+                    titleString = titleString + '<i>See <a href="https://git.opencarp.org/openCARP/experiments/-/blob/master/tutorials/' + str(run_path) + '" target="_blank">code</a> in GitLab.</i>\n'    
                     if 'AUTHOR' in metadata_run.keys():
                         titleString = titleString + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
 
