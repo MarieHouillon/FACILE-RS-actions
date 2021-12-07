@@ -77,8 +77,10 @@ def main():
 
     # prepare radar payload
     metadata = fetch_dict(settings.METADATA_LOCATIONS)
-    metadata['creators'] = sort_persons(fetch_list(settings.CREATORS_LOCATIONS))
-    metadata['contributors'] = sort_persons(fetch_list(settings.CONTRIBUTORS_LOCATIONS))
+    if settings.CREATORS_LOCATIONS:
+        metadata['creators'] = sort_persons(fetch_list(settings.CREATORS_LOCATIONS))
+    if settings.CONTRIBUTORS_LOCATIONS:
+        metadata['contributors'] = sort_persons(fetch_list(settings.CONTRIBUTORS_LOCATIONS))
     metadata['issued'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     metadata['version'] = settings.VERSION
 
