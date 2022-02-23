@@ -111,12 +111,12 @@ def main():
 
     if settings.SMTP_SERVER and settings.NOTIFICATION_EMAIL:
         message = """\
-        From: %s
-        To: %s
-        Subject: %s
+From: %s
+To: %s
+Subject: %s
 
-        %s
-        """ % (settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, "New RADAR release ready to publish", "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit https://radar.kit.edu/radar/de/workspace/%s.%s to publish this release."%(settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID))
+%s
+""" % (settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, "New RADAR release ready to publish", "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit https://radar.kit.edu/radar/de/workspace/%s.%s to publish this release."%(settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID))
         server = smtplib.SMTP(settings.SMTP_SERVER)
         server.sendmail(settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, message)
         print("Mail sent")
