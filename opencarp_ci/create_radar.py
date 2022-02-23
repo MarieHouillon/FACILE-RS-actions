@@ -49,6 +49,8 @@ def main():
                         help='Backlink for the RADAR metadata.')
     parser.add_argument('--smtp-server', dest='smtp_server',
                         help='SMTP server used to inform about new relase. No mail sent if empty.')    
+    parser.add_argument('--notification-email', dest='notification_email',
+                        help='Recipient address to inform about new relase. No mail sent if empty.')        
     parser.add_argument('--dry', action='store_true',
                         help='Perform a dry run, do not upload anything.')
     parser.add_argument('--log-level', dest='log_level',
@@ -107,16 +109,16 @@ def main():
         # # upload assets
         upload_radar_assets(settings.RADAR_URL, dataset_id, headers, settings.ASSETS, radar_path)
 
-    if settings.SMTP_SERVER:
+    if settings.SMTP_SERVER and settings.NOTIFICATION_EMAIL:
         message = """\
         From: %s
         To: %s
         Subject: %s
 
         %s
-        """ % (settings.RADAR_EMAIL, settings.RADAR_EMAIL, "New RADAR release ready to publish", "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit https://radar.kit.edu/radar/de/workspace/%s.%s to publish this release."%(settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID))
+        """ % (settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, "New RADAR release ready to publish", "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit https://radar.kit.edu/radar/de/workspace/%s.%s to publish this release."%(settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID))
         server = smtplib.SMTP(settings.SMTP_SERVER)
-        server.sendmail(settings.RADAR_EMAIL, settings.RADAR_EMAIL, message)
+        server.sendmail(settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, message)
         print("Mail sent")
         server.quit()
 
