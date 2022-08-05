@@ -41,10 +41,13 @@ def main():
                         help='Path to the footer template.')
     parser.add_argument('--pipeline-refs', dest='pipeline_refs',
                         help='Path to the refs yaml file.')
+    parser.add_argument('--output-html', action='store_true',
+                        help='Output HTML files instead of markdown')
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+
 
     settings.setup(parser, validate=[
         'GRAV_PATH',
@@ -70,12 +73,16 @@ def main():
         header = Path(settings.PIPELINE_HEADER).expanduser().read_text()
     else:
         header = ''
+    if settings.OUTPUT_HTML:
+        header = "<html><head><meta charset=\"utf-8\"></head><body>" + header
 
     # read footer
     if settings.PIPELINE_FOOTER:
         footer = Path(settings.PIPELINE_FOOTER).expanduser().read_text()
     else:
         footer = ''
+    if settings.OUTPUT_HTML:
+        footer = footer + "</body></html>"
 
     # read refs
     if settings.PIPELINE_REFS:
@@ -92,7 +99,10 @@ def main():
                 root_path = Path(root)
                 run_path = root_path / 'run.py'
                 init_path = root_path / '__init__.py'
-                md_path = Path(root.replace(str(source_path), str(page_path.parent)).lower()) / 'default.md'
+                if settings.OUTPUT_HTML:
+                    md_path = Path(root.replace(str(source_path), str(page_path.parent)).lower()) / 'default.html'
+                else:
+                    md_path = Path(root.replace(str(source_path), str(page_path.parent)).lower()) / 'default.md'
 
                 if 'run.py' in files:
                     # read the __init__.py file and obtain the metadata
@@ -132,7 +142,10 @@ def main():
                         figure = m.group(1)
                         image = figure.replace('/images/', '')
                         images.append(image)
-                        docstring = docstring.replace(figure, str(Path(root_path.name.lower()) / image))
+                        if settings.OUTPUT_HTML:
+                            docstring = docstring.replace(figure, image)
+                        else:
+                            docstring = docstring.replace(figure, str(Path(root_path.name.lower()) / image))
 
                     # append image from the metadata to the image list
                     if metadata.get('image'):
@@ -168,7 +181,10 @@ def main():
 
                     # write the grav file
                     logger.info('writing to %s', md_path)
-                    md_path.write_text(frontmatter.dumps(page))
+                    if settings.OUTPUT_HTML:
+                        md_path.write_text(content)
+                    else:
+                        md_path.write_text(frontmatter.dumps(page))
 
                     # copy images
                     if images_path is not None:
