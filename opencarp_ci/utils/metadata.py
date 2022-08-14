@@ -6,24 +6,43 @@ from datetime import datetime
 from xml.dom.minidom import parseString
 from xml.sax.saxutils import XMLGenerator
 
+from .http import fetch_dict
+
 logger = logging.getLogger(__file__)
 
 
-def sort_persons(persons):
-    def get_key(item):
-        key = item.get('family_name', item.get('name', ''))
+class CodemetaMetadata(object):
 
-        if item.get('name_type') == 'Organizational':
-            # put organzations last
-            key = '~' + key
+    def __init__(self):
+        self.data = None
 
-        if item.get('first'):
-            # put first things first
-            key = '!' + key
+    def fetch(self, locations):
+        self.data = fetch_dict(locations)
 
-        return key
+    def fetch_authors(self, locations):
+        if locations:
+            if 'author' not in self.data:
+                self.data['author'] = []
+            self.data['author'] = fetch_dict(locations).get('author', [])
 
-    return sorted(persons, key=get_key)
+    def fetch_contributors(self, locations):
+        if locations:
+            if 'contributor' not in self.data:
+                self.data['contributor'] = []
+            self.data['contributor'] += fetch_dict(locations).get('author', [])
+
+    def sort_persons(self):
+        def get_key(item):
+            key = item.get('familyName', item.get('name', ''))
+
+            if item.get('@type') == 'Organization':
+                # put organzations first
+                key = '!' + key
+
+            return key
+
+        self.data['author'] = sorted(self.data['author'], key=get_key)
+        self.data['contributor'] = sorted(self.data['contributor'], key=get_key)
 
 
 class RadarMetadata(object):
@@ -228,6 +247,15 @@ class RadarMetadata(object):
 
 class DataciteMetadata(object):
 
+    doi_prefix = 'https://doi.org/'
+    orcid_prefix = 'https://orcid.org/'
+    ror_prefix = 'https://ror.org/'
+
+    name_types = {
+        'Person': 'Personal',
+        'Organization': 'Organizational'
+    }
+
     def __init__(self, data):
         self.stream = io.StringIO()
         self.xml = XMLGenerator(self.stream, 'utf-8')
@@ -257,168 +285,202 @@ class DataciteMetadata(object):
             'xsi:schemaLocation': 'http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.3/metadata.xsd'
         })
 
-        if 'identifier' in self.data:
-            self.render_node('identifier', {'identifierType': 'DOI'}, self.data['identifier'])
+        if '@id' in self.data:
+            if self.data['@id'].startswith(self.doi_prefix):
+                self.render_node('identifier', {'identifierType': 'DOI'}, self.data['@id'].replace(self.doi_prefix, ''))
+            else:
+                self.render_node('identifier', {'identifierType': 'URL'}, self.data['@id'])
 
-        if 'creators' in self.data:
+        if 'author' in self.data:
             self.xml.startElement('creators', {})
-            for creator in self.data['creators']:
-                self.xml.startElement('creator', {})
-                self.render_node('creatorName', {
-                    'nameType': creator.get('name_type', 'Personal')
-                }, creator['name'])
+            for author in self.data['author']:
+                if 'givenName' in author and 'familyName' in author:
+                    name = '{} {}'.format(author['givenName'], author['familyName'])
+                else:
+                    name = author.get('name')
 
-                if 'given_name' in creator:
-                    self.render_node('givenName', {}, creator['given_name'])
+                if name is not None:
+                    self.xml.startElement('creator', {})
+                    self.render_node('creatorName', {
+                        'nameType': self.name_types[author.get('@type', 'Person')]
+                    }, name)
 
-                if 'family_name' in creator:
-                    self.render_node('familyName', {}, creator['family_name'])
+                    if 'givenName' in author:
+                        self.render_node('givenName', {}, author['givenName'])
 
-                if 'orcid' in creator:
-                    self.render_node('nameIdentifier', {
-                        'schemeURI': 'http://orcid.org',
-                        'nameIdentifierScheme': 'ORCID'
-                    }, creator['orcid'])
+                    if 'familyName' in author:
+                        self.render_node('familyName', {}, author['familyName'])
 
-                for affiliation in creator.get('affiliations', []):
-                    self.render_node('affiliation', {
-                        'affiliationIdentifier': 'https://ror.org/{}'.format(affiliation['ror']),
-                        'affiliationIdentifierScheme': 'ROR'
-                    } if 'ror' in affiliation else {}, affiliation['name'])
+                    if '@id' in author:
+                        if author['@id'].startswith(self.orcid_prefix):
+                            self.render_node('nameIdentifier', {
+                                'schemeURI': 'http://orcid.org',
+                                'nameIdentifierScheme': 'ORCID'
+                            }, author['@id'].replace(self.orcid_prefix, ''))
 
-                self.xml.endElement('creator')
+                    for affiliation in author.get('affiliation', []):
+                        affiliation_attrs = {}
+
+                        if '@id' in affiliation:
+                            if affiliation['@id'].startswith(self.ror_prefix):
+                                affiliation_attrs = {
+                                    'affiliationIdentifier': affiliation['@id'],
+                                    'affiliationIdentifierScheme': 'ROR'
+                                }
+
+                        if 'name' in affiliation:
+                            self.render_node('affiliation', affiliation_attrs, affiliation['name'])
+
+                    self.xml.endElement('creator')
             self.xml.endElement('creators')
 
-        self.xml.startElement('titles', {})
-        self.render_node('title', {}, self.data['title'])
-        if 'additional_titles' in self.data:
-            for additional_title in self.data['additional_titles']:
+        if 'name' in self.data:
+            self.xml.startElement('titles', {})
+            self.render_node('title', {}, self.data['name'])
+            if 'alternateName' in self.data:
                 self.render_node('title', {
-                    'titleType': additional_title.get('additional_title_type', 'AlternativeTitle')
-                }, additional_title['additional_title'])
-        self.xml.endElement('titles')
+                    'titleType': 'AlternativeTitle'
+                }, self.data['alternateName'])
+            self.xml.endElement('titles')
 
-        if 'publisher' in self.data:
-            self.render_node('publisher', {}, self.data['publisher'])
+        if 'publisher' in self.data and 'name' in self.data['publisher']:
+            self.render_node('publisher', {}, self.data['publisher']['name'])
 
-        if 'issued' in self.data:
-            self.render_node('publicationYear', {}, datetime.strptime(self.data['issued'], '%Y-%m-%d').year)
+        if 'dateModified' in self.data:
+            self.render_node('publicationYear', {}, datetime.strptime(self.data['dateModified'], '%Y-%m-%d').year)
 
-        if 'subjects' in self.data:
+        if 'keywords' in self.data:
             self.xml.startElement('subjects', {})
-            for subject in self.data['subjects']:
-                subject_args = {}
-                if 'scheme_uri' in subject:
-                    subject_args['schemeURI'] = subject['scheme_uri']
-                if 'value_uri' in subject:
-                    subject_args['valueURI'] = subject['value_uri']
-                self.render_node('subject', subject_args, subject['subject'])
+            for subject in self.data['keywords']:
+                if 'name' in subject:
+                    subject_args = {}
+                    if 'inDefinedTermSet' in subject:
+                        subject_args['schemeURI'] = subject['inDefinedTermSet']
+                    if 'url' in subject:
+                        subject_args['valueURI'] = subject['url']
+                    self.render_node('subject', subject_args, subject['name'])
             self.xml.endElement('subjects')
 
-        if 'contributors' in self.data:
+        contributors = self.data.get('contributor', []) + self.data.get('copyrightHolder', [])
+        if contributors:
             self.xml.startElement('contributors', {})
-            for contributor in self.data.get('contributors', []):
-                self.xml.startElement('contributor', {
-                    'contributorType': contributor['contributor_type']
-                })
-                self.render_node('contributorName', {'nameType': contributor['name_type']}, contributor['name'])
+            for contributor in contributors:
+                if 'givenName' in contributor and 'familyName' in contributor:
+                    name = '{} {}'.format(contributor['givenName'], contributor['familyName'])
+                else:
+                    name = contributor.get('name')
 
-                if contributor['name_type'] == 'Personal':
-                    self.render_node('givenName', {}, contributor.get('given_name'))
-                    self.render_node('familyName', {}, contributor.get('family_name'))
+                if name is not None:
+                    self.xml.startElement('contributor', {
+                        'contributorType': contributor['additionalType']
+                    } if 'additionalType' in contributor else {})
+                    self.render_node('contributorName', {
+                        'nameType': self.name_types[contributor.get('@type', 'Person')]
+                    }, name)
 
-                if 'orcid' in contributor:
-                    self.render_node('nameIdentifier', {
-                        'schemeURI': 'http://orcid.org',
-                        'nameIdentifierScheme': 'ORCID'
-                    }, contributor['orcid'])
+                    if 'givenName' in contributor:
+                        self.render_node('givenName', {}, contributor['givenName'])
 
-                if 'ror' in contributor:
-                    self.render_node('nameIdentifier', {
-                        'schemeURI': 'https://ror.org',
-                        'nameIdentifierScheme': 'ROR'
-                    }, contributor['ror'])
+                    if 'familyName' in contributor:
+                        self.render_node('familyName', {}, contributor['familyName'])
 
-                for affiliation in contributor.get('affiliations', []):
-                    self.render_node('affiliation', {
-                        'affiliationIdentifier': 'https://ror.org/{}'.format(affiliation['ror']),
-                        'affiliationIdentifierScheme': 'ROR'
-                    } if 'ror' in affiliation else {}, affiliation['name'])
+                    if '@id' in contributor:
+                        if contributor['@id'].startswith(self.orcid_prefix):
+                            self.render_node('nameIdentifier', {
+                                'schemeURI': 'http://orcid.org',
+                                'nameIdentifierScheme': 'ORCID'
+                            }, contributor['@id'].replace(self.orcid_prefix, ''))
 
-                self.xml.endElement('contributor')
+                    for affiliation in contributor.get('affiliation', []):
+                        affiliation_attrs = {}
+
+                        if '@id' in affiliation:
+                            if affiliation['@id'].startswith(self.ror_prefix):
+                                affiliation_attrs = {
+                                    'affiliationIdentifier': affiliation['@id'],
+                                    'affiliationIdentifierScheme': 'ROR'
+                                }
+
+                        if 'name' in affiliation:
+                            self.render_node('affiliation', affiliation_attrs, affiliation['name'])
+
+                    self.xml.endElement('contributor')
             self.xml.endElement('contributors')
 
         self.xml.startElement('dates', {})
-        if 'created' in self.data:
+        if 'dateCreated' in self.data:
             self.render_node('date', {
                 'dateType': 'Created'
-            }, self.data['created'])
-        if 'issued' in self.data:
+            }, self.data['dateCreated'])
+        if 'dateModified' in self.data:
             self.render_node('date', {
                 'dateType': 'Issued'
-            }, self.data['issued'])
+            }, self.data['dateModified'])
         self.xml.endElement('dates')
 
         self.render_node('language', {}, 'en-US')
 
-        if 'resource' in self.data:
-            self.render_node('resource', {
-                'resourceType': self.data.get('resource_type', 'Software')
-            }, self.data['resource'])
+        if '@type' in self.data:
+            if self.data['@type'] == 'SoftwareSourceCode':
+                self.render_node('resource', {
+                    'resourceType': 'Software'
+                }, 'SoftwareSourceCode')
 
-        if 'alternate_identifiers' in self.data:
+        if 'sameAs' in self.data:
             self.xml.startElement('alternateIdentifiers', {})
-            for alternate_identifier in self.data['alternate_identifiers']:
-                self.render_node('alternateIdentifier', {
-                    'alternateIdentifierType': alternate_identifier['alternate_identifier_type']
-                }, alternate_identifier['alternate_identifier'])
+            self.render_node('alternateIdentifier', {
+                'alternateIdentifierType': 'URL'
+            }, self.data['sameAs'])
             self.xml.endElement('alternateIdentifiers')
 
-        if 'related_identifiers' in self.data:
+        if 'referencePublication' in self.data:
             self.xml.startElement('relatedIdentifiers', {})
-            for related_identifier in self.data['related_identifiers']:
+            if 'referencePublication' in self.data:
                 self.render_node('relatedIdentifier', {
-                    'relatedIdentifierType': related_identifier['related_identifier_type'],
-                    'relationType': related_identifier['relation_type']
-                }, related_identifier['related_identifier'])
+                    'relatedIdentifierType': 'DOI',
+                    'relationType': 'IsDocumentedBy'
+                }, self.data['referencePublication'])
             self.xml.endElement('relatedIdentifiers')
 
         if 'version' in self.data:
             self.render_node('version', {}, self.data['version'])
 
-        self.xml.startElement('rightsList', {})
-        self.render_node('rights', {
-            'rightsURI': self.data.get('rights_uri')
-        }, self.data['rights'])
-        self.xml.endElement('rightsList')
+        if 'license' in self.data and 'name' in self.data['license']:
+            self.xml.startElement('rightsList', {})
+            self.render_node('rights', {
+                'rightsURI': self.data['license'].get('url')
+            }, self.data['license']['name'])
+            self.xml.endElement('rightsList')
 
-        if 'descriptions' in self.data:
+        if 'description' in self.data:
             self.xml.startElement('descriptions', {})
-            for description in self.data['descriptions']:
-                self.render_node('description', {
-                    'descriptionType': description.get('description_type', 'Abstract')
-                }, description['description'])
+            self.render_node('description', {
+                'descriptionType': 'Abstract'
+            }, self.data['description'])
             self.xml.endElement('descriptions')
 
-        if 'funding_references' in self.data:
+        if 'funding' in self.data:
             self.xml.startElement('fundingReferences', {})
-            for funding_reference in self.data['funding_references']:
+            for funding in self.data['funding']:
                 self.xml.startElement('fundingReference', {})
-                self.render_node('funderName', {}, funding_reference['name'])
 
-                if 'ror' in funding_reference:
-                    self.render_node('funderIdentifier', {
-                        'schemeURI': 'https://ror.org',
-                        'funderIdentifierType': 'ROR'
-                    }, funding_reference['ror'])
+                if 'funder' in funding:
+                    if 'name' in funding['funder']:
+                        self.render_node('funderName', {}, funding['funder']['name'])
 
-                if 'award_number' in funding_reference:
+                    if '@id' in funding['funder'] and funding['funder']['@id'].startswith(self.ror_prefix):
+                        self.render_node('funderIdentifier', {
+                            'schemeURI': 'https://ror.org',
+                            'funderIdentifierType': 'ROR'
+                        }, funding['funder']['@id'])
+
+                if 'identifier' in funding:
                     self.render_node('awardNumber', {
-                        'awardURI': funding_reference.get('award_uri')
-                    }, funding_reference['award_number'])
+                        'awardURI': funding.get('url')
+                    }, funding['identifier'])
 
-                if 'award_title' in funding_reference:
-                    self.render_node('awardTitle', {}, funding_reference['award_title'])
+                if 'name' in funding:
+                    self.render_node('awardTitle', {}, funding['name'])
 
                 self.xml.endElement('fundingReference')
             self.xml.endElement('fundingReferences')

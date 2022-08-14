@@ -1,10 +1,10 @@
+import json
 import logging
 import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
-import yaml
 
 logger = logging.getLogger(__file__)
 
@@ -28,7 +28,7 @@ def fetch_files(locations, path):
 def fetch_list(locations):
     data = []
     for location in locations:
-        for obj in fetch_yaml(location):
+        for obj in fetch_json(location):
             if obj not in data:
                 data.append(obj)
     return data
@@ -37,18 +37,17 @@ def fetch_list(locations):
 def fetch_dict(locations):
     data = {}
     for location in locations:
-        data.update(fetch_yaml(location))
+        data.update(fetch_json(location))
     return data
 
 
-def fetch_yaml(location):
+def fetch_json(location):
     if urlparse(location).scheme:
         logger.debug('location = %s', location)
 
         response = requests.get(location)
         response.raise_for_status()
-        return yaml.safe_load(response.text)
+        return json.loads(response.text)
     else:
-
         with open(Path(location).expanduser()) as f:
-            return yaml.safe_load(f.read())
+            return json.load(f)

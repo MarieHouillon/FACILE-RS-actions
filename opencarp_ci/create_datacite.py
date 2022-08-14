@@ -4,19 +4,18 @@ from datetime import date
 from pathlib import Path
 
 from .utils import settings
-from .utils.http import fetch_dict, fetch_list
-from .utils.metadata import DataciteMetadata, sort_persons
+from .utils.metadata import CodemetaMetadata, DataciteMetadata
 
 
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--metadata-location', dest='metadata_locations', action='append', default=[],
-                        help='Locations of the metadata YAML files')
+                        help='Locations of the codemeta JSON files')
     parser.add_argument('--creators-location', dest='creators_locations', action='append', default=[],
-                        help='Locations of the creators YAML files')
+                        help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
-                        help='Locations of the contributors YAML files')
+                        help='Locations of codemeta JSON files for additional contributors')
     parser.add_argument('--version', dest='version',
                         help='Version of the resource')
     parser.add_argument('--issued', dest='issued',
@@ -32,15 +31,15 @@ def main():
         'METADATA_LOCATIONS'
     ])
 
-    metadata = fetch_dict(settings.METADATA_LOCATIONS)
-    if settings.CREATORS_LOCATIONS:
-        metadata['creators'] = sort_persons(fetch_list(settings.CREATORS_LOCATIONS))
-    if settings.CONTRIBUTORS_LOCATIONS:
-        metadata['contributors'] = sort_persons(fetch_list(settings.CONTRIBUTORS_LOCATIONS))
-    metadata['issued'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
-    metadata['version'] = settings.VERSION
+    codemeta = CodemetaMetadata()
+    codemeta.fetch(settings.METADATA_LOCATIONS)
+    codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
+    codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
+    codemeta.sort_persons()
+    codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
+    codemeta.data['version'] = settings.VERSION
 
-    datacite_renderer = DataciteMetadata(metadata)
+    datacite_renderer = DataciteMetadata(codemeta.data)
     datacite_xml = datacite_renderer.to_xml()
 
     if settings.DATACITE_PATH:
