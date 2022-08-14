@@ -39,8 +39,8 @@ def main():
     codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     codemeta.data['version'] = settings.VERSION
 
-    datacite_renderer = DataciteMetadata(codemeta.data)
-    datacite_xml = datacite_renderer.to_xml()
+    datacite_metadata = DataciteMetadata(codemeta.data)
+    datacite_xml = datacite_metadata.to_xml()
 
     if settings.DATACITE_PATH:
         Path(settings.DATACITE_PATH).expanduser().write_text(datacite_xml)

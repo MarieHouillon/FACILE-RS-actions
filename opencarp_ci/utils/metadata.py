@@ -47,6 +47,10 @@ class CodemetaMetadata(object):
 
 class RadarMetadata(object):
 
+    doi_prefix = 'https://doi.org/'
+    orcid_prefix = 'https://orcid.org/'
+    ror_prefix = 'https://ror.org/'
+
     def __init__(self, data, responsible_email, publication_backlink):
         self.data = data
         self.responsible_email = responsible_email
@@ -60,8 +64,8 @@ class RadarMetadata(object):
     def to_json(self):
         # prepare radar payload
         archive_date = datetime.utcnow()
-        production_year = datetime.strptime(self.data.get('created') or self.data.get('issued'), '%Y-%m-%d')
-        publish_date = datetime.strptime(self.data['issued'], '%Y-%m-%d')
+        production_year = datetime.strptime(self.data.get('dateModified'), '%Y-%m-%d')
+        publish_date = datetime.strptime(self.data['dateModified'], '%Y-%m-%d')
 
         radar_json = {
             'technicalMetadata': {
@@ -76,62 +80,67 @@ class RadarMetadata(object):
                 }
             },
             'descriptiveMetadata': {
-                'title': self.data['title'],
+                'title': self.data['name'],
                 'productionYear': production_year.year,
                 'publicationYear': publish_date.year,
                 'language': 'ENG'
             }
         }
 
-        if 'alternate_identifiers' in self.data:
+        if 'sameAs' in self.data:
             radar_json['descriptiveMetadata']['alternateIdentifiers'] = {
                 'alternateIdentifier': []
             }
-            for alternate_identifier in self.data['alternate_identifiers']:
-                radar_json['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
-                    'value': alternate_identifier['alternate_identifier'],
-                    'alternateIdentifierType': alternate_identifier['alternate_identifier_type']
-                })
+            radar_json['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
+                'value': self.data['sameAs'],
+                'alternateIdentifierType': 'URL'
+            })
 
-        if 'related_identifiers' in self.data:
+        if 'referencePublication' in self.data:
             radar_json['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []
             }
-            for related_identifier in self.data['related_identifiers']:
-                if related_identifier['relation_type'] not in ['IsVersionOf']:
-                    radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
-                        'value': related_identifier['related_identifier'],
-                        'relatedIdentifierType': related_identifier['related_identifier_type'],
-                        'relationType': self.radar_value(related_identifier['relation_type'])
-                    })
+            radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                'value': self.data['referencePublication'],
+                'relatedIdentifierType': 'DOI',
+                'relationType': self.radar_value('IsDocumentedBy')
+            })
 
-        if 'creators' in self.data:
+        if 'author' in self.data:
             radar_json['descriptiveMetadata']['creators'] = {
                 'creator': []
             }
 
-            for creator in self.data['creators']:
-                radar_creator = {
-                    'creatorName': creator['name']
-                }
+            for author in self.data['author']:
+                if 'givenName' in author and 'familyName' in author:
+                    name = '{} {}'.format(author['givenName'], author['familyName'])
+                else:
+                    name = author.get('name')
 
-                if 'given_name' in creator:
-                    radar_creator['givenName'] = creator['given_name']
+                if name is not None:
+                    radar_creator = {
+                        'creatorName': name
+                    }
 
-                if 'family_name' in creator:
-                    radar_creator['familyName'] = creator['family_name']
+                    if 'givenName' in author:
+                        radar_creator['givenName'] = author['givenName']
 
-                if 'orcid' in creator:
-                    radar_creator['nameIdentifier'] = [{
-                        'value': creator['orcid'],
-                        'schemeURI': 'http://orcid.org',
-                        'nameIdentifierScheme': 'ORCID',
-                    }]
+                    if 'familyName' in author:
+                        radar_creator['familyName'] = author['familyName']
 
-                for affiliation in creator.get('affiliations', []):
-                    radar_creator['creatorAffiliation'] = affiliation['name']
+                    if '@id' in author:
+                        if author['@id'].startswith(self.orcid_prefix):
+                            radar_creator['nameIdentifier'] = [{
+                                'value': author['@id'].replace(self.orcid_prefix, ''),
+                                'schemeURI': 'http://orcid.org',
+                                'nameIdentifierScheme': 'ORCID',
+                            }]
 
-                radar_json['descriptiveMetadata']['creators']['creator'].append(radar_creator)
+                    for affiliation in author.get('affiliation', []):
+                        if 'name' in affiliation:
+                            radar_creator['creatorAffiliation'] = affiliation['name']
+
+                    radar_json['descriptiveMetadata']['creators']['creator'].append(radar_creator)
 
         if 'contributors' in self.data:
             radar_json['descriptiveMetadata']['contributors'] = {
@@ -139,105 +148,128 @@ class RadarMetadata(object):
             }
 
             for contributor in self.data['contributors']:
-                radar_contributor = {
-                    'contributorName': contributor['name'],
-                    'contributorType': self.radar_value(contributor['contributor_type'])
-                }
+                if 'givenName' in contributor and 'familyName' in contributor:
+                    name = '{} {}'.format(contributor['givenName'], contributor['familyName'])
+                else:
+                    name = contributor.get('name')
 
-                if contributor.get('name_type') != 'Organizational':
-                    radar_contributor['givenName'] = contributor['given_name']
-                    radar_contributor['familyName'] = contributor['family_name']
+                if name is not None:
+                    radar_contributor = {
+                        'contributorName': name,
+                        'contributorType': self.radar_value(contributor['additionalType'])
+                    }
 
-                    if 'orcid' in contributor:
-                        radar_contributor['nameIdentifier'] = [{
-                            'value': contributor['orcid'],
-                            'schemeURI': 'http://orcid.org',
-                            'nameIdentifierScheme': 'ORCID',
-                        }]
-                    for affiliation in contributor.get('affiliations', []):
-                        radar_contributor['contributorAffiliation'] = affiliation['name']
+                    if contributor.get('@type') == 'Person':
+                        radar_contributor['givenName'] = contributor['givenName']
+                        radar_contributor['familyName'] = contributor['familyName']
+
+                        if '@id' in contributor:
+                            if contributor['@id'].startswith(self.orcid_prefix):
+                                radar_contributor['nameIdentifier'] = [{
+                                    'value': contributor['@id'].replace(self.orcid_prefix, ''),
+                                    'schemeURI': 'http://orcid.org',
+                                    'nameIdentifierScheme': 'ORCID',
+                                }]
+
+                        for affiliation in contributor.get('affiliation', []):
+                            if 'name' in affiliation:
+                                radar_contributor['contributorAffiliation'] = affiliation['name']
 
                 radar_json['descriptiveMetadata']['contributors']['contributor'].append(radar_contributor)
 
-        if 'additional_titles' in self.data:
+        if 'alternateName' in self.data:
             radar_json['descriptiveMetadata']['additionalTitles'] = {
                 'additionalTitle': []
             }
-            for additional_title in self.data['additional_titles']:
-                radar_json['descriptiveMetadata']['additionalTitles']['additionalTitle'].append({
-                    'value': additional_title['additional_title'],
-                    'additionalTitleType': self.radar_value(additional_title.get('additional_title_type', 'AlternativeTitle'))
-                })
+            radar_json['descriptiveMetadata']['additionalTitles']['additionalTitle'].append({
+                'value': self.data['alternateName'],
+                'additionalTitleType': self.radar_value('AlternativeTitle')
+            })
 
-        if 'descriptions' in self.data:
+        if 'description' in self.data:
             radar_json['descriptiveMetadata']['descriptions'] = {
                 'description': []
             }
-            for description in self.data['descriptions']:
-                radar_json['descriptiveMetadata']['descriptions']['description'].append({
-                    'value': description['description'],
-                    'descriptionType': self.radar_value(description.get('description_type', 'Abstract'))
-                })
+            radar_json['descriptiveMetadata']['descriptions']['description'].append({
+                'value': self.data['description'],
+                'descriptionType': self.radar_value('Abstract')
+            })
 
         if 'keywords' in self.data:
-            radar_json['descriptiveMetadata']['keywords'] = {
-                'keyword': []
-            }
+            keywords = []
+            subjects = []
             for keyword in self.data['keywords']:
-                radar_json['descriptiveMetadata']['keywords']['keyword'].append(keyword)
+                if isinstance(keyword, str):
+                    keywords.append(keyword)
 
-        if 'publisher' in self.data:
+                else:
+                    if 'name' in keyword and \
+                            keyword.get('@type') == 'DefinedTerm' and \
+                            keyword.get('inDefinedTermSet', '').startswith('https://www.radar-service.eu/schemas/'):
+                        subjects.append(keyword['name'])
+
+            if keywords:
+                radar_json['descriptiveMetadata']['keywords'] = {
+                    'keyword': []
+                }
+                for keyword in keywords:
+                    radar_json['descriptiveMetadata']['keywords']['keyword'].append(keyword)
+
+            if subjects:
+                radar_json['descriptiveMetadata']['subjectAreas'] = {
+                    'subjectArea': []
+                }
+                for subject in subjects:
+                    radar_json['descriptiveMetadata']['subjectAreas']['subjectArea'].append({
+                        'controlledSubjectAreaName': self.radar_value(subject)
+                    })
+
+        if 'publisher' in self.data and 'name' in self.data['publisher']:
             radar_json['descriptiveMetadata']['publishers'] = {
-                'publisher': [self.data['publisher']]
+                'publisher': [self.data['publisher']['name']]
             }
 
-        if 'radar_subjects' in self.data:
-            radar_json['descriptiveMetadata']['subjectAreas'] = {
-                'subjectArea': []
-            }
-            for subject in self.data['radar_subjects']:
-                radar_json['descriptiveMetadata']['subjectAreas']['subjectArea'].append({
-                    'controlledSubjectAreaName': self.radar_value(subject)
-                })
+        if '@type' in self.data:
+            if self.data['@type'] == 'SoftwareSourceCode':
+                radar_json['descriptiveMetadata']['resource'] = {
+                    'value': 'SoftwareSourceCode',
+                    'resourceType': self.radar_value('Software'),
+                }
 
-        if 'resource' in self.data:
-            radar_json['descriptiveMetadata']['resource'] = {
-                'value': self.data['resource'],
-                'resourceType': self.radar_value(self.data.get('resource_type', 'Software')),
-            }
-
-        if 'rights' in self.data:
+        if 'license' in self.data and 'name' in self.data['license']:
             radar_json['descriptiveMetadata']['rights'] = {
                 'controlledRights': 'OTHER',
-                'additionalRights': self.data['rights']
+                'additionalRights': self.data['license']['name']
             }
 
-        if 'rights_holder' in self.data:
+        if 'copyrightHolder' in self.data:
             radar_json['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [self.data['rights_holder']]
+                'rightsHolder': [self.data['copyrightHolder']]
             }
 
-        if 'funding_references' in self.data:
+        if 'funding' in self.data:
             radar_json['descriptiveMetadata']['fundingReferences'] = {
                 'fundingReference': []
             }
-            for funding_reference in self.data['funding_references']:
-                radar_funding_reference = {
-                    'funderName': funding_reference['name']
-                }
+            for funding in self.data['funding']:
+                radar_funding_reference = {}
 
-                if 'ror' in funding_reference:
-                    radar_funding_reference['funderIdentifier'] = {
-                        'value': funding_reference['ror'],
-                        'type': 'OTHER'
-                    }
+                if 'funder' in funding:
+                    if 'name' in funding['funder']:
+                        radar_funding_reference['funderName'] = funding['funder']['name']
 
-                if 'award_number' in funding_reference:
-                    radar_funding_reference['awardNumber'] = funding_reference['award_number']
-                if 'award_uri' in funding_reference:
-                    radar_funding_reference['awardURI'] = funding_reference['award_uri']
-                if 'award_title' in funding_reference:
-                    radar_funding_reference['awardTitle'] = funding_reference['award_title']
+                    if '@id' in funding['funder'] and funding['funder']['@id'].startswith(self.ror_prefix):
+                        radar_funding_reference['funderIdentifier'] = {
+                            'value': funding['funder']['@id'],
+                            'type': 'OTHER'
+                        }
+
+                if 'identifier' in funding:
+                    radar_funding_reference['awardNumber'] = funding['identifier']
+                if 'url' in funding:
+                    radar_funding_reference['awardURI'] = funding['url']
+                if 'name' in funding:
+                    radar_funding_reference['awardTitle'] = funding['name']
 
                 radar_json['descriptiveMetadata']['fundingReferences']['fundingReference'].append(radar_funding_reference)
 

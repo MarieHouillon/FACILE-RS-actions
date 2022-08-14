@@ -5,8 +5,8 @@ from pathlib import Path
 import smtplib
 
 from .utils import settings
-from .utils.http import fetch_dict, fetch_files, fetch_list
-from .utils.metadata import RadarMetadata, sort_persons
+from .utils.http import fetch_files
+from .utils.metadata import RadarMetadata, CodemetaMetadata
 from .utils.radar import (create_radar_dataset, fetch_radar_token,
                           upload_radar_assets)
 
@@ -48,9 +48,9 @@ def main():
     parser.add_argument('--radar-backlink', dest='radar_backlink',
                         help='Backlink for the RADAR metadata.')
     parser.add_argument('--smtp-server', dest='smtp_server',
-                        help='SMTP server used to inform about new relase. No mail sent if empty.')    
+                        help='SMTP server used to inform about new relase. No mail sent if empty.')
     parser.add_argument('--notification-email', dest='notification_email',
-                        help='Recipient address to inform about new relase. No mail sent if empty.')        
+                        help='Recipient address to inform about new relase. No mail sent if empty.')
     parser.add_argument('--dry', action='store_true',
                         help='Perform a dry run, do not upload anything.')
     parser.add_argument('--log-level', dest='log_level',
@@ -81,18 +81,16 @@ def main():
     radar_path.mkdir()
 
     # prepare radar payload
-    metadata = fetch_dict(settings.METADATA_LOCATIONS)
-    if settings.CREATORS_LOCATIONS:
-        metadata['creators'] = sort_persons(fetch_list(settings.CREATORS_LOCATIONS))
-    if settings.CONTRIBUTORS_LOCATIONS:
-        metadata['contributors'] = sort_persons(fetch_list(settings.CONTRIBUTORS_LOCATIONS))
-    metadata['issued'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
-    metadata['version'] = settings.VERSION
+    codemeta = CodemetaMetadata()
+    codemeta.fetch(settings.METADATA_LOCATIONS)
+    codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
+    codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
+    codemeta.sort_persons()
+    codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
+    codemeta.data['version'] = settings.VERSION
+    codemeta.data['name'] = '{name} ({version})'.format(**codemeta.data)  # override name/title to include version
 
-    # override title to include version
-    metadata['title'] = '{title} ({version})'.format(**metadata)
-
-    radar_metadata = RadarMetadata(metadata, settings.RADAR_EMAIL, settings.RADAR_BACKLINK)
+    radar_metadata = RadarMetadata(codemeta.data, settings.RADAR_EMAIL, settings.RADAR_BACKLINK)
     radar_json = radar_metadata.to_json()
 
     # collect assets
