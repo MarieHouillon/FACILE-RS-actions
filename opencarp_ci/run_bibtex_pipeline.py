@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 import argparse
 import logging
-import re
 from pathlib import Path
 
 import frontmatter
 import pypandoc
-import yaml
 
 from .utils import settings
 from .utils.grav import collect_pages

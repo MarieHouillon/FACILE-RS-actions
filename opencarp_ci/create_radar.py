@@ -16,11 +16,11 @@ def main():
     parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the repository.')
     parser.add_argument('--metadata-location', dest='metadata_locations', action='append', default=[],
-                        help='Locations of the metadata YAML files')
+                        help='Locations of the codemeta JSON files')
     parser.add_argument('--creators-location', dest='creators_locations', action='append', default=[],
-                        help='Locations of the creators YAML files')
+                        help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
-                        help='Locations of the contributors YAML files')
+                        help='Locations of codemeta JSON files for additional contributors')
     parser.add_argument('--version', dest='version',
                         help='Version of the resource')
     parser.add_argument('--issued', dest='issued',

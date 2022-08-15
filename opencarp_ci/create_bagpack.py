@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--bag-path', dest='bag_path',
                         help='Path to the Bag directory')
     parser.add_argument('--bag-info-location', dest='bag_info_locations', action='append', default=[],
-                        help='Locations of the bog-info YAML files')
+                        help='Locations of the bag-info YAML/JSON files')
     parser.add_argument('--datacite-path', dest='datacite_path',
                         help='Path to the DataCite XML file')
     parser.add_argument('--log-level', dest='log_level',
