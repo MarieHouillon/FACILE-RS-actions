@@ -26,23 +26,7 @@ def fetch_files(locations, path):
             shutil.copyfile(location, target)
 
 
-def fetch_list(locations):
-    data = []
-    for location in locations:
-        for obj in fetch(location):
-            if obj not in data:
-                data.append(obj)
-    return data
-
-
-def fetch_dict(locations):
-    data = {}
-    for location in locations:
-        data.update(fetch(location))
-    return data
-
-
-def fetch(location):
+def fetch_dict(location):
     parsed_url = urlparse(location)
     if parsed_url.scheme:
         logger.debug('location = %s', location)

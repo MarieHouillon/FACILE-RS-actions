@@ -14,30 +14,61 @@ logger = logging.getLogger(__file__)
 class CodemetaMetadata(object):
 
     def __init__(self):
-        self.data = None
+        self.data = {}
 
     def fetch(self, locations):
-        self.data = fetch_dict(locations)
+        if locations:
+            for location in locations:
+                self.data.update(fetch_dict(location))
 
     def fetch_authors(self, locations):
         if locations:
             if 'author' not in self.data:
                 self.data['author'] = []
-            self.data['author'] = fetch_dict(locations).get('author', [])
+            for location in locations:
+                self.data['author'] += fetch_dict(location).get('author', [])
 
     def fetch_contributors(self, locations):
         if locations:
             if 'contributor' not in self.data:
                 self.data['contributor'] = []
-            self.data['contributor'] += fetch_dict(locations).get('author', [])
+            for location in locations:
+                self.data['contributor'] += fetch_dict(location).get('author', [])
+
+    def compute_names(self):
+        for key in ['author', 'contributor']:
+            for thing in self.data[key]:
+                if 'name' not in thing and ('givenName' in thing and 'familyName' in thing):
+                    thing['name'] = '{} {}'.format(thing['givenName'], thing['familyName'])
+
+    def remove_doubles(self):
+        for key in ['author', 'contributor']:
+            ids = set()
+            names = set()
+            things = []
+            for thing in self.data[key]:
+                thing_id = thing.get('@id')
+                thing_name = thing.get('name')
+                if thing_id in ids or thing_name in names:
+                    pass
+                else:
+                    things.append(thing)
+                    if thing_id is not None:
+                        ids.add(thing_id)
+                    if thing_name is not None:
+                        names.add(thing_name)
+            self.data[key] = things
 
     def sort_persons(self):
         def get_key(item):
             key = item.get('familyName', item.get('name', ''))
 
             if item.get('@type') == 'Organization':
-                # put organzations first
-                key = '!' + key
+                # put organzations first unless they have an additionalType
+                if item.get('additionalType') is None:
+                    key = '!' + key
+                else:
+                    key = '~' + key
 
             return key
 
@@ -101,13 +132,13 @@ class RadarMetadata(object):
                 'relatedIdentifier': []
             }
             radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
-                'value': self.data['referencePublication'],
+                'value': self.data['referencePublication'].replace(self.doi_prefix, ''),
                 'relatedIdentifierType': 'DOI',
                 'relationType': self.radar_value('IsDocumentedBy')
             })
             radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
                 'value': self.data['codeRepository'],
-                'relatedIdentifierType': 'DOI',
+                'relatedIdentifierType': 'URL',
                 'relationType': self.radar_value('IsSupplementTo')  # like zenodo does it
             })
 
@@ -117,14 +148,9 @@ class RadarMetadata(object):
             }
 
             for author in self.data['author']:
-                if 'givenName' in author and 'familyName' in author:
-                    name = '{} {}'.format(author['givenName'], author['familyName'])
-                else:
-                    name = author.get('name')
-
-                if name is not None:
+                if 'name' in author:
                     radar_creator = {
-                        'creatorName': name
+                        'creatorName': author['name']
                     }
 
                     if 'givenName' in author:
@@ -153,14 +179,9 @@ class RadarMetadata(object):
             }
 
             for contributor in self.data['contributors']:
-                if 'givenName' in contributor and 'familyName' in contributor:
-                    name = '{} {}'.format(contributor['givenName'], contributor['familyName'])
-                else:
-                    name = contributor.get('name')
-
-                if name is not None:
+                if 'name' in contributor:
                     radar_contributor = {
-                        'contributorName': name,
+                        'contributorName': author['name'],
                         'contributorType': self.radar_value(contributor['additionalType'])
                     }
 
@@ -247,9 +268,11 @@ class RadarMetadata(object):
                 'additionalRights': self.data['license']['name']
             }
 
-        if 'copyrightHolder' in self.data:
+        if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
             radar_json['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [self.data['copyrightHolder']]
+                'rightsHolder': [
+                    self.data['copyrightHolder']['name']
+                ]
             }
 
         if 'funding' in self.data:
@@ -351,8 +374,8 @@ class DataciteMetadata(object):
                     if '@id' in author:
                         if author['@id'].startswith(self.orcid_prefix):
                             self.render_node('nameIdentifier', {
-                                'schemeURI': 'http://orcid.org',
-                                'nameIdentifierScheme': 'ORCID'
+                                'nameIdentifierScheme': 'ORCID',
+                                'schemeURI': 'http://orcid.org'
                             }, author['@id'].replace(self.orcid_prefix, ''))
 
                     for affiliation in author.get('affiliation', []):
@@ -388,14 +411,17 @@ class DataciteMetadata(object):
 
         if 'keywords' in self.data:
             self.xml.startElement('subjects', {})
-            for subject in self.data['keywords']:
-                if 'name' in subject:
-                    subject_args = {}
-                    if 'inDefinedTermSet' in subject:
-                        subject_args['schemeURI'] = subject['inDefinedTermSet']
-                    if 'url' in subject:
-                        subject_args['valueURI'] = subject['url']
-                    self.render_node('subject', subject_args, subject['name'])
+            for keyword in self.data['keywords']:
+                if isinstance(keyword, str):
+                    self.render_node('subject', {}, keyword)
+                else:
+                    if 'name' in keyword:
+                        subject_args = {}
+                        if 'inDefinedTermSet' in keyword:
+                            subject_args['schemeURI'] = keyword['inDefinedTermSet']
+                        if 'url' in keyword:
+                            subject_args['valueURI'] = keyword['url']
+                        self.render_node('subject', subject_args, keyword['name'])
             self.xml.endElement('subjects')
 
         contributors = self.data.get('contributor', []) + self.data.get('copyrightHolder', [])
@@ -408,9 +434,16 @@ class DataciteMetadata(object):
                     name = contributor.get('name')
 
                 if name is not None:
+                    if contributor in self.data.get('copyrightHolder', []):
+                        contributor_type = 'RightsHolder'
+                    elif 'additionalType' in contributor:
+                        contributor_type = contributor['additionalType']
+                    else:
+                        contributor_type = None
+
                     self.xml.startElement('contributor', {
-                        'contributorType': contributor['additionalType']
-                    } if 'additionalType' in contributor else {})
+                        'contributorType': contributor_type
+                    } if contributor_type is not None else {})
                     self.render_node('contributorName', {
                         'nameType': self.name_types[contributor.get('@type', 'Person')]
                     }, name)
@@ -424,8 +457,8 @@ class DataciteMetadata(object):
                     if '@id' in contributor:
                         if contributor['@id'].startswith(self.orcid_prefix):
                             self.render_node('nameIdentifier', {
-                                'schemeURI': 'http://orcid.org',
-                                'nameIdentifierScheme': 'ORCID'
+                                'nameIdentifierScheme': 'ORCID',
+                                'schemeURI': 'http://orcid.org'
                             }, contributor['@id'].replace(self.orcid_prefix, ''))
 
                     for affiliation in contributor.get('affiliation', []):
@@ -475,10 +508,10 @@ class DataciteMetadata(object):
                 self.render_node('relatedIdentifier', {
                     'relatedIdentifierType': 'DOI',
                     'relationType': 'IsDocumentedBy'
-                }, self.data['referencePublication'])
+                }, self.data['referencePublication'].replace(self.doi_prefix, ''))
             if 'codeRepository' in self.data:
                 self.render_node('relatedIdentifier', {
-                    'relatedIdentifierType': 'DOI',
+                    'relatedIdentifierType': 'URL',
                     'relationType': 'IsSupplementTo'  # like zenodo does it
                 }, self.data['codeRepository'])
             self.xml.endElement('relatedIdentifiers')
@@ -511,8 +544,8 @@ class DataciteMetadata(object):
 
                     if '@id' in funding['funder'] and funding['funder']['@id'].startswith(self.ror_prefix):
                         self.render_node('funderIdentifier', {
-                            'schemeURI': 'https://ror.org',
-                            'funderIdentifierType': 'ROR'
+                            'funderIdentifierType': 'ROR',
+                            'schemeURI': 'https://ror.org'
                         }, funding['funder']['@id'])
 
                 if 'identifier' in funding:

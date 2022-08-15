@@ -77,7 +77,7 @@ def main():
     # setup the bag directory
     radar_path = Path(settings.RADAR_PATH).expanduser()
     if radar_path.exists():
-        parser.error('RADAR_PATH exists.')
+        parser.error('{} already exists.'.format(radar_path))
     radar_path.mkdir()
 
     # prepare radar payload
@@ -85,6 +85,8 @@ def main():
     codemeta.fetch(settings.METADATA_LOCATIONS)
     codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
+    codemeta.compute_names()
+    codemeta.remove_doubles()
     codemeta.sort_persons()
     codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     codemeta.data['version'] = settings.VERSION

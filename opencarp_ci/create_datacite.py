@@ -35,6 +35,8 @@ def main():
     codemeta.fetch(settings.METADATA_LOCATIONS)
     codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
+    codemeta.compute_names()
+    codemeta.remove_doubles()
     codemeta.sort_persons()
     codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
     codemeta.data['version'] = settings.VERSION

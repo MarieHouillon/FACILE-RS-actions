@@ -29,14 +29,16 @@ def main():
     # setup the bag
     bag_path = Path(settings.BAG_PATH).expanduser()
     if bag_path.exists():
-        parser.error('BAG_PATH exists.')
+        parser.error('{} already exists.'.format(bag_path))
     bag_path.mkdir()
 
     # collect assets
     fetch_files(settings.ASSETS, bag_path)
 
     # fetch bag-info
-    bag_info = fetch_dict(settings.BAG_INFO_LOCATIONS)
+    bag_info = {}
+    for location in settings.BAG_INFO_LOCATIONS:
+        bag_info.update(fetch_dict(location))
 
     # create bag using bagit
     bag = bagit.make_bag(bag_path, bag_info)
