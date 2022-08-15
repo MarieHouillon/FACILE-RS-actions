@@ -96,7 +96,7 @@ class RadarMetadata(object):
                 'alternateIdentifierType': 'URL'
             })
 
-        if 'referencePublication' in self.data:
+        if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             radar_json['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []
             }
@@ -104,6 +104,11 @@ class RadarMetadata(object):
                 'value': self.data['referencePublication'],
                 'relatedIdentifierType': 'DOI',
                 'relationType': self.radar_value('IsDocumentedBy')
+            })
+            radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                'value': self.data['codeRepository'],
+                'relatedIdentifierType': 'DOI',
+                'relationType': self.radar_value('IsSupplementTo')  # like zenodo does it
             })
 
         if 'author' in self.data:
@@ -229,12 +234,12 @@ class RadarMetadata(object):
                 'publisher': [self.data['publisher']['name']]
             }
 
-        if '@type' in self.data:
-            if self.data['@type'] == 'SoftwareSourceCode':
-                radar_json['descriptiveMetadata']['resource'] = {
-                    'value': 'SoftwareSourceCode',
-                    'resourceType': self.radar_value('Software'),
-                }
+        if 'applicationCategory' in self.data:
+            radar_json['descriptiveMetadata']['resource'] = {
+                'value': self.data['applicationCategory']
+            }
+            if self.data.get('@type') == 'SoftwareSourceCode':
+                radar_json['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
 
         if 'license' in self.data and 'name' in self.data['license']:
             radar_json['descriptiveMetadata']['rights'] = {
@@ -452,11 +457,10 @@ class DataciteMetadata(object):
 
         self.render_node('language', {}, 'en-US')
 
-        if '@type' in self.data:
-            if self.data['@type'] == 'SoftwareSourceCode':
-                self.render_node('resource', {
-                    'resourceType': 'Software'
-                }, 'SoftwareSourceCode')
+        if 'applicationCategory' in self.data:
+            self.render_node('resource', {
+                'resourceType': 'Software' if self.data.get('@type') == 'SoftwareSourceCode' else None
+            }, self.data['applicationCategory'])
 
         if 'sameAs' in self.data:
             self.xml.startElement('alternateIdentifiers', {})
@@ -465,13 +469,18 @@ class DataciteMetadata(object):
             }, self.data['sameAs'])
             self.xml.endElement('alternateIdentifiers')
 
-        if 'referencePublication' in self.data:
+        if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             self.xml.startElement('relatedIdentifiers', {})
             if 'referencePublication' in self.data:
                 self.render_node('relatedIdentifier', {
                     'relatedIdentifierType': 'DOI',
                     'relationType': 'IsDocumentedBy'
                 }, self.data['referencePublication'])
+            if 'codeRepository' in self.data:
+                self.render_node('relatedIdentifier', {
+                    'relatedIdentifierType': 'DOI',
+                    'relationType': 'IsSupplementTo'  # like zenodo does it
+                }, self.data['codeRepository'])
             self.xml.endElement('relatedIdentifiers')
 
         if 'version' in self.data:
