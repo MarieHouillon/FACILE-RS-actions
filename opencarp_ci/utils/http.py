@@ -49,3 +49,9 @@ def fetch_dict(location):
                 return yaml.safe_load(f.read())
             else:
                 raise RuntimeError('{} is not a JSON or YAML file.')
+
+
+def fetch_json(location):
+    response = requests.get(location, headers={'Accept': 'application/json'})
+    response.raise_for_status()
+    return response.json()

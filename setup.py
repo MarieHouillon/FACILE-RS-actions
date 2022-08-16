@@ -37,6 +37,7 @@ setup(
         'console_scripts': [
             'create_bag=opencarp_ci.create_bag:main',
             'create_bagpack=opencarp_ci.create_bagpack:main',
+            'create_cff=opencarp_ci.create_cff:main',
             'create_datacite=opencarp_ci.create_datacite:main',
             'create_radar=opencarp_ci.create_radar:main',
             'create_release=opencarp_ci.create_release:main',
