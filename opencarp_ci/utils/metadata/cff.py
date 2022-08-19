@@ -40,6 +40,9 @@ class CffMetadata(object):
         if 'sameAs' in self.data:
             cff_json['url'] = self.data['sameAs']
 
+        if 'version' in self.data:
+            cff_json['version'] = self.data['version']
+
         if 'author' in self.data:
             cff_json['authors'] = []
             for author in self.data['author']:
