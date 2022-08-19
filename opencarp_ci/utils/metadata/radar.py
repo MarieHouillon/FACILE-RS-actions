@@ -57,6 +57,15 @@ class RadarMetadata(object):
                 'alternateIdentifierType': 'URL'
             })
 
+        if 'downloadUrl' in self.data:
+            radar_json['descriptiveMetadata']['alternateIdentifiers'] = {
+                'alternateIdentifier': []
+            }
+            radar_json['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
+                'value': self.data['downloadUrl'],
+                'alternateIdentifierType': 'URL'
+            })
+
         if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             radar_json['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []

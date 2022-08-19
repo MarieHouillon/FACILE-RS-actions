@@ -204,6 +204,13 @@ class DataciteMetadata(object):
             }, self.data['sameAs'])
             self.xml.endElement('alternateIdentifiers')
 
+        if 'downloadUrl' in self.data:
+            self.xml.startElement('alternateIdentifiers', {})
+            self.render_node('alternateIdentifier', {
+                'alternateIdentifierType': 'URL'
+            }, self.data['downloadUrl'])
+            self.xml.endElement('alternateIdentifiers')
+
         if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             self.xml.startElement('relatedIdentifiers', {})
             if 'referencePublication' in self.data:

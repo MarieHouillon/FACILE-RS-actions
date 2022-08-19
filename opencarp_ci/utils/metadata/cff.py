@@ -37,6 +37,9 @@ class CffMetadata(object):
         if 'description' in self.data:
             cff_json['abstract'] = self.data['description']
 
+        if 'sameAs' in self.data:
+            cff_json['url'] = self.data['sameAs']
+
         if 'author' in self.data:
             cff_json['authors'] = []
             for author in self.data['author']:
