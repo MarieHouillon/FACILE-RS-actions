@@ -45,6 +45,9 @@ class CffMetadata(object):
             for author in self.data['author']:
                 cff_author = {}
 
+                if 'name' in author:
+                    cff_author['name'] = author['name']
+
                 if 'givenName' in author:
                     cff_author['given-names'] = author['givenName']
 
@@ -56,8 +59,6 @@ class CffMetadata(object):
 
                 if cff_author:
                     cff_json['authors'].append(cff_author)
-
-            cff_json['name'] = self.data['name']
 
         if '@id' in self.data and self.data['@id'].startswith(self.doi_prefix):
             cff_json['identifier'] = {
