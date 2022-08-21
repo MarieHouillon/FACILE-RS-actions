@@ -41,6 +41,8 @@ setup(
             'create_datacite=opencarp_ci.create_datacite:main',
             'create_radar=opencarp_ci.create_radar:main',
             'create_release=opencarp_ci.create_release:main',
+            'prepare_radar=opencarp_ci.prepare_radar:main',
+            'prepare_release=opencarp_ci.prepare_release:main',
             'run_bibtex_pipeline=opencarp_ci.run_bibtex_pipeline:main',
             'run_docstring_pipeline=opencarp_ci.run_docstring_pipeline:main',
             'run_markdown_pipeline=opencarp_ci.run_markdown_pipeline:main'

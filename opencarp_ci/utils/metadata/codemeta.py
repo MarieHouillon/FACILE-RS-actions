@@ -1,4 +1,6 @@
+import json
 import logging
+from pathlib import Path
 
 from ..http import fetch_dict
 
@@ -10,10 +12,9 @@ class CodemetaMetadata(object):
     def __init__(self):
         self.data = {}
 
-    def fetch(self, locations):
-        if locations:
-            for location in locations:
-                self.data.update(fetch_dict(location))
+    def fetch(self, location):
+        if location:
+            self.data.update(fetch_dict(location))
 
     def fetch_authors(self, locations):
         if locations:
@@ -72,3 +73,7 @@ class CodemetaMetadata(object):
             self.data['author'] = sorted(self.data['author'], key=get_key)
         if 'contributor' in self.data:
             self.data['contributor'] = sorted(self.data['contributor'], key=get_key)
+
+    def write(self, location):
+        with open(Path(location).expanduser(), 'w') as fp:
+            json.dump(self.data, fp, indent=2)

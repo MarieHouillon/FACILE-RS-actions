@@ -213,11 +213,11 @@ class DataciteMetadata(object):
 
         if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             self.xml.startElement('relatedIdentifiers', {})
-            if 'referencePublication' in self.data:
+            if 'referencePublication' in self.data and self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
                 self.render_node('relatedIdentifier', {
                     'relatedIdentifierType': 'DOI',
                     'relationType': 'IsDocumentedBy'
-                }, self.data['referencePublication'].replace(self.doi_prefix, ''))
+                }, self.data['referencePublication']['@id'].replace(self.doi_prefix, ''))
             if 'codeRepository' in self.data:
                 self.render_node('relatedIdentifier', {
                     'relatedIdentifierType': 'URL',

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import argparse
-from datetime import date
 from pathlib import Path
 import smtplib
 
@@ -8,23 +7,19 @@ from .utils import settings
 from .utils.http import fetch_files
 from .utils.metadata import RadarMetadata, CodemetaMetadata
 from .utils.radar import (create_radar_dataset, fetch_radar_token,
-                          upload_radar_assets)
+                          update_radar_dataset, upload_radar_assets)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the repository.')
-    parser.add_argument('--metadata-location', dest='metadata_locations', action='append', default=[],
-                        help='Locations of the codemeta JSON files')
+    parser.add_argument('--codemeta-location', dest='codemeta_location',
+                        help='Locations of the main codemeta.json JSON file')
     parser.add_argument('--creators-location', dest='creators_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional contributors')
-    parser.add_argument('--version', dest='version',
-                        help='Version of the resource')
-    parser.add_argument('--issued', dest='issued',
-                        help='Date for the Issued field and publication year (format: \'%%Y-%%m-%%d\')')
     parser.add_argument('--radar-path', dest='radar_path',
                         help='Path to the Radar directory, where the assets are collected before upload.')
     parser.add_argument('--radar-url', dest='radar_url',
@@ -59,8 +54,7 @@ def main():
                         help='Path to the log file')
 
     settings.setup(parser, validate=[
-        'METADATA_LOCATIONS',
-        'VERSION',
+        'CODEMETA_LOCATION',
         'RADAR_PATH',
         'RADAR_URL',
         'RADAR_CLIENT_ID',
@@ -82,14 +76,12 @@ def main():
 
     # prepare radar payload
     codemeta = CodemetaMetadata()
-    codemeta.fetch(settings.METADATA_LOCATIONS)
+    codemeta.fetch(settings.CODEMETA_LOCATION)
     codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
     codemeta.compute_names()
     codemeta.remove_doubles()
     codemeta.sort_persons()
-    codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
-    codemeta.data['version'] = settings.VERSION
     codemeta.data['name'] = '{name} ({version})'.format(**codemeta.data)  # override name/title to include version
 
     radar_metadata = RadarMetadata(codemeta.data, settings.RADAR_EMAIL, settings.RADAR_BACKLINK)
@@ -103,10 +95,13 @@ def main():
         headers = fetch_radar_token(settings.RADAR_URL, settings.RADAR_CLIENT_ID, settings.RADAR_CLIENT_SECRET,
                                     settings.RADAR_REDIRECT_URL, settings.RADAR_USERNAME, settings.RADAR_PASSWORD)
 
-        # create radar dataset
-        dataset_id = create_radar_dataset(settings.RADAR_URL, settings.RADAR_WORKSPACE_ID, headers, radar_json)
+        # update or create radar dataset
+        if radar_json.get('id'):
+            dataset_id = update_radar_dataset(settings.RADAR_URL, radar_json.get('id'), headers, radar_json)
+        else:
+            dataset_id = create_radar_dataset(settings.RADAR_URL, settings.RADAR_WORKSPACE_ID, headers, radar_json)
 
-        # # upload assets
+        # upload assets
         upload_radar_assets(settings.RADAR_URL, dataset_id, headers, settings.ASSETS, radar_path)
 
     if settings.SMTP_SERVER and settings.NOTIFICATION_EMAIL:

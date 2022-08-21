@@ -25,14 +25,11 @@ class RadarMetadata(object):
     def to_json(self):
         # prepare radar payload
         archive_date = datetime.utcnow()
-        production_year = datetime.strptime(self.data.get('dateModified'), '%Y-%m-%d')
-        publish_date = datetime.strptime(self.data['dateModified'], '%Y-%m-%d')
 
         radar_json = {
             'technicalMetadata': {
                 "retentionPeriod": 10,
                 "archiveDate": int(archive_date.timestamp()),
-                "publishDate": int(publish_date.timestamp()),
                 "responsibleEmail": self.responsible_email,
                 "publicationBacklink": self.publication_backlink,
                 "schema": {
@@ -41,12 +38,25 @@ class RadarMetadata(object):
                 }
             },
             'descriptiveMetadata': {
-                'title': self.data['name'],
-                'productionYear': production_year.year,
-                'publicationYear': publish_date.year,
                 'language': 'ENG'
             }
         }
+
+        if 'identifier' in self.data and isinstance(self.data['identifier'], list):
+            for identifier in self.data['identifier']:
+                if identifier.get('propertyID') == 'RADAR':
+                    radar_json['id'] = identifier['value']
+
+        if 'name' in self.data:
+            radar_json['descriptiveMetadata']['title'] = self.data['name']
+
+        if 'dateModified' in self.data:
+            production_year = datetime.strptime(self.data.get('dateModified'), '%Y-%m-%d')
+            publish_date = datetime.strptime(self.data['dateModified'], '%Y-%m-%d')
+
+            radar_json['technicalMetadata']['publishDate'] = int(publish_date.timestamp())
+            radar_json['descriptiveMetadata']['productionYear'] = production_year.year
+            radar_json['descriptiveMetadata']['publicationYear'] = publish_date.year
 
         if 'sameAs' in self.data:
             radar_json['descriptiveMetadata']['alternateIdentifiers'] = {
@@ -70,16 +80,18 @@ class RadarMetadata(object):
             radar_json['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []
             }
-            radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
-                'value': self.data['referencePublication'].replace(self.doi_prefix, ''),
-                'relatedIdentifierType': 'DOI',
-                'relationType': self.radar_value('IsDocumentedBy')
-            })
-            radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
-                'value': self.data['codeRepository'],
-                'relatedIdentifierType': 'URL',
-                'relationType': self.radar_value('IsSupplementTo')  # like zenodo does it
-            })
+            if 'referencePublication' in self.data and self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
+                radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                    'value': self.data['referencePublication']['@id'].replace(self.doi_prefix, ''),
+                    'relatedIdentifierType': 'DOI',
+                    'relationType': self.radar_value('IsDocumentedBy')
+                })
+            if 'codeRepository' in self.data:
+                radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                    'value': self.data['codeRepository'],
+                    'relatedIdentifierType': 'URL',
+                    'relationType': self.radar_value('IsSupplementTo')  # like zenodo does it
+                })
 
         if 'author' in self.data:
             radar_json['descriptiveMetadata']['creators'] = {

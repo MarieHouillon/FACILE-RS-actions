@@ -3,8 +3,6 @@ from datetime import datetime
 
 import yaml
 
-from ..http import fetch_json
-
 logger = logging.getLogger(__file__)
 
 
@@ -37,6 +35,9 @@ class CffMetadata(object):
         if 'description' in self.data:
             cff_json['abstract'] = self.data['description']
 
+        if '@id' in self.data and self.data['@id'].startswith(self.doi_prefix):
+            cff_json['doi'] = self.data['@id'].replace(self.doi_prefix, '')
+
         if 'sameAs' in self.data:
             cff_json['url'] = self.data['sameAs']
 
@@ -63,12 +64,6 @@ class CffMetadata(object):
                 if cff_author:
                     cff_json['authors'].append(cff_author)
 
-        if '@id' in self.data and self.data['@id'].startswith(self.doi_prefix):
-            cff_json['identifier'] = {
-                'type': 'doi',
-                'value': self.data['@id']
-            }
-
         if 'dateModified' in self.data:
             cff_json['date-released'] = datetime.strptime(self.data['dateModified'], '%Y-%m-%d').date()
 
@@ -84,43 +79,45 @@ class CffMetadata(object):
 
         if 'referencePublication' in self.data:
             cff_json['preferred-citation'] = {}
-            if self.data['referencePublication'].startswith(self.doi_prefix):
-                doi_metadata = fetch_json(self.data['referencePublication'])
 
-                if 'type' in doi_metadata:
-                    cff_json['preferred-citation']['type'] = doi_metadata['type']
+            if 'type' in self.data['referencePublication']:
+                if self.data['referencePublication'] == 'ScholarlyArticle':
+                    cff_json['preferred-citation']['type'] = 'article'
 
-                cff_json['preferred-citation']['doi'] = self.data['referencePublication'].replace(self.doi_prefix, '')
+            if '@id' in self.data['referencePublication'] and self.data['referencePublication']['@id'].startswith(self.doi_prefix):
+                cff_json['preferred-citation']['doi'] = self.data['referencePublication']['@id'].replace(self.doi_prefix, '')
 
-                if 'title' in doi_metadata:
-                    cff_json['preferred-citation']['title'] = doi_metadata['title']
+            if 'name' in self.data['referencePublication']:
+                cff_json['preferred-citation']['title'] = self.data['referencePublication']['name']
 
-                if 'author' in doi_metadata:
-                    cff_json['preferred-citation']['authors'] = []
-                    for doi_author in doi_metadata['author']:
-                        cff_citation_author = {}
+            if 'author' in self.data['referencePublication']:
+                cff_json['preferred-citation']['authors'] = []
+                for author in self.data['referencePublication']['author']:
+                    cff_citation_author = {}
 
-                        if 'family' in doi_author:
-                            cff_citation_author['family-names'] = doi_author['family']
+                    if 'familyName' in author:
+                        cff_citation_author['family-names'] = author['familyName']
 
-                        if 'given' in doi_author:
-                            cff_citation_author['given-names'] = doi_author['given']
+                    if 'givenName' in author:
+                        cff_citation_author['given-names'] = author['givenName']
 
-                        if 'ORCID' in doi_author:
-                            cff_citation_author['orcid'] = doi_author['ORCID']
+                    if '@id' in author and author['@id'].startswith(self.orcid_prefix):
+                        cff_citation_author['orcid'] = author['@id'].replace(self.orcid_prefix, '')
 
-                        cff_json['preferred-citation']['authors'].append(cff_citation_author)
+                    cff_json['preferred-citation']['authors'].append(cff_citation_author)
 
-                if 'container-title' in doi_metadata:
-                    cff_json['preferred-citation']['journal'] = doi_metadata['container-title']
+            if 'isPartOf' in self.data['referencePublication']:
+                if 'isPartOf' in self.data['referencePublication']['isPartOf']:
+                    if 'name' in self.data['referencePublication']['isPartOf']['isPartOf']:
+                        cff_json['preferred-citation']['journal'] = self.data['referencePublication']['isPartOf']['isPartOf']['name']
 
-                if 'published' in doi_metadata:
-                    cff_json['preferred-citation']['year'] = doi_metadata['published']['date-parts'][0][0]
+                if 'volumeNumber' in self.data['referencePublication']['isPartOf']:
+                    cff_json['preferred-citation']['volume'] = int(self.data['referencePublication']['isPartOf']['volumeNumber'])
 
-                if 'volume' in doi_metadata:
-                    cff_json['preferred-citation']['volume'] = int(doi_metadata['volume'])
+                if 'datePublished' in self.data['referencePublication']['isPartOf']:
+                    cff_json['preferred-citation']['year'] = int(self.data['referencePublication']['isPartOf']['datePublished'])
 
-                if 'page' in doi_metadata:
-                    cff_json['preferred-citation']['page'] = int(doi_metadata['page'])
+            if 'pageStart' in self.data['referencePublication']:
+                cff_json['preferred-citation']['page'] = int(self.data['referencePublication']['pageStart'])
 
         return yaml.dump(cff_json, allow_unicode=True, sort_keys=False, default_flow_style=False)

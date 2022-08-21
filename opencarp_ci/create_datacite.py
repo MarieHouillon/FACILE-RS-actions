@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import argparse
-from datetime import date
 from pathlib import Path
 
 from .utils import settings
@@ -10,16 +9,12 @@ from .utils.metadata import CodemetaMetadata, DataciteMetadata
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--metadata-location', dest='metadata_locations', action='append', default=[],
-                        help='Locations of the codemeta JSON files')
+    parser.add_argument('--codemeta-location', dest='codemeta_location',
+                        help='Locations of the main codemeta.json JSON file')
     parser.add_argument('--creators-location', dest='creators_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional contributors')
-    parser.add_argument('--version', dest='version',
-                        help='Version of the resource')
-    parser.add_argument('--issued', dest='issued',
-                        help='Date for the Issued field and publication year (format: \'%%Y-%%m-%%d\')')
     parser.add_argument('--datacite-path', dest='datacite_path',
                         help='Path to the DataCite XML output file')
     parser.add_argument('--log-level', dest='log_level',
@@ -28,18 +23,16 @@ def main():
                         help='Path to the log file')
 
     settings.setup(parser, validate=[
-        'METADATA_LOCATIONS'
+        'CODEMETA_LOCATION'
     ])
 
     codemeta = CodemetaMetadata()
-    codemeta.fetch(settings.METADATA_LOCATIONS)
+    codemeta.fetch(settings.CODEMETA_LOCATION)
     codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
     codemeta.compute_names()
     codemeta.remove_doubles()
     codemeta.sort_persons()
-    codemeta.data['dateModified'] = settings.ISSUED or date.today().strftime('%Y-%m-%d')
-    codemeta.data['version'] = settings.VERSION
 
     datacite_metadata = DataciteMetadata(codemeta.data)
     datacite_xml = datacite_metadata.to_xml()
