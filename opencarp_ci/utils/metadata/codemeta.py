@@ -74,6 +74,5 @@ class CodemetaMetadata(object):
         if 'contributor' in self.data:
             self.data['contributor'] = sorted(self.data['contributor'], key=get_key)
 
-    def write(self, location):
-        with open(Path(location).expanduser(), 'w') as fp:
-            json.dump(self.data, fp, indent=2)
+    def to_json(self):
+        return json.dumps(self.data, indent=2, ensure_ascii=False)

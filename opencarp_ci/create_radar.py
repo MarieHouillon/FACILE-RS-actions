@@ -85,7 +85,7 @@ def main():
     codemeta.data['name'] = '{name} ({version})'.format(**codemeta.data)  # override name/title to include version
 
     radar_metadata = RadarMetadata(codemeta.data, settings.RADAR_EMAIL, settings.RADAR_BACKLINK)
-    radar_json = radar_metadata.to_json()
+    radar_dict = radar_metadata.as_dict()
 
     # collect assets
     fetch_files(settings.ASSETS, radar_path)
@@ -96,10 +96,10 @@ def main():
                                     settings.RADAR_REDIRECT_URL, settings.RADAR_USERNAME, settings.RADAR_PASSWORD)
 
         # update or create radar dataset
-        if radar_json.get('id'):
-            dataset_id = update_radar_dataset(settings.RADAR_URL, radar_json.get('id'), headers, radar_json)
+        if radar_dict.get('id'):
+            dataset_id = update_radar_dataset(settings.RADAR_URL, radar_dict.get('id'), headers, radar_dict)
         else:
-            dataset_id = create_radar_dataset(settings.RADAR_URL, settings.RADAR_WORKSPACE_ID, headers, radar_json)
+            dataset_id = create_radar_dataset(settings.RADAR_URL, settings.RADAR_WORKSPACE_ID, headers, radar_dict)
 
         # upload assets
         upload_radar_assets(settings.RADAR_URL, dataset_id, headers, settings.ASSETS, radar_path)

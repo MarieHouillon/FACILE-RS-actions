@@ -27,10 +27,10 @@ def fetch_radar_token(radar_url, client_id, client_secret, redirect_url, usernam
     }
 
 
-def create_radar_dataset(radar_url, workspace_id, headers, radar_json):
+def create_radar_dataset(radar_url, workspace_id, headers, radar_dict):
     url = radar_url + '/radar/api/workspaces/{}/datasets'.format(workspace_id)
     try:
-        response = requests.post(url, headers=headers, json=radar_json)
+        response = requests.post(url, headers=headers, json=radar_dict)
         response.raise_for_status()
         logger.debug('response = %s', response.json())
         return response.json()['id']
@@ -57,10 +57,10 @@ def prepare_radar_dataset(radar_url, dataset_id, headers):
         raise e
 
 
-def update_radar_dataset(radar_url, dataset_id, headers, radar_json):
+def update_radar_dataset(radar_url, dataset_id, headers, radar_dict):
     url = radar_url + '/radar/api/datasets/{}'.format(dataset_id)
     try:
-        response = requests.put(url, headers=headers, json=radar_json)
+        response = requests.put(url, headers=headers, json=radar_dict)
         response.raise_for_status()
         logger.debug('response = %s', response.json())
         return response.json()['id']

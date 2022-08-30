@@ -22,11 +22,11 @@ class RadarMetadata(object):
         # converts CamelCase to all caps and underscores, e.g. HostingInstitution -> HOSTING_INSTITUTION
         return '_'.join([s.upper() for s in re.findall('([A-Z][a-z]+)', string)])
 
-    def to_json(self):
+    def as_dict(self):
         # prepare radar payload
         archive_date = datetime.utcnow()
 
-        radar_json = {
+        radar_dict = {
             'technicalMetadata': {
                 "retentionPeriod": 10,
                 "archiveDate": int(archive_date.timestamp()),
@@ -45,56 +45,56 @@ class RadarMetadata(object):
         if 'identifier' in self.data and isinstance(self.data['identifier'], list):
             for identifier in self.data['identifier']:
                 if identifier.get('propertyID') == 'RADAR':
-                    radar_json['id'] = identifier['value']
+                    radar_dict['id'] = identifier['value']
 
         if 'name' in self.data:
-            radar_json['descriptiveMetadata']['title'] = self.data['name']
+            radar_dict['descriptiveMetadata']['title'] = self.data['name']
 
         if 'dateModified' in self.data:
             production_year = datetime.strptime(self.data.get('dateModified'), '%Y-%m-%d')
             publish_date = datetime.strptime(self.data['dateModified'], '%Y-%m-%d')
 
-            radar_json['technicalMetadata']['publishDate'] = int(publish_date.timestamp())
-            radar_json['descriptiveMetadata']['productionYear'] = production_year.year
-            radar_json['descriptiveMetadata']['publicationYear'] = publish_date.year
+            radar_dict['technicalMetadata']['publishDate'] = int(publish_date.timestamp())
+            radar_dict['descriptiveMetadata']['productionYear'] = production_year.year
+            radar_dict['descriptiveMetadata']['publicationYear'] = publish_date.year
 
         if 'sameAs' in self.data:
-            radar_json['descriptiveMetadata']['alternateIdentifiers'] = {
+            radar_dict['descriptiveMetadata']['alternateIdentifiers'] = {
                 'alternateIdentifier': []
             }
-            radar_json['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
+            radar_dict['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
                 'value': self.data['sameAs'],
                 'alternateIdentifierType': 'URL'
             })
 
         if 'downloadUrl' in self.data:
-            radar_json['descriptiveMetadata']['alternateIdentifiers'] = {
+            radar_dict['descriptiveMetadata']['alternateIdentifiers'] = {
                 'alternateIdentifier': []
             }
-            radar_json['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
+            radar_dict['descriptiveMetadata']['alternateIdentifiers']['alternateIdentifier'].append({
                 'value': self.data['downloadUrl'],
                 'alternateIdentifierType': 'URL'
             })
 
         if any(key in self.data for key in ['referencePublication', 'codeRepository']):
-            radar_json['descriptiveMetadata']['relatedIdentifiers'] = {
+            radar_dict['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []
             }
             if 'referencePublication' in self.data and self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
-                radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                radar_dict['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
                     'value': self.data['referencePublication']['@id'].replace(self.doi_prefix, ''),
                     'relatedIdentifierType': 'DOI',
                     'relationType': self.radar_value('IsDocumentedBy')
                 })
             if 'codeRepository' in self.data:
-                radar_json['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
+                radar_dict['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
                     'value': self.data['codeRepository'],
                     'relatedIdentifierType': 'URL',
                     'relationType': self.radar_value('IsSupplementTo')  # like zenodo does it
                 })
 
         if 'author' in self.data:
-            radar_json['descriptiveMetadata']['creators'] = {
+            radar_dict['descriptiveMetadata']['creators'] = {
                 'creator': []
             }
 
@@ -122,10 +122,10 @@ class RadarMetadata(object):
                         if 'name' in affiliation:
                             radar_creator['creatorAffiliation'] = affiliation['name']
 
-                    radar_json['descriptiveMetadata']['creators']['creator'].append(radar_creator)
+                    radar_dict['descriptiveMetadata']['creators']['creator'].append(radar_creator)
 
         if 'contributors' in self.data:
-            radar_json['descriptiveMetadata']['contributors'] = {
+            radar_dict['descriptiveMetadata']['contributors'] = {
                 'contributor': []
             }
 
@@ -152,22 +152,22 @@ class RadarMetadata(object):
                             if 'name' in affiliation:
                                 radar_contributor['contributorAffiliation'] = affiliation['name']
 
-                radar_json['descriptiveMetadata']['contributors']['contributor'].append(radar_contributor)
+                radar_dict['descriptiveMetadata']['contributors']['contributor'].append(radar_contributor)
 
         if 'alternateName' in self.data:
-            radar_json['descriptiveMetadata']['additionalTitles'] = {
+            radar_dict['descriptiveMetadata']['additionalTitles'] = {
                 'additionalTitle': []
             }
-            radar_json['descriptiveMetadata']['additionalTitles']['additionalTitle'].append({
+            radar_dict['descriptiveMetadata']['additionalTitles']['additionalTitle'].append({
                 'value': self.data['alternateName'],
                 'additionalTitleType': self.radar_value('AlternativeTitle')
             })
 
         if 'description' in self.data:
-            radar_json['descriptiveMetadata']['descriptions'] = {
+            radar_dict['descriptiveMetadata']['descriptions'] = {
                 'description': []
             }
-            radar_json['descriptiveMetadata']['descriptions']['description'].append({
+            radar_dict['descriptiveMetadata']['descriptions']['description'].append({
                 'value': self.data['description'],
                 'descriptionType': self.radar_value('Abstract')
             })
@@ -186,48 +186,48 @@ class RadarMetadata(object):
                         subjects.append(keyword['name'])
 
             if keywords:
-                radar_json['descriptiveMetadata']['keywords'] = {
+                radar_dict['descriptiveMetadata']['keywords'] = {
                     'keyword': []
                 }
                 for keyword in keywords:
-                    radar_json['descriptiveMetadata']['keywords']['keyword'].append(keyword)
+                    radar_dict['descriptiveMetadata']['keywords']['keyword'].append(keyword)
 
             if subjects:
-                radar_json['descriptiveMetadata']['subjectAreas'] = {
+                radar_dict['descriptiveMetadata']['subjectAreas'] = {
                     'subjectArea': []
                 }
                 for subject in subjects:
-                    radar_json['descriptiveMetadata']['subjectAreas']['subjectArea'].append({
+                    radar_dict['descriptiveMetadata']['subjectAreas']['subjectArea'].append({
                         'controlledSubjectAreaName': self.radar_value(subject)
                     })
 
         if 'publisher' in self.data and 'name' in self.data['publisher']:
-            radar_json['descriptiveMetadata']['publishers'] = {
+            radar_dict['descriptiveMetadata']['publishers'] = {
                 'publisher': [self.data['publisher']['name']]
             }
 
         if 'applicationCategory' in self.data:
-            radar_json['descriptiveMetadata']['resource'] = {
+            radar_dict['descriptiveMetadata']['resource'] = {
                 'value': self.data['applicationCategory']
             }
             if self.data.get('@type') == 'SoftwareSourceCode':
-                radar_json['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
+                radar_dict['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
 
         if 'license' in self.data and 'name' in self.data['license']:
-            radar_json['descriptiveMetadata']['rights'] = {
+            radar_dict['descriptiveMetadata']['rights'] = {
                 'controlledRights': 'OTHER',
                 'additionalRights': self.data['license']['name']
             }
 
         if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
-            radar_json['descriptiveMetadata']['rightsHolders'] = {
+            radar_dict['descriptiveMetadata']['rightsHolders'] = {
                 'rightsHolder': [
                     self.data['copyrightHolder']['name']
                 ]
             }
 
         if 'funding' in self.data:
-            radar_json['descriptiveMetadata']['fundingReferences'] = {
+            radar_dict['descriptiveMetadata']['fundingReferences'] = {
                 'fundingReference': []
             }
             for funding in self.data['funding']:
@@ -250,7 +250,7 @@ class RadarMetadata(object):
                 if 'name' in funding:
                     radar_funding_reference['awardTitle'] = funding['name']
 
-                radar_json['descriptiveMetadata']['fundingReferences']['fundingReference'].append(radar_funding_reference)
+                radar_dict['descriptiveMetadata']['fundingReferences']['fundingReference'].append(radar_funding_reference)
 
-        logger.debug('radar_json = %s', json.dumps(radar_json, indent=2))
-        return radar_json
+        logger.debug('radar_dict = %s', json.dumps(radar_dict, indent=2))
+        return radar_dict

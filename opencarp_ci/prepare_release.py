@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 from datetime import date
+from pathlib import Path
 
 from .utils import settings
 from .utils.metadata import CodemetaMetadata
@@ -33,7 +34,7 @@ def main():
     if 'dateModified' in codemeta.data:
         codemeta.data['dateModified'] = settings.DATE or date.today().strftime('%Y-%m-%d')
 
-    codemeta.write(settings.CODEMETA_LOCATION)
+    Path(settings.CODEMETA_LOCATION).expanduser().write_text(codemeta.to_json())
 
 
 if __name__ == "__main__":
