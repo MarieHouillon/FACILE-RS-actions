@@ -7,6 +7,7 @@ This HowTo will guide you through
  * archiving your release on a RADAR repository
 
 ## Prepare your codemeta file
+You'll need your metadata prepared in a [codemeta.json](https://codemeta.github.io/create/) file. If you used [KIT's cookiecutter template](https://git.scc.kit.edu/ak-open-source-software/cookiecutter-kittemplate), you should be good to go already.
 
 
 ## GitLab Continuous Integration environment
