@@ -3,12 +3,12 @@
 This package contains a set of Python scripts, which can be used to perform tasks around the archival and long term preservation of software repositories. In particular, it can be used to:
 
 * create a release in GitLab using the GitLab API,
-* create a DataCite record based on different YAML files present in the repository,
+* create a DataCite record based on codemeta files present in repositories,
 * create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) format.
 * archive the software using the [RADAR service](https://www.radar-service.eu),
 * use content from markdown files, bibtex files, or python docstrings to create web pages in a [Grav CMS](https://getgrav.org/).
 
-The scripts where created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used with the GitLab CI to run automatically run on each push to a repository, or when a tag is created.
+The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used with the GitLab CI to run automatically run on each push to a repository, or when a tag is created.
 
 
 ## Setup

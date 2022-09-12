@@ -32,8 +32,6 @@ def main():
                         help='Client ID for the RADAR service.')
     parser.add_argument('--radar-client-secret', dest='radar_client_secret',
                         help='Client secret for the RADAR service.')
-    parser.add_argument('--radar-contract-id', dest='radar_contract_id',
-                        help='Contract ID for the RADAR service.')
     parser.add_argument('--radar-workspace-id', dest='radar_workspace_id',
                         help='Workspace ID for the RADAR service.')
     parser.add_argument('--radar-redirect-url', dest='radar_redirect_url',
@@ -62,7 +60,6 @@ def main():
         'RADAR_REDIRECT_URL',
         'RADAR_USERNAME',
         'RADAR_PASSWORD',
-        'RADAR_CONTRACT_ID',
         'RADAR_WORKSPACE_ID',
         'RADAR_EMAIL',
         'RADAR_BACKLINK'
