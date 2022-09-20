@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 
 from .utils import settings
-from .utils.metadata import CodemetaMetadata, DataciteMetadata
+from .utils.metadata import CodemetaMetadata, CffMetadata
 
 
 def main():
@@ -15,8 +15,8 @@ def main():
                         help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional contributors')
-    parser.add_argument('--datacite-path', dest='datacite_path',
-                        help='Path to the DataCite XML output file')
+    parser.add_argument('--cff-path', dest='cff_path',
+                        help='Path to the cff output file')
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
@@ -34,13 +34,13 @@ def main():
     codemeta.remove_doubles()
     codemeta.sort_persons()
 
-    datacite_metadata = DataciteMetadata(codemeta.data)
-    datacite_xml = datacite_metadata.to_xml()
+    cff_metadata = CffMetadata(codemeta.data)
+    cff_yaml = cff_metadata.to_yaml()
 
-    if settings.DATACITE_PATH:
-        Path(settings.DATACITE_PATH).expanduser().write_text(datacite_xml)
+    if settings.CFF_PATH:
+        Path(settings.CFF_PATH).expanduser().write_text(cff_yaml)
     else:
-        print(datacite_xml)
+        print(cff_yaml)
 
 
 if __name__ == "__main__":

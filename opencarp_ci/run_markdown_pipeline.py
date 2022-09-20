@@ -5,6 +5,7 @@ from pathlib import Path
 
 import frontmatter
 import yaml
+import json
 
 from .utils import settings
 from .utils.grav import collect_pages
@@ -37,7 +38,13 @@ def main():
         source_path = Path(settings.PIPELINE_SOURCE).expanduser() / source
 
         # read the source file
-        if source_path.suffix in ['.yml', '.yaml']:
+        if source_path.suffix in ['.json']:
+            data = json.loads(source_path.read_text())
+            if source_path.name == 'codemeta.json':
+                page.metadata['codemeta'] = data
+            else:
+                page.metadata['items'] = data
+        elif source_path.suffix in ['.yml', '.yaml']:
             page.metadata['items'] = yaml.safe_load(source_path.read_text())
         else:
             page.content = source_path.read_text()

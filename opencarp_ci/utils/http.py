@@ -1,3 +1,4 @@
+import json
 import logging
 import shutil
 from pathlib import Path
@@ -25,30 +26,32 @@ def fetch_files(locations, path):
             shutil.copyfile(location, target)
 
 
-def fetch_list(locations):
-    data = []
-    for location in locations:
-        for obj in fetch_yaml(location):
-            if obj not in data:
-                data.append(obj)
-    return data
-
-
-def fetch_dict(locations):
-    data = {}
-    for location in locations:
-        data.update(fetch_yaml(location))
-    return data
-
-
-def fetch_yaml(location):
-    if urlparse(location).scheme:
+def fetch_dict(location):
+    parsed_url = urlparse(location)
+    if parsed_url.scheme:
         logger.debug('location = %s', location)
 
         response = requests.get(location)
         response.raise_for_status()
-        return yaml.safe_load(response.text)
-    else:
 
+        if parsed_url.path.endswith('.json'):
+            return json.loads(response.text)
+        elif parsed_url.path.endswith('.yml') or parsed_url.path.endswith('.yaml'):
+            return yaml.safe_load(response.text)
+        else:
+            raise RuntimeError('{} is not a JSON or YAML file.')
+    else:
+        path = Path(location).expanduser()
         with open(Path(location).expanduser()) as f:
-            return yaml.safe_load(f.read())
+            if path.suffix == '.json':
+                return json.load(f)
+            elif path.suffix in ['.yml', '.yaml']:
+                return yaml.safe_load(f.read())
+            else:
+                raise RuntimeError('{} is not a JSON or YAML file.')
+
+
+def fetch_json(location):
+    response = requests.get(location, headers={'Accept': 'application/json'})
+    response.raise_for_status()
+    return response.json()
