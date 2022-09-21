@@ -5,5 +5,5 @@
   files: codemeta.json
   pass_filenames: false
   args:
-  - '--metadata-location=codemeta.json'
+  - '--codemeta-location=codemeta.json'
   - '--cff-path=CITATION.cff'
