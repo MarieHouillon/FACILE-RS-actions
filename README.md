@@ -154,6 +154,7 @@ optional arguments:
 ### create_radar
 
 Creates an archive in the [RADAR service](https://www.radar-service.eu) and upload the assets provided as positional arguments. The metadata is created similar to `create_datacite`.
+A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
 
 ```
 usage: create_radar [-h] [--metadata-location METADATA_LOCATIONS]
@@ -219,6 +220,8 @@ Copies the content of markdown files in the `PIPELINE_SOURCE` to a Grav CMS repo
 The pages need to be already existing in Grav and contain a `pipeline` and a `source` field in their frontmatter. The script will find all pages which match the provided `PIPELINE` and will overwrite content part of the page with the markdown file given by `source`.
 
 After running the script, the changes to the Grav CMS repository can be committed and pushed and the Git-Sync Plugin will update the public pages.
+
+Twig templates digesting the metadata can be found in the file `Twig_templates.md` in this directory.
 
 ```
 usage: run_markdown_pipeline [-h] [--grav-path GRAV_PATH] [--pipeline PIPELINE]
