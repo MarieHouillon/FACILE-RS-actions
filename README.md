@@ -10,6 +10,8 @@ This package contains a set of Python scripts, which can be used to perform task
 
 The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used with the GitLab CI to run automatically run on each push to a repository, or when a tag is created.
 
+An example integration in a CI environment can be found in the [openCARP CI file](https://git.opencarp.org/openCARP/openCARP/-/blob/master/.gitlab-ci.yml) and the [included subscripts](https://git.opencarp.org/openCARP/openCARP/-/tree/master/.gitlab/ci).
+
 
 ## Setup
 
@@ -47,6 +49,7 @@ The following scripts are included:
 ### create_release
 
 Creates a release in GitLab using the GitLab API. A tag for the release needs to be created before and provided to the script.
+An example output can be found [here](https://git.opencarp.org/openCARP/openCARP/-/releases).
 
 ```
 usage: create_release [-h] [--release-tag RELEASE_TAG]
@@ -76,12 +79,12 @@ optional arguments:
 
 ### create_datacite
 
-Creates a DataCite XML file following the [DataCite Metadata Schema 4.3](https://schema.datacite.org/meta/kernel-4.3/). The information needed for this can be taken from (a list) of locations given as URL or local file path. `METADATA_LOCATIONS` must point to YAML files following an adaptation of [DataCite JSON](https://github.com/datacite/schema/tree/master/source/json/kernel-4.3). `CREATORS_LOCATIONS` and `CONTRIBUTORS_LOCATIONS` point to similar files which contain a list of `creators` or `contributors`, repectively.
+Creates a DataCite XML file following the [DataCite Metadata Schema 4.3](https://schema.datacite.org/meta/kernel-4.3/). The information needed for this can be taken from (a list) of locations given as URL or local file path. `CODEMETA_LOCATION` must point to a [codemeta.json](https://codemeta.github.io) file. `CREATORS_LOCATIONS` and `CONTRIBUTORS_LOCATIONS` point to similar files which contain a list of `creators` or `contributors`, repectively.
 
-For examples, see https://git.opencarp.org/openCARP/openCARP/blob/master/METADATA.yml and https://git.opencarp.org/openCARP/openCARP/blob/master/CONTRIBUTORS.yml.
+For an example, see [here](https://git.opencarp.org/openCARP/openCARP/blob/master/codemeta.json).
 
 ```
-usage: create_datacite [-h] [--metadata-location METADATA_LOCATIONS]
+usage: create_datacite [-h] [--codemeta-location CODEMETA_LOCATION]
                        [--creators-location CREATORS_LOCATIONS]
                        [--contributors-location CONTRIBUTORS_LOCATIONS] [--version VERSION]
                        [--issued ISSUED] [--datacite-path DATACITE_PATH]
@@ -89,8 +92,8 @@ usage: create_datacite [-h] [--metadata-location METADATA_LOCATIONS]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --metadata-location METADATA_LOCATIONS
-                        Locations of the metadata YAML files
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the codemeta.json file
   --creators-location CREATORS_LOCATIONS
                         Locations of the creators YAML files
   --contributors-location CONTRIBUTORS_LOCATIONS
@@ -157,7 +160,7 @@ Creates an archive in the [RADAR service](https://www.radar-service.eu) and uplo
 A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
 
 ```
-usage: create_radar [-h] [--metadata-location METADATA_LOCATIONS]
+usage: create_radar [-h] [--codemeta-location CODEMETA_LOCATION]
                     [--creators-location CREATORS_LOCATIONS]
                     [--contributors-location CONTRIBUTORS_LOCATIONS] [--version VERSION]
                     [--issued ISSUED] [--radar-path RADAR_PATH] [--radar-url RADAR_URL]
@@ -176,8 +179,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --metadata-location METADATA_LOCATIONS
-                        Locations of the metadata YAML files
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the codemeta.json file
   --creators-location CREATORS_LOCATIONS
                         Locations of the creators YAML files
   --contributors-location CONTRIBUTORS_LOCATIONS
@@ -217,11 +220,12 @@ optional arguments:
 
 Copies the content of markdown files in the `PIPELINE_SOURCE` to a Grav CMS repository given by `GRAV_PATH`. The Grav repository is created by the [Git-Sync Plugin](https://getgrav.org/blog/git-sync-plugin).
 
-The pages need to be already existing in Grav and contain a `pipeline` and a `source` field in their frontmatter. The script will find all pages which match the provided `PIPELINE` and will overwrite content part of the page with the markdown file given by `source`.
+The pages need to be already existing in Grav and contain a `pipeline` and a `source` field in their frontmatter. The script will find all pages which match the provided `PIPELINE` and will overwrite content part of the page with the markdown file given by `source`. If source is `codemeta.json`, the content will be added to the frontmatter entry `codemeta` rather than overwriting the page content. Twig templates digesting the metadata can be found in the file `Twig_templates.md` in this directory.
 
 After running the script, the changes to the Grav CMS repository can be committed and pushed and the Git-Sync Plugin will update the public pages.
 
-Twig templates digesting the metadata can be found in the file `Twig_templates.md` in this directory.
+See [openCARP citation info](https://opencarp.org/download/citation) or [code of conduct](https://opencarp.org/community/code-of-conduct) for examples.
+
 
 ```
 usage: run_markdown_pipeline [-h] [--grav-path GRAV_PATH] [--pipeline PIPELINE]
