@@ -1,0 +1,5 @@
+repos:
+-   repo: https://git.opencarp.org/openCARP/openCARP-CI
+    rev: v1.3
+    hooks:
+    - id: create_cff
