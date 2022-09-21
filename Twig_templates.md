@@ -5,7 +5,7 @@ The following [Twig](https://twig.symfony.com/doc/3.x/) templates can be used to
 ## Modular
 ### citation.twig.html
 Based on the `text` modular. See [here](https://opencarp.org/download/citation) for an example.
-``
+````
 {% set grid_size = theme_var('grid-size') %}
 
 <section class="section modular-text {{ page.header.class}}">
@@ -14,8 +14,8 @@ Based on the `text` modular. See [here](https://opencarp.org/download/citation) 
             <div class="column col-12">
                 {{ content|raw }}{% markdown %}
 		! *{% for author in page.header.codemeta.referencePublication.author|slice(0, 3) %}{{ author.givenName }} {{ author.familyName }}{% if not loop.last %}, {% endif %}{% endfor %} {% if page.header.codemeta.referencePublication.author|length > 3 %} et al{% endif %}. {{ page.header.codemeta.referencePublication.name }}. {{ page.header.codemeta.referencePublication.isPartOf.isPartOf.name }} {{ page.header.codemeta.referencePublication.isPartOf.datePublished }};{{page.header.codemeta.referencePublication.isPartOf.volumeNumber }}:{{page.header.codemeta.referencePublication.pageStart}}. [doi:{{ page.header.codemeta.referencePublication['@id']|replace({'https://doi.org/': ""}) }}]({{ page.header.codemeta.referencePublication['@id'] }})*
-			
-		```bibtex
+		
+        ```bibtex
 @article{{ '{' }}{{ page.header.codemeta.name }}-paper,
 	author = {{ '{' }}{% for author in page.header.codemeta.referencePublication.author %}{{ author.familyName }}, {{ author.givenName }}{% if not loop.last %} and {% endif %}{% endfor %}},
 	title = {{ '{' }}{{ page.header.codemeta.referencePublication.name|replace({'openCARP': "{openCARP}"}) }}},
@@ -40,11 +40,11 @@ Based on the `text` modular. See [here](https://opencarp.org/download/citation) 
         </div>
     </section>
 </section>
-``
+```
 
 ### contributors.twig.html
 Based on the `text` modular. See [here](https://opencarp.org/community/contributors) for an example.
-``
+```
 {% set grid_size = theme_var('grid-size') %}
 
 <section class="section modular-text {{ page.header.class}}">
@@ -72,6 +72,6 @@ Based on the `text` modular. See [here](https://opencarp.org/community/contribut
         </div>
     </section>
 </section>
-``
+```
 
 
