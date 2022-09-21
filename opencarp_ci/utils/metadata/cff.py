@@ -102,10 +102,10 @@ class CffMetadata(object):
                     cff_json['preferred-citation']['year'] = int(self.data['referencePublication']['isPartOf']['datePublished'])
 
             if 'pageStart' in self.data['referencePublication']:
-                cff_json['preferred-citation']['page'] = self.data['referencePublication']['pageStart']
+                cff_json['preferred-citation']['pages'] = self.data['referencePublication']['pageStart']
             
             if 'pageEnd' in self.data['referencePublication']:
-                cff_json['preferred-citation']['page'] += "-" + self.data['referencePublication']['pageEnd']
+                cff_json['preferred-citation']['pages'] += "-" + self.data['referencePublication']['pageEnd']
 
             if 'author' in self.data['referencePublication']:
                 cff_json['preferred-citation']['authors'] = []
