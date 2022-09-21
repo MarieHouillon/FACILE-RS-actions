@@ -9,7 +9,7 @@
   "dateModified": "2022-09-21",
   "alternateName": "openCARP Continuous Integration Toolkit",
   "applicationCategory": "Development tools",
-  "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories",
+  "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories.",
   "codeRepository": "https://git.opencarp.org/openCARP/openCARP-CI",  
   "license": {
     "@type": "CreativeWork",
