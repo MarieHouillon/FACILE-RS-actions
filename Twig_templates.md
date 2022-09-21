@@ -40,7 +40,7 @@ Based on the `text` modular. See [here](https://opencarp.org/download/citation) 
         </div>
     </section>
 </section>
-```
+````
 
 ### contributors.twig.html
 Based on the `text` modular. See [here](https://opencarp.org/community/contributors) for an example.
