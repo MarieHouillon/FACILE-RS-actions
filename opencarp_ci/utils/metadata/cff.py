@@ -44,6 +44,9 @@ class CffMetadata(object):
         if 'version' in self.data:
             cff_json['version'] = self.data['version']
 
+        if 'dateModified' in self.data:
+            cff_json['date-released'] = datetime.strptime(self.data['dateModified'], '%Y-%m-%d').date()
+
         if 'author' in self.data:
             cff_json['authors'] = []
             for author in self.data['author']:
@@ -64,9 +67,6 @@ class CffMetadata(object):
                 if cff_author:
                     cff_json['authors'].append(cff_author)
 
-        if 'dateModified' in self.data:
-            cff_json['date-released'] = datetime.strptime(self.data['dateModified'], '%Y-%m-%d').date()
-
         if 'license' in self.data:
             if 'name' in self.data['license']:
                 cff_json['license'] = self.data['license']['name']
@@ -80,8 +80,8 @@ class CffMetadata(object):
         if 'referencePublication' in self.data:
             cff_json['preferred-citation'] = {}
 
-            if 'type' in self.data['referencePublication']:
-                if self.data['referencePublication'] == 'ScholarlyArticle':
+            if '@type' in self.data['referencePublication']:
+                if self.data['referencePublication']['@type'] == 'ScholarlyArticle':
                     cff_json['preferred-citation']['type'] = 'article'
 
             if '@id' in self.data['referencePublication'] and self.data['referencePublication']['@id'].startswith(self.doi_prefix):
@@ -89,6 +89,20 @@ class CffMetadata(object):
 
             if 'name' in self.data['referencePublication']:
                 cff_json['preferred-citation']['title'] = self.data['referencePublication']['name']
+
+            if 'isPartOf' in self.data['referencePublication']:
+                if 'isPartOf' in self.data['referencePublication']['isPartOf']:
+                    if 'name' in self.data['referencePublication']['isPartOf']['isPartOf']:
+                        cff_json['preferred-citation']['journal'] = self.data['referencePublication']['isPartOf']['isPartOf']['name']
+
+                if 'volumeNumber' in self.data['referencePublication']['isPartOf']:
+                    cff_json['preferred-citation']['volume'] = int(self.data['referencePublication']['isPartOf']['volumeNumber'])
+
+                if 'datePublished' in self.data['referencePublication']['isPartOf']:
+                    cff_json['preferred-citation']['year'] = int(self.data['referencePublication']['isPartOf']['datePublished'])
+
+            if 'pageStart' in self.data['referencePublication']:
+                cff_json['preferred-citation']['page'] = int(self.data['referencePublication']['pageStart'])
 
             if 'author' in self.data['referencePublication']:
                 cff_json['preferred-citation']['authors'] = []
@@ -106,18 +120,19 @@ class CffMetadata(object):
 
                     cff_json['preferred-citation']['authors'].append(cff_citation_author)
 
-            if 'isPartOf' in self.data['referencePublication']:
-                if 'isPartOf' in self.data['referencePublication']['isPartOf']:
-                    if 'name' in self.data['referencePublication']['isPartOf']['isPartOf']:
-                        cff_json['preferred-citation']['journal'] = self.data['referencePublication']['isPartOf']['isPartOf']['name']
+        if 'identifier' in self.data:
+            cff_json['identifiers'] = []
+            for identifier in self.data['identifier']:
+                if 'propertyID' in identifier and identifier['propertyID'] == "DOI":
+                    cff_identifier = {}
+                    if 'title' in cff_json and 'version' in cff_json:
+                        cff_identifier['description'] = "This is the archived snapshot of version %s of %s"%(cff_json['version'], cff_json['title'])
+                    cff_identifier['type'] = 'doi'
+                    if 'value' in identifier:
+                        cff_identifier['value'] = identifier['value']
+                    cff_json['identifiers'].append(cff_identifier)
 
-                if 'volumeNumber' in self.data['referencePublication']['isPartOf']:
-                    cff_json['preferred-citation']['volume'] = int(self.data['referencePublication']['isPartOf']['volumeNumber'])
 
-                if 'datePublished' in self.data['referencePublication']['isPartOf']:
-                    cff_json['preferred-citation']['year'] = int(self.data['referencePublication']['isPartOf']['datePublished'])
 
-            if 'pageStart' in self.data['referencePublication']:
-                cff_json['preferred-citation']['page'] = int(self.data['referencePublication']['pageStart'])
 
         return yaml.dump(cff_json, allow_unicode=True, sort_keys=False, default_flow_style=False)
