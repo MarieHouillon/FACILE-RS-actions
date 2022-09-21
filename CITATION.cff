@@ -4,7 +4,7 @@ message: If you use this software, please cite the paper describing it as below.
 type: Software
 title: openCARP CI
 abstract: A set of Python scripts for tasks around the archival and long term preservation
-  of software repositories
+  of software repositories.
 version: v1.3
 date-released: 2022-09-21
 authors:
@@ -31,7 +31,7 @@ preferred-citation:
   journal: Bausteine Forschungsdatenmanagement
   volume: 2022
   year: 2022
-  page: 64
+  pages: 64-84
   authors:
   - family-names: Bach
     given-names: Felix
