@@ -15,7 +15,7 @@ def main():
     parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the repository.')
     parser.add_argument('--codemeta-location', dest='codemeta_location',
-                        help='Locations of the main codemeta.json JSON file')
+                        help='Location of the main codemeta.json JSON file')
     parser.add_argument('--creators-location', dest='creators_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional creators')
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],

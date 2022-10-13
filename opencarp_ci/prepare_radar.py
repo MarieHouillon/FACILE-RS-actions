@@ -10,7 +10,7 @@ from .utils.metadata import RadarMetadata, CodemetaMetadata
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--codemeta-location', dest='codemeta_location',
-                        help='Locations of the main codemeta.json JSON file')
+                        help='Location of the main codemeta.json JSON file')
     parser.add_argument('--radar-url', dest='radar_url',
                         help='URL of the RADAR service.')
     parser.add_argument('--radar-username', dest='radar_username',

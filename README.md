@@ -45,6 +45,32 @@ Enviroments variables can be set in the usual way, e.g. the `.gitlab-ci.yml` fil
 
 The following scripts are included:
 
+### create_cff
+
+Creates a [Citation File Format](https://citation-file-format.github.io) (CFF) file from your CodeMeta file.
+An example output can be found [here](https://git.opencarp.org/openCARP/openCARP/-/blob/master/CITATION.cff).
+
+```
+usage: create_cff     [-h] [--codemeta-location CODEMETA_LOCATION]
+                      [--creators-location CREATORS_LOCATION]
+                      [--contributors-location CONTRIBUTORS_LOCATION] 
+                      [--cff-path CFF_PATH] 
+                      [--log-level LOG_LEVEL] [--log-file LOG_FILE]
+                      
+optional arguments:
+  -h, --help            show this help message and exit
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the main codemeta.json JSON file
+  --creators-location CREATORS_LOCATIONS
+                        Locations of codemeta JSON files for additional creators
+  --contributors-location CONTRIBUTORS_LOCATIONS
+                        Locations of codemeta JSON files for additional contributors
+  --cff-path CFF_PATH
+                        Path to the cff output file
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
 
 ### create_release
 
@@ -93,11 +119,11 @@ usage: create_datacite [-h] [--codemeta-location CODEMETA_LOCATION]
 optional arguments:
   -h, --help            show this help message and exit
   --codemeta-location CODEMETA_LOCATION
-                        Location of the codemeta.json file
+                        Location of the maim codemeta.json file
   --creators-location CREATORS_LOCATIONS
-                        Locations of the creators YAML files
+                        Locations of codemeta JSON files for additional creators
   --contributors-location CONTRIBUTORS_LOCATIONS
-                        Locations of the contributors YAML files
+                        Locations of codemeta JSON files for additional contributors
   --version VERSION     Version of the resource
   --issued ISSUED       Date for the Issued field and publication year (format: '%Y-%m-%d')
   --datacite-path DATACITE_PATH
@@ -180,11 +206,11 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --codemeta-location CODEMETA_LOCATION
-                        Location of the codemeta.json file
+                        Location of the main codemeta.json file
   --creators-location CREATORS_LOCATIONS
-                        Locations of the creators YAML files
+                        Locations of codemeta JSON files for additional creators
   --contributors-location CONTRIBUTORS_LOCATIONS
-                        Locations of the contributors YAML files
+                        Locations of codemeta JSON files for additional contributors
   --version VERSION     Version of the resource
   --issued ISSUED       Date for the Issued field and publication year (format: '%Y-%m-%d')
   --radar-path RADAR_PATH
