@@ -218,11 +218,22 @@ class RadarMetadata(object):
                 'controlledRights': 'OTHER',
                 'additionalRights': self.data['license']['name']
             }
+        elif 'license' in self.data and isinstance(self.data['license'], str):
+            radar_dict['descriptiveMetadata']['rights'] = {
+                'controlledRights': 'OTHER',
+                'additionalRights': self.data['license']
+            }
 
         if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
                 'rightsHolder': [
                     self.data['copyrightHolder']['name']
+                ]
+            }
+        else
+            radar_dict['descriptiveMetadata']['rightsHolders'] = {
+                'rightsHolder': [
+                    'The authors'
                 ]
             }
 
