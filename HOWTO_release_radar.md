@@ -126,7 +126,6 @@ release-create:
     create_release
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
     ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
-- git push --delete "https://RELEASE_TOKEN:${RELEASE_TOKEN}@${CI_REPOSITORY_URL#*@}" pre-${CI_COMMIT_TAG}
 
 prepare-release:
   image: python:3.7
@@ -175,6 +174,6 @@ Then, the prepare-release pipeline will run and
 * reserve a DOI for your release
 * update your `codemeta.json` with the new version, its date and DOI
 * create the tag `vX.Y`
-* delete the tag `pre-vX.Y`
+* not delete the tag `pre-vX.Y` as protected tags can only be deleted from the web interface
 * upload your dataset to RADAR
 * notify the data steward by email that the release is ready to be published on RADAR
