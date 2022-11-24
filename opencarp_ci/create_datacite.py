@@ -17,6 +17,9 @@ def main():
                         help='Locations of codemeta JSON files for additional contributors')
     parser.add_argument('--datacite-path', dest='datacite_path',
                         help='Path to the DataCite XML output file')
+    parser.add_argument('--no-sort-authors', dest='sort_authors', action='store_false',
+                        help='Do not sort authors alphabetically, keep order in codemeta.json file')    
+    parser.set_defaults(sort_authors=True)    
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
@@ -32,7 +35,8 @@ def main():
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
     codemeta.compute_names()
     codemeta.remove_doubles()
-    codemeta.sort_persons()
+    if settings.SORT_AUTHORS:
+        codemeta.sort_persons()
 
     datacite_metadata = DataciteMetadata(codemeta.data)
     datacite_xml = datacite_metadata.to_xml()
