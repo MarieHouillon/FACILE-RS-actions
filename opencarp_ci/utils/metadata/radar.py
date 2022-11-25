@@ -213,16 +213,28 @@ class RadarMetadata(object):
             if self.data.get('@type') == 'SoftwareSourceCode':
                 radar_dict['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
 
-        if 'license' in self.data and 'name' in self.data['license']:
-            radar_dict['descriptiveMetadata']['rights'] = {
-                'controlledRights': 'OTHER',
-                'additionalRights': self.data['license']['name']
-            }
+        if 'license' in self.data:
+            if isinstance(self.data['license'], str):
+                radar_dict['descriptiveMetadata']['rights'] = {
+                    'controlledRights': 'OTHER',
+                    'additionalRights': self.data['license']
+                }
+            elif isinstance(self.data['license'], dict) and 'name' in self.data['license']:
+                radar_dict['descriptiveMetadata']['rights'] = {
+                    'controlledRights': 'OTHER',
+                    'additionalRights': self.data['license']['name']
+                }
 
         if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
                 'rightsHolder': [
                     self.data['copyrightHolder']['name']
+                ]
+            }
+        else
+            radar_dict['descriptiveMetadata']['rightsHolders'] = {
+                'rightsHolder': [
+                    'The authors'
                 ]
             }
 
