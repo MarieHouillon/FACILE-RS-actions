@@ -231,7 +231,7 @@ class RadarMetadata(object):
                     self.data['copyrightHolder']['name']
                 ]
             }
-        else
+        else:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
                 'rightsHolder': [
                     'The authors'
