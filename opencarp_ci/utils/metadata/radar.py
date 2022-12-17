@@ -14,7 +14,7 @@ class RadarMetadata(object):
 
     # map SPDX to Radar licenses
     radar_licenses = {
-        "": "Public Domain Mark 1.0",
+        "": "Public Domain Mark 1.0", # SPDX doesn't consider it a license https://github.com/spdx/license-list-XML/issues/988
         "PDDL-1.0": "Public Domain Dedication and License (PDDL)",
         "ODC-By-1.0": "Attribution License (ODC-By)",
         "ODbL-1.0": "Open Database License (ODC-ODbL)",
