@@ -227,15 +227,17 @@ class RadarMetadata(object):
 
         if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [
-                    self.data['copyrightHolder']['name']
-                ]
+                'rightsHolder': self.data['copyrightHolder']['name']
             }
+        elif 'copyrightHolder' in self.data and type(self.data['copyrightHolder']) == list:
+            radar_dict['descriptiveMetadata']['rightsHolders'] = {
+                    'rightsHolder': ''
+            }
+            for copyrightHolder in self.data['copyrightHolder']:
+                radar_dict['descriptiveMetadata']['rightsHolders']['rightsHolder'] += copyrightHolder['name']                    
         else:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [
-                    'The authors'
-                ]
+                'rightsHolder': 'The authors'
             }
 
         if 'funding' in self.data:
