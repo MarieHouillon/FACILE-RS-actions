@@ -34,7 +34,7 @@ class RadarMetadata(object):
                 "publicationBacklink": self.publication_backlink,
                 "schema": {
                     "key": "RDDM",
-                    "version": "09"
+                    "version": "9.1"
                 }
             },
             'descriptiveMetadata': {
