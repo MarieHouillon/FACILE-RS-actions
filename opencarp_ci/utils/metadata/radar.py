@@ -226,19 +226,18 @@ class RadarMetadata(object):
                 }
 
         if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
-            radar_dict['descriptiveMetadata']['rightsHolders'] = {
+            radar_dict['descriptiveMetadata']['rightsHolders'] = [{
                 'rightsHolder': self.data['copyrightHolder']['name']
-            }
+            }]
         elif 'copyrightHolder' in self.data and type(self.data['copyrightHolder']) == list:
-            radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                    'rightsHolder': ''
-            }
+            radar_dict['descriptiveMetadata']['rightsHolders'] = []
             for copyrightHolder in self.data['copyrightHolder']:
-                radar_dict['descriptiveMetadata']['rightsHolders']['rightsHolder'] += copyrightHolder['name']                    
+                radar_dict['descriptiveMetadata']['rightsHolders'].append({'rightsHolder': copyrightHolder['name']})
         else:
-            radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': 'The authors'
-            }
+            logger.warning('No copyrightHolder found.')
+            # radar_dict['descriptiveMetadata']['rightsHolders'] = {
+            #     'rightsHolder': 'Authors, The'
+            # }
 
         if 'funding' in self.data:
             radar_dict['descriptiveMetadata']['fundingReferences'] = {
