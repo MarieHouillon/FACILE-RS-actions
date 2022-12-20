@@ -74,7 +74,7 @@ optional arguments:
 
 ### prepare_release
 
-Updates the CodeMeta file for the given `VERSION` and `DATE` (as `dateModified`, current date if omitted). Useful to automatically get the version from a git tag and inject it into the repo's metadata.
+Updates the CodeMeta file for the given `VERSION` and `DATE` (as `dateModified`, current date if omitted). Useful to automatically get the version from a git tag and inject it into the repo's metadata file.
 
 ```
 usage: prepare_release [-h] [--codemeta-location CODEMETA_LOCATION] [--version VERSION]
