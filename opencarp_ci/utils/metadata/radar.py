@@ -14,7 +14,7 @@ class RadarMetadata(object):
 
     # map SPDX to Radar licenses
     radar_licenses = {
-        "": "Public Domain Mark 1.0", # SPDX doesn't consider it a license https://github.com/spdx/license-list-XML/issues/988
+        "": "Public Domain Mark 1.0",  # SPDX doesn't consider it a license https://github.com/spdx/license-list-XML/issues/988
         "PDDL-1.0": "Public Domain Dedication and License (PDDL)",
         "ODC-By-1.0": "Attribution License (ODC-By)",
         "ODbL-1.0": "Open Database License (ODC-ODbL)",
@@ -136,16 +136,17 @@ class RadarMetadata(object):
                             }]
 
                     for affiliation in author.get('affiliation', []):
-                        if 'name' in affiliation andd '@id' in affiliation and affiliation['@id'].startswith(self.ror_prefix):
-                            radar_creator['creatorAffiliation'] = [{
-                                'value': affiliation['name'],
-                                'affiliationIdentifier': affiliation['@id'],
-                                'schemeURI': 'https://ror.org',
-                                'affiliationIdentifierScheme': 'ROR'
-                            }]
-                        elif 'name' in affiliation:
-                            radar_creator['creatorAffiliation'] = affiliation['name']
-                        
+                        if 'name' in affiliation:
+                            radar_creator['creatorAffiliation'] = {
+                                'value': affiliation['name']
+                            }
+                            if '@id' in affiliation and affiliation['@id'].startswith(self.ror_prefix):
+                                radar_creator['creatorAffiliation'].update({
+                                    'schemeURI': 'https://ror.org',
+                                    'affiliationIdentifier': affiliation['@id'],
+                                    'affiliationIdentifierScheme': 'ROR'
+                                })
+
                     radar_dict['descriptiveMetadata']['creators']['creator'].append(radar_creator)
 
         if 'contributors' in self.data:
@@ -173,16 +174,17 @@ class RadarMetadata(object):
                                 }]
 
                         for affiliation in contributor.get('affiliation', []):
-                            if 'name' in affiliation and '@id' in affiliation and affiliation['@id'].startswith(self.ror_prefix):
-                                radar_creator['contributorAffiliation'] = [{
-                                    'value': affiliation['name'],
-                                    'affiliationIdentifier': affiliation['@id'],
-                                    'schemeURI': 'https://ror.org',
-                                    'affiliationIdentifierScheme': 'ROR'
-                                }]
-                            elif 'name' in affiliation:
-                                radar_contributor['contributorAffiliation'] = affiliation['name']
-                            
+                            if 'name' in affiliation:
+                                radar_creator['contributorAffiliation'] = {
+                                    'value': affiliation['name']
+                                }
+                                if '@id' in affiliation and affiliation['@id'].startswith(self.ror_prefix):
+                                    radar_creator['contributorAffiliation'].update({
+                                        'schemeURI': 'https://ror.org',
+                                        'affiliationIdentifier': affiliation['@id'],
+                                        'affiliationIdentifierScheme': 'ROR'
+                                    })
+
                 radar_dict['descriptiveMetadata']['contributors']['contributor'].append(radar_contributor)
 
         if 'alternateName' in self.data:
@@ -221,7 +223,9 @@ class RadarMetadata(object):
                     'keyword': []
                 }
                 for keyword in keywords:
-                    radar_dict['descriptiveMetadata']['keywords']['keyword'].append(keyword)
+                    radar_dict['descriptiveMetadata']['keywords']['keyword'].append({
+                        'value': keyword
+                    })
 
             if subjects:
                 radar_dict['descriptiveMetadata']['subjectAreas'] = {
@@ -233,18 +237,16 @@ class RadarMetadata(object):
                     })
 
         if 'publisher' in self.data and 'name' in self.data['publisher']:
-            if '@id' in self.data['publisher'] and self.data['publisher']['@id'].startswith(self.ror_prefix):
-                radar_dict['descriptiveMetadata']['publishers'] = [{
-                    'value': self.data['publisher']['name']
-                    'schemeURI': 'https://ror.org',
-                    'nameIdentifierScheme': 'ROR',
-                    'nameIdentifier': self.data['publisher']['@id']
+            radar_dict['descriptiveMetadata']['publishers'] = {
+                'value': self.data['publisher']['name']
+            }
 
-                }]
-            else 'publisher' in self.data and 'name' in self.data['publisher']:
-                radar_dict['descriptiveMetadata']['publishers'] = {
-                    'publisher': [self.data['publisher']['name']]
-                }
+            if '@id' in self.data['publisher'] and self.data['publisher']['@id'].startswith(self.ror_prefix):
+                radar_dict['descriptiveMetadata']['publishers'].update({
+                    'schemeURI': 'https://ror.org',
+                    'nameIdentifier': self.data['publisher']['@id'],
+                    'nameIdentifierScheme': 'ROR'
+                })
 
         if 'applicationCategory' in self.data:
             radar_dict['descriptiveMetadata']['resource'] = {
@@ -258,12 +260,13 @@ class RadarMetadata(object):
             if isinstance(self.data['license'], str):
                 licenseName = self.data['license']
             elif isinstance(self.data['license'], dict) and 'name' in self.data['license']:
-                licenseName self.data['license']['name']
-            for spdx_name, radar_name in radar_licenses.items():
+                licenseName = self.data['license']['name']
+
+            for spdx_name, radar_name in self.radar_licenses.items():
                 if spdx_name:
                     licenseName = licenseName.replace(spdx_name, radar_name)
 
-            if licenseName in list(radar_licenses.values()):
+            if licenseName in list(self.radar_licenses.values()):
                 radar_dict['descriptiveMetadata']['rights'] = {
                     'controlledRights': licenseName
                 }
@@ -272,19 +275,25 @@ class RadarMetadata(object):
                     'controlledRights': 'OTHER',
                     'additionalRights': licenseName
                 }
-            
-        if 'copyrightHolder' in self.data and 'name' in self.data['copyrightHolder']:
+
+        if 'copyrightHolder' in self.data:
             radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [
-                    self.data['copyrightHolder']['name']
-                ]
+                'rightsHolder': []
             }
-        else:
-            radar_dict['descriptiveMetadata']['rightsHolders'] = {
-                'rightsHolder': [
-                    'The authors'
-                ]
-            }
+            for copyright_holder in self.data['copyrightHolder']:
+                if 'name' in copyright_holder:
+                    radar_rights_holder = {
+                        'value': copyright_holder['name']
+                    }
+
+                    if '@id' in copyright_holder and copyright_holder['@id'].startswith(self.ror_prefix):
+                        radar_rights_holder.update({
+                            'schemeURI': 'https://ror.org',
+                            'nameIdentifier': copyright_holder['@id'],
+                            'nameIdentifierScheme': 'ROR'
+                        })
+
+                radar_dict['descriptiveMetadata']['rightsHolders']['rightsHolder'].append(radar_rights_holder)
 
         if 'funding' in self.data:
             radar_dict['descriptiveMetadata']['fundingReferences'] = {
@@ -302,7 +311,7 @@ class RadarMetadata(object):
                             'value': funding['funder']['@id'],
                             'schemeURI': 'https://ror.org',
                             'type': 'ROR'
-                        }            
+                        }
 
                 if 'identifier' in funding:
                     radar_funding_reference['awardNumber'] = funding['identifier']

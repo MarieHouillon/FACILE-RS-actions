@@ -1,6 +1,5 @@
 import json
 import logging
-from pathlib import Path
 
 from ..http import fetch_dict
 

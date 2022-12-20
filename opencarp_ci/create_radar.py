@@ -21,8 +21,8 @@ def main():
     parser.add_argument('--contributors-location', dest='contributors_locations', action='append', default=[],
                         help='Locations of codemeta JSON files for additional contributors')
     parser.add_argument('--no-sort-authors', dest='sort_authors', action='store_false',
-                        help='Do not sort authors alphabetically, keep order in codemeta.json file')    
-    parser.set_defaults(sort_authors=True)        
+                        help='Do not sort authors alphabetically, keep order in codemeta.json file')
+    parser.set_defaults(sort_authors=True)
     parser.add_argument('--radar-path', dest='radar_path',
                         help='Path to the Radar directory, where the assets are collected before upload.')
     parser.add_argument('--radar-url', dest='radar_url',
@@ -83,7 +83,13 @@ def main():
     codemeta.remove_doubles()
     if settings.SORT_AUTHORS:
         codemeta.sort_persons()
+
     codemeta.data['name'] = '{name} ({version})'.format(**codemeta.data)  # override name/title to include version
+
+    if not codemeta.data.get('copyrightHolder'):
+        codemeta.data['copyrightHolder'] = [{
+            'name': 'The authors'
+        }]
 
     radar_metadata = RadarMetadata(codemeta.data, settings.RADAR_EMAIL, settings.RADAR_BACKLINK)
     radar_dict = radar_metadata.as_dict()
