@@ -72,6 +72,25 @@ optional arguments:
   --log-file LOG_FILE   Path to the log file
 ```
 
+### prepare_release
+
+Updates the CodeMeta file for the given `VERSION` and `DATE` (as `dateModified`, current date if omitted). Useful to automatically get the version from a git tag and inject it into the repo's metadata.
+
+```
+usage: prepare_release [-h] [--codemeta-location CODEMETA_LOCATION] [--version VERSION]
+                       [--date DATE] [--log-level LOG_LEVEL] [--log-file LOG_FILE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the main codemeta.json JSON file
+  --version VERSION     Version of the resource
+  --date DATE           Date for dateModified (format: '%Y-%m-%d')
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
+
 ### create_release
 
 Creates a release in GitLab using the GitLab API. A tag for the release needs to be created before and provided to the script.
@@ -180,10 +199,51 @@ optional arguments:
   --log-file LOG_FILE   Path to the log file
 ```
 
+### prepare_radar
+
+Creates an empty archive in the [RADAR service](https://www.radar-service.eu) in order to "reserve" a DOI and an ID in RADAR. Both are stored in the CodeMeta file and can be used by the `create_radar` command below. A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
+
+```
+usage: prepare_radar [-h] [--codemeta-location CODEMETA_LOCATION] [--radar-url RADAR_URL]
+                     [--radar-username RADAR_USERNAME] [--radar-password RADAR_PASSWORD]
+                     [--radar-client-id RADAR_CLIENT_ID]
+                     [--radar-client-secret RADAR_CLIENT_SECRET]
+                     [--radar-workspace-id RADAR_WORKSPACE_ID]
+                     [--radar-redirect-url RADAR_REDIRECT_URL] [--radar-email RADAR_EMAIL]
+                     [--radar-backlink RADAR_BACKLINK] [--dry] [--log-level LOG_LEVEL]
+                     [--log-file LOG_FILE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the main codemeta.json JSON file
+  --radar-url RADAR_URL
+                        URL of the RADAR service.
+  --radar-username RADAR_USERNAME
+                        Username for the RADAR service.
+  --radar-password RADAR_PASSWORD
+                        Password for the RADAR service.
+  --radar-client-id RADAR_CLIENT_ID
+                        Client ID for the RADAR service.
+  --radar-client-secret RADAR_CLIENT_SECRET
+                        Client secret for the RADAR service.
+  --radar-workspace-id RADAR_WORKSPACE_ID
+                        Workspace ID for the RADAR service.
+  --radar-redirect-url RADAR_REDIRECT_URL
+                        Redirect URL for the OAuth workflow of the RADAR service.
+  --radar-email RADAR_EMAIL
+                        Email for the RADAR metadata.
+  --radar-backlink RADAR_BACKLINK
+                        Backlink for the RADAR metadata.
+  --dry                 Perform a dry run, do not upload anything.
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
+
 ### create_radar
 
-Creates an archive in the [RADAR service](https://www.radar-service.eu) and upload the assets provided as positional arguments. The metadata is created similar to `create_datacite`.
-A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
+Creates an archive in the [RADAR service](https://www.radar-service.eu) and upload the assets provided as positional arguments. The metadata is created similar to `create_datacite`. If the RADAR ID is already in the CodeMeta file, the existing archive is updated instead. A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
 
 ```
 usage: create_radar [-h] [--codemeta-location CODEMETA_LOCATION]
