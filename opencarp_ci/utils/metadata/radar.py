@@ -237,12 +237,12 @@ class RadarMetadata(object):
                     })
 
         if 'publisher' in self.data and 'name' in self.data['publisher']:
-            radar_dict['descriptiveMetadata']['publishers'] = {
+            radar_dict['descriptiveMetadata']['publisher'] = {
                 'value': self.data['publisher']['name']
             }
 
             if '@id' in self.data['publisher'] and self.data['publisher']['@id'].startswith(self.ror_prefix):
-                radar_dict['descriptiveMetadata']['publishers'].update({
+                radar_dict['descriptiveMetadata']['publisher'].update({
                     'schemeURI': 'https://ror.org',
                     'nameIdentifier': self.data['publisher']['@id'],
                     'nameIdentifierScheme': 'ROR'
