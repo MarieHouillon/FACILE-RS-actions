@@ -201,7 +201,7 @@ optional arguments:
 
 ### prepare_radar
 
-Creates an empty archive in the [RADAR service](https://www.radar-service.eu) in order to "reserve" a DOI and an ID in RADAR. Both are stored in the CodeMeta file and can be used by the `create_radar` command below to include the DOI for this release in the deposited CodeMeta file. A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
+Creates an empty archive in the [RADAR service](https://www.radar-service.eu) in order to "reserve" a DOI and an ID in RADAR. Both are stored in the CodeMeta file and can be used by the `create_radar` command below to include the DOI for this release in the deposited CodeMeta file. A detailed HowTo for releasing datasets on RADAR is provided in the file [`HOWTO_release_radar.md`](https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/HOWTO_release_radar.md) in this directory.
 
 ```
 usage: prepare_radar [-h] [--codemeta-location CODEMETA_LOCATION] [--radar-url RADAR_URL]
