@@ -5,8 +5,8 @@ type: Software
 title: openCARP CI
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
-version: v1.3
-date-released: 2022-09-21
+version: v1.5.1
+date-released: 2023-02-02
 authors:
 - name: openCARP consortium
 - name: Marie Houillon
