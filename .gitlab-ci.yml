@@ -1,0 +1,52 @@
+stages:
+- build
+- test
+- release
+- archive
+
+variables:
+  PROJECT_NAME: openCARP-CI
+  GIT_SUBMODULE_STRATEGY: recursive
+  DOCKER_DRIVER: overlay
+  GIT_STRATEGY: clone
+  GIT_DEPTH: 1
+  # source code including submodules
+  INCLSUBMODULES_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-inclSubmodules/${CI_COMMIT_TAG}
+  INCLSUBMODULES_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}-inclSubmodules.zip
+
+  # DataCite XML
+  DATACITE_PATH: ${PROJECT_NAME}.xml
+  DATACITE_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}.xml
+  DATACITE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-datacite/${CI_COMMIT_TAG}
+
+  # Metadata YAML files
+  CREATORS_LOCATIONS: codemeta.json
+  CODEMETA_LOCATION: codemeta.json
+  CFF_PATH: CITATION.cff
+  # Releases
+  RELEASE_TAG: ${CI_COMMIT_TAG}
+  RELEASE_API_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases
+  RELEASE_ARCHIVE_URL: ${CI_PROJECT_URL}/-/archive/${CI_COMMIT_TAG}/${PROJECT_NAME}-${CI_COMMIT_TAG}.tar.gz
+  RELEASE_DESCRIPTION: |
+    Find the changelog [here](${CI_PROJECT_URL}/blob/master/CHANGELOG.md).
+  # BagPack
+  ENABLE_BAGPACK: "true"
+  BAG_PATH: ${PROJECT_NAME}-${CI_COMMIT_TAG}
+  BAGPACK_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-bagpack/${CI_COMMIT_TAG}
+  # RADAR
+  ENABLE_RADAR: "false"
+  RADAR_PATH: ${PROJECT_NAME}-${CI_COMMIT_TAG}
+  RADAR_BACKLINK: ${CI_PROJECT_URL}/-/releases
+  SMTP_SERVER: smarthost.kit.edu
+  NOTIFICATION_EMAIL: tomas.stary@kit.edu
+
+include:
+- local: .gitlab/ci/checkReadme.gitlab-ci.yml # Example CI job to check for existence of a README.
+- local: .gitlab/ci/archive.gitlab-ci.yml
+- local: .gitlab/ci/datacite.gitlab-ci.yml
+- local: .gitlab/ci/release.gitlab-ci.yml
+
+
+default:
+  tags:
+    - docker

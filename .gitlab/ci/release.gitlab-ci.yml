@@ -1,0 +1,61 @@
+release-submodule:
+  variables:
+    GIT_STRATEGY: none
+  stage: release
+  image: mrnonz/alpine-git-curl:alpine3.12
+  rules:
+  - if: $CI_COMMIT_TAG =~ /^v/
+  script:
+  - git clone --branch ${CI_COMMIT_TAG} --depth 1 --recurse-submodules ${CI_SERVER_PROTOCOL}://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}.git
+  - rm -rf ${CI_PROJECT_NAME}/.git/
+  - tar czf ${INCLSUBMODULES_RELEASE} ${CI_PROJECT_NAME}
+  - |
+    curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${INCLSUBMODULES_RELEASE} ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+
+release-create:
+  stage: release
+  image: python:3.7
+  rules:
+  - if: $CI_COMMIT_TAG =~ /^v/
+  before_script:
+  - git config --global user.name "${GITLAB_USER_NAME}"
+  - git config --global user.email "${GITLAB_USER_EMAIL}"
+  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - export DEBIAN_FRONTEND="noninteractive"
+  - apt update
+  - apt-get install -y jq
+  script:
+  - DOI=`jq -r ".identifier[0].value" codemeta.json`
+  - RELEASE_DESCRIPTION="${RELEASE_DESCRIPTION}<br/>Find the archived version of the ${CI_COMMIT_TAG} release in the RADAR4KIT repository - [doi:${DOI}](https://doi.org/${DOI})."
+  - >
+    create_release --release-description "$RELEASE_DESCRIPTION"
+    ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
+    ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+
+prepare-release:
+  image: python:3.9
+  stage: release
+  rules:
+  - if: $CI_COMMIT_TAG =~ /^pre/
+  before_script:
+  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - git config --global user.name "${GITLAB_USER_NAME}"
+  - git config --global user.email "${GITLAB_USER_EMAIL}"
+  script:
+  - VERSION=`echo $CI_COMMIT_TAG | grep -oP '^pre-\K.*$'`
+  - echo "Preparing release of $VERSION"
+  - prepare_release --version=$VERSION
+  - >
+    if [ $ENABLE_RADAR = true ];
+    then
+        echo "preparing RADAR release, make sure the credentials are defined as gitlab CI/CD variables";
+        prepare_radar;
+    else
+        echo "RADAR skiped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
+    fi
+  - create_cff
+  - git add ${CODEMETA_LOCATION} ${CFF_PATH}
+  - git commit -m "Release ${VERSION}"
+  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
+  - git tag $VERSION
+  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
