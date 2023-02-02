@@ -30,6 +30,12 @@ source env/bin/activate
 pip install git+https://git.opencarp.org/openCARP/openCARP-CI
 ```
 
+### Adapting CI from openCARP-CI
+
+You can adapt the automated pipelines from this repository by copying `.gitlab-ci.yml` and `.gitlab/` to your project.
+
+For the publication in releases you need to add access token. Go to your repository and then in Settings -> Access Tokens choose the name of your token, Expiration date (can be removed) and role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been crated, copy its value and go to your repository Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously.
+
 
 ## Usage
 
