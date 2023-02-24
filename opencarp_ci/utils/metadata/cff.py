@@ -26,7 +26,7 @@ class CffMetadata(object):
             'cff-version': '1.2.0',
             'message': 'If you use this software, please cite the paper describing it as below. '
                        'Specific versions of the software can additionally be referenced using individual DOIs.',
-            'type': 'Software'
+            'type': 'software'
         }
 
         if 'name' in self.data:
