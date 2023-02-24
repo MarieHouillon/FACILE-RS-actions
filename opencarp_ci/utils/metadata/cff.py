@@ -119,7 +119,7 @@ class CffMetadata(object):
                         cff_citation_author['given-names'] = author['givenName']
 
                     if '@id' in author and author['@id'].startswith(self.orcid_prefix):
-                        cff_citation_author['orcid'] = author['@id'].replace(self.orcid_prefix, '')
+                        cff_citation_author['orcid'] = author['@id']
 
                     cff_json['preferred-citation']['authors'].append(cff_citation_author)
 
