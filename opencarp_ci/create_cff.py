@@ -33,7 +33,6 @@ def main():
     codemeta.fetch(settings.CODEMETA_LOCATION)
     codemeta.fetch_authors(settings.CREATORS_LOCATIONS)
     codemeta.fetch_contributors(settings.CONTRIBUTORS_LOCATIONS)
-    codemeta.compute_names()
     codemeta.remove_doubles()
     if settings.SORT_AUTHORS:
         codemeta.sort_persons()
