@@ -13,7 +13,7 @@
   "codeRepository": "https://git.opencarp.org/openCARP/openCARP-CI",
   "license": {
     "@type": "CreativeWork",
-    "name": "Apache-2",
+    "name": "Apache-2.0",
     "url": "https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/LICENSE"
   },
   "referencePublication": {
