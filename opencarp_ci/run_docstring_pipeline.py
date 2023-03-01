@@ -177,6 +177,8 @@ def main():
                     # update or create markdown file
                     title = metadata.get('title', '')
                     description = metadata.get('description', '')
+                    image = metadata.get('image', '').replace('/images/', '')
+                    print(image)
                     
                     try:
                         page = frontmatter.load(md_path)
