@@ -178,7 +178,10 @@ def main():
                     title = metadata.get('title', '')
                     description = metadata.get('description', '')
                     image = metadata.get('image', '').replace('/images/', '')
-                    print(image)
+                    thumb_name = ''
+                    if image:
+                        thumb_name = 'thumb_' + image
+                    
                     
                     try:
                         page = frontmatter.load(md_path)
