@@ -154,10 +154,10 @@ def main():
                     if metadata.get('image'):
                         image_name = metadata.get('image').replace('/images/', '')
                         thumb_name = 'thumb_' + image_name
-                        with open(image_name, 'r+b') as f:
+                        with open('/images/' + image_name, 'r+b') as f:
                             with Image.open(f) as image:
                                 cover = resizeimage.resize_width(image, 200)
-                                cover.save(thumb_name, image.format)
+                                cover.save('/images/' + thumb_name, image.format)
                         images.append(thumb_name)
 
                     # create content from the docstring using pandoc
