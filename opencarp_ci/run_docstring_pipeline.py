@@ -156,7 +156,9 @@ def main():
                         thumb_name = 'thumb_' + image_name
                         with open(images_path / image_name, 'r+b') as f:
                             with Image.open(f) as image:
-                                cover = resizeimage.resize_width(image, 200)
+                                w, h = image.size
+                                if w > 200:
+                                    cover = resizeimage.resize_width(image, 200)
                                 cover.save(images_path / thumb_name, image.format)
                         images.append(thumb_name)
 
