@@ -6,6 +6,9 @@ import os
 import re
 import shutil
 from pathlib import Path
+from PIL import Image
+from resizeimage import resizeimage
+
 
 import frontmatter
 import pypandoc
@@ -149,8 +152,13 @@ def main():
 
                     # append image from the metadata to the image list
                     if metadata.get('image'):
-                        image = metadata.get('image').replace('/images/', '')
-                        images.append(image)
+                        image_name = metadata.get('image').replace('/images/', '')
+                        thumb_name = 'thumb_' + image_name
+                        with open(image_name, 'r+b') as f:
+                            with Image.open(f) as image:
+                                cover = resizeimage.resize_width(image, 200)
+                                cover.save(thumb_name, image.format)
+                        images.append(thumb_name)
 
                     # create content from the docstring using pandoc
                     # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
