@@ -175,17 +175,16 @@ def main():
                     # update or create markdown file
                     title = metadata.get('title', '')
                     description = metadata.get('description', '')
-                    image = metadata.get('image', '').replace('/images/', '')
-
+                    
                     try:
                         page = frontmatter.load(md_path)
                         page.content = content
                         page['title'] = title
                         page['description'] = description
-                        page['image'] = image
+                        page['image'] = thumb_name
 
                     except FileNotFoundError:
-                        page = frontmatter.Post(content, title=title, description=description, image=image)
+                        page = frontmatter.Post(content, title=title, description=description, image=thumb_name)
 
                     # write the grav file
                     logger.info('writing to %s', md_path)
