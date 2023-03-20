@@ -1,11 +1,12 @@
 cff-version: 1.2.0
-message: If you use this software, please cite the paper describing it as below. Specific versions of the software can additionally be referenced using individual DOIs.
+message: If you use this software, please cite the paper describing it as below. Specific
+  versions of the software can additionally be referenced using individual DOIs.
 type: software
 title: openCARP CI
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
 version: v1.5.1
-date-released: 2023-02-02
+date-released: 2023-03-20
 authors:
 - name: openCARP consortium
 - given-names: Marie

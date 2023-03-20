@@ -6,7 +6,7 @@
   "@type": "SoftwareSourceCode",
   "name": "openCARP CI",
   "version": "v1.5.1",
-  "dateModified": "2023-02-02",
+  "dateModified": "2023-03-20",
   "alternateName": "openCARP Continuous Integration Toolkit",
   "applicationCategory": "Development tools",
   "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories.",
