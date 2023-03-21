@@ -9,7 +9,7 @@ archive-radar:
   - >
     create_radar
     $RELEASE_ARCHIVE_URL
-    #${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+  # ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 archive-bagpack:
   stage: archive
@@ -27,5 +27,5 @@ archive-bagpack:
   - >
     create_bagpack
     $RELEASE_ARCHIVE_URL
-    #${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+  # ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
   - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${BAG_PATH} ${BAGPACK_REGISTRY_URL}/${BAG_PATH}'

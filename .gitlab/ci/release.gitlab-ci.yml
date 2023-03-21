@@ -30,7 +30,7 @@ release-create:
   - >
     create_release --release-description "$RELEASE_DESCRIPTION"
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
-    # ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+  # ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 prepare-release:
   image: python:3.9
