@@ -36,6 +36,8 @@ You can adapt the automated pipelines from this repository by copying `.gitlab-c
 
 For the publication in releases you need to add access token. Go to your repository and then in Settings -> Access Tokens choose the name of your token, Expiration date (can be removed) and role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been crated, copy its value and go to your repository Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously.
 
+If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/.gitlab-ci.yml#L35).
+
 
 ## Usage
 
