@@ -203,6 +203,19 @@
           "name": "Karlsruhe Institute of Technology (KIT)"
         }
       ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0001-9614-6263",
+      "givenName": "Tomas",
+      "familyName": "Stary",
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "@id": "https://ror.org/04t3en479",
+          "name": "Karlsruhe Institute of Technology (KIT)"
+        }
+      ]
     }
   ],
   "copyrightHolder": [
