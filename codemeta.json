@@ -5,8 +5,8 @@
   ],
   "@type": "SoftwareSourceCode",
   "name": "openCARP CI",
-  "version": "v1.5.1",
-  "dateModified": "2023-03-20",
+  "version": "v1.5.2",
+  "dateModified": "2023-03-21",
   "alternateName": "openCARP Continuous Integration Toolkit",
   "applicationCategory": "Development tools",
   "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories.",
@@ -244,5 +244,6 @@
         "name": "Karlsruhe Institute of Technology (KIT)"
       }
     }
-  ]
+  ],
+  "@id": "https://doi.org/10.35097/960"
 }
