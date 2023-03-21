@@ -17,8 +17,8 @@ In general, openCARP-CI should also be comatible with GitHub Actions. We did not
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
 3. In your GitLab project, go to `Settings` -> `CI/CD`. Create the following variables which you can all [protect and mask](https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project) to keep them safe:
   * `RELEASE_TOKEN` with the value being the token created in step 2
-  * `RADAR_BACKLINK` with the value being a link to a web page of your project's releases, e.g. https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/releases
-  * `RADAR_REDIRECT_URL` with the value being a link to a web page of your project or repository, e.g. https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/
+  * `RADAR_BACKLINK` with the value being a link to a web page of your project's releases, e.g. `https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/releases`
+  * `RADAR_REDIRECT_URL` with the value being a link to a web page of your project or repository, e.g. `https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/
   * `RADAR_EMAIL` with the value being the mail address of the data steward for this dataset
   * `RADAR_WORKSPACE_ID` with the value being the ID of your RADAR workspace (see the URL to your workspace with the . followed by the name of your workspace)
   * `RADAR_URL` with the value being the URL to your RADAR instance (talk to your RADAR admin)  
