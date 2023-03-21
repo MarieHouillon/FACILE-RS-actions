@@ -51,7 +51,7 @@ prepare-release:
         echo "preparing RADAR release, make sure the credentials are defined as gitlab CI/CD variables";
         prepare_radar;
     else
-        echo "RADAR skiped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
+        echo "RADAR skipped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
     fi
   - create_cff
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
