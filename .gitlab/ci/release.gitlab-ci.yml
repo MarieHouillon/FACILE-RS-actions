@@ -11,7 +11,7 @@ release-create:
   - apt update
   - apt-get install -y jq
   script:
-  - DOI_URL=`jq -r ".@id" codemeta.json`
+  - DOI_URL=`jq -r ".[\"@id\"]" codemeta.json`
   - DOI=${DOI_URL#"https://doi.org/"}
   - >
     if [ $ENABLE_RADAR = true ];
