@@ -14,19 +14,19 @@ class RadarMetadata(object):
 
     # map SPDX to Radar licenses
     radar_licenses = {
-        "": "Public Domain Mark 1.0",  # SPDX doesn't consider it a license https://github.com/spdx/license-list-XML/issues/988
-        "PDDL-1.0": "Public Domain Dedication and License (PDDL)",
-        "ODC-By-1.0": "Attribution License (ODC-By)",
-        "ODbL-1.0": "Open Database License (ODC-ODbL)",
-        "Apache-2.0": "Apache License 2.0",
-        "CDDL-1.0": "Common Development and Distribution License 1.0",
-        "EPL-1.0": "Eclipse Public License 1.0",
-        "EPL-2.0": "Eclipse Public License 2.0",
-        "GPL-3.0-only": "GNU General Public License v3.0 only",
-        "LGPL-3.0": "GNU Lesser General Public License v3.0 only",
-        "BSD-2-Clause": "BSD 2-Clause Simplified License",
-        "BSD-3-Clause": "BSD 3-Clause New or Revised License",
-        "MIT": "MIT License"
+        "": "PUBLIC_DOMAIN_MARK_1_0",  # SPDX doesn't consider it a license https://github.com/spdx/license-list-XML/issues/988
+        "PDDL-1.0": "PUBLIC_DOMAIN_DEDICATION_AND_LICENSE_PDDL",
+        "ODC-By-1.0": "ATTRIBUTION_LICENSE_ODC_BY",
+        "ODbL-1.0": "OPEN_DATABASE_LICENSE_ODC_O_DB_L",
+        "Apache-2.0": "APACHE_LICENSE_2_0",
+        "CDDL-1.0": "COMMON_DEVELOPMENT_AND_DISTRIBUTION_LICENSE_1_0",
+        "EPL-1.0": "ECLIPSE_PUBLIC_LICENSE_1_0",
+        "EPL-2.0": "ECLIPSE_PUBLIC_LICENSE_2_0",
+        "GPL-3.0-only": "GNU_GENERAL_PUBLIC_LICENSE_V_3_0_ONLY",
+        "LGPL-3.0": "GNU_LESSER_GENERAL_PUBLIC_LICENSE_V_3_0_ONLY",
+        "BSD-2-Clause": "BSD_2_CLAUSE_SIMPLIFIED_LICENSE",
+        "BSD-3-Clause": "BSD_3_CLAUSE_NEW_OR_REVISED_LICENSE",
+        "MIT": "MIT_LICENSE"
     }
 
     def __init__(self, data, responsible_email, publication_backlink):
