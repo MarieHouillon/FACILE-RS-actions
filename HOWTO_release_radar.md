@@ -167,8 +167,10 @@ Just make a change to the repository with GitLab's WebIDE or push a local commit
 
 ## Tag a release
 To initiate the two-stage release process, add a tag `pre-vX.Y` where `X.Y` is  your desired version number. This can either be done in GitLab via `Repository` -> `Tags` or on the commandline:
-`git tag -a pre-vX.Y``
-`git push origin pre-vX.Y`
+```
+git tag -a pre-vX.Y
+git push origin pre-vX.Y
+```
 
 Then, the prepare-release pipeline will run and
 * reserve a DOI for your release
