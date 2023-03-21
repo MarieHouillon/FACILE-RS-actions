@@ -40,7 +40,7 @@ You can find a minimum template for a two-stage release process below. There are
   * If you want to inform the data steward about the new release ready to be published, set the following variables:
     * `NOTIFICATION_EMAIL: abc@host.com` address of the data steward (can be the same as `RADAR_EMAIL`)
     * `SMTP_SERVER: your.smtpserver.com` (a SMTP server not requiring authentication, e.g. `smarthost.kit.edu`)
-  * The code below will include the code in your repository including all submodules in the archived release. If you don't want the submodules to be included, adapt accordingly.
+  * Commented content in the code below can be uncommented in order to include all submodules in the archived release. If your repository doesn't include submodules, this content can be removed.
   * You can add further artifacts to be included in the archive by simply adding additional arguments to the `create_release` call in the the `release-create` pipeline.
 
 ```
@@ -72,9 +72,9 @@ variables:
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
   GIT_DEPTH: 1
-  # source code including submodules
-  INCLSUBMODULES_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-inclSubmodules/${CI_COMMIT_TAG}
-  INCLSUBMODULES_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}-inclSubmodules.zip
+  # # Optional: for source code including submodules
+  # INCLSUBMODULES_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-inclSubmodules/${CI_COMMIT_TAG}
+  # INCLSUBMODULES_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}-inclSubmodules.zip
 
 build-datacite:
   stage: build
@@ -102,20 +102,20 @@ release-datacite:
   - |
     curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${DATACITE_RELEASE} ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
 
-
-release-submodule:
-  variables:
-    GIT_STRATEGY: none
-  stage: release
-  image: mrnonz/alpine-git-curl:alpine3.12
-  rules:
-  - if: $CI_COMMIT_TAG =~ /^v/  
-  script:
-  - git clone --branch ${CI_COMMIT_TAG} --depth 1 --recurse-submodules ${CI_PROJECT_URL}.git
-  - rm -rf ${CI_PROJECT_NAME}/.git/
-  - tar czf ${INCLSUBMODULES_RELEASE} ${CI_PROJECT_NAME}
-  - |
-    curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${INCLSUBMODULES_RELEASE} ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+# # Optional job, for releasing source code including submodules
+# release-submodule:
+#  variables:
+#    GIT_STRATEGY: none
+#  stage: release
+#  image: mrnonz/alpine-git-curl:alpine3.12
+#  rules:
+#  - if: $CI_COMMIT_TAG =~ /^v/  
+#  script:
+#  - git clone --branch ${CI_COMMIT_TAG} --depth 1 --recurse-submodules ${CI_PROJECT_URL}.git
+#  - rm -rf ${CI_PROJECT_NAME}/.git/
+#  - tar czf ${INCLSUBMODULES_RELEASE} ${CI_PROJECT_NAME}
+#  - |
+#    curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${INCLSUBMODULES_RELEASE} ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 release-create:
   stage: release
@@ -130,7 +130,7 @@ release-create:
   - >
     create_release
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
-    ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+  #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 prepare-release:
   image: python:3.7
@@ -164,7 +164,7 @@ archive-radar:
   - >
     create_radar
     $RELEASE_ARCHIVE_URL
-    ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
+  #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 ```
 
 ## Test your pipeline

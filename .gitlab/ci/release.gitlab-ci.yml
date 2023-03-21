@@ -1,17 +1,3 @@
-# release-submodule:
-#   variables:
-#     GIT_STRATEGY: none
-#   stage: release
-#   image: mrnonz/alpine-git-curl:alpine3.12
-#   rules:
-#   - if: $CI_COMMIT_TAG =~ /^v/
-#   script:
-#   - git clone --branch ${CI_COMMIT_TAG} --depth 1 --recurse-submodules ${CI_SERVER_PROTOCOL}://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}.git
-#   - rm -rf ${CI_PROJECT_NAME}/.git/
-#   - tar czf ${INCLSUBMODULES_RELEASE} ${CI_PROJECT_NAME}
-#   - |
-#     curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${INCLSUBMODULES_RELEASE} ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
-
 release-create:
   stage: release
   image: python:3.7
@@ -35,7 +21,6 @@ release-create:
   - >
     create_release --release-description "$RELEASE_DESCRIPTION"
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
-  # ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 prepare-release:
   image: python:3.9
