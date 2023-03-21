@@ -74,11 +74,31 @@ def main():
         if settings.CODEMETA_LOCATION:
             codemeta.data['@id'] = doi_url
             if 'identifier' in codemeta.data and isinstance(codemeta.data['identifier'], list):
+                found_doi = false
+                found_radar = false
+                doi_entry = {
+                        '@type': 'PropertyValue',
+                        'propertyID': 'DOI',
+                        'value': doi
+                        }
+                radar_entry = {
+                        '@type': 'PropertyValue',
+                        'propertyID': 'RADAR',
+                        'value': dataset_id
+                        }
                 for identifier in codemeta.data['identifier']:
                     if identifier.get('propertyID') == 'DOI':
                         identifier['value'] = doi
+                        found_doi = true
                     elif identifier.get('propertyID') == 'RADAR':
                         identifier['value'] = dataset_id
+                        found_radar = true
+                if not found_doi:
+                    codemeta.data['identifier'].append(doi_entry)
+                if not found_radar:
+                    codemeta.data['identifier'].append(radar_entry)
+            else:
+                codemeta.data['identifier'] = [doi_entry, radar_entry]
 
             Path(settings.CODEMETA_LOCATION).expanduser().write_text(codemeta.to_json())
         else:
