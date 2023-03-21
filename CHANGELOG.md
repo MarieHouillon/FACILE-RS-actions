@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## Unpublished
 
 ### Changed
-- thumbnails in the docstring pipeline are now automatically generated
+
+## v1.5.2
+
+### Added
+- Activate RADAR CI jobs
 
 ## v1.5.1
 
 ### Added
-
+- thumbnails in the docstring pipeline are now automatically generated
 - added the CI pipelines
 - intialise the CHANGELOG.md
