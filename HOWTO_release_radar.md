@@ -26,8 +26,13 @@ In general, openCARP-CI should also be comatible with GitHub Actions. We did not
   * `RADAR_CLIENT_SECRET` with the value being your RADAR API secret (talk to your RADAR admin)
   * `RADAR_USERNAME` with the value being your RADAR API user name (talk to your RADAR admin)
   * `RADAR_PASSWORD` with the value being your RADAR API password (talk to your RADAR admin)
-  
-4. Create the CI configuration in the `.gitlab-ci.yml` file in your repository.
+
+4. Protect the tags triggering the release process so that they can access the protected variables.
+Go to `Settings` -> `Repository` -> `Protected tags` and add the following entries:
+  * Tag: `pre-v*`, Allowed to create: `Maintainers`
+  * Tag: `v*`, Allowed to create: `Maintainers`
+
+5. Create the CI configuration in the `.gitlab-ci.yml` file in your repository.
 You can find a minimum template for a two-stage release process below. There are a number of variables that should/can be adapted:
   * `PROJECT_NAME` where you replace `openCARP` with for example the name of your software
   * `RELEASE_DESCRIPTION` where you adapt the search term and can add as many additional release info as desired, see for example [here](https://git.opencarp.org/openCARP/openCARP/-/releases)
@@ -166,6 +171,7 @@ archive-radar:
 Just make a change to the repository with GitLab's WebIDE or push a local commit to the server.
 
 ## Tag a release
+
 To initiate the two-stage release process, add a tag `pre-vX.Y` where `X.Y` is  your desired version number. This can either be done in GitLab via `Repository` -> `Tags` or on the commandline:
 ```
 git tag -a pre-vX.Y
