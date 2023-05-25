@@ -84,8 +84,8 @@ def main():
                 'value': dataset_id
             }
             if 'identifier' in codemeta.data and isinstance(codemeta.data['identifier'], list):
-                found_doi = false
-                found_radar = false
+                found_doi = False
+                found_radar = False
                 for identifier in codemeta.data['identifier']:
                     if identifier.get('propertyID') == 'DOI':
                         identifier['value'] = doi
