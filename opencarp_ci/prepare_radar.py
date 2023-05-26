@@ -89,10 +89,10 @@ def main():
                 for identifier in codemeta.data['identifier']:
                     if identifier.get('propertyID') == 'DOI':
                         identifier['value'] = doi
-                        found_doi = true
+                        found_doi = True
                     elif identifier.get('propertyID') == 'RADAR':
                         identifier['value'] = dataset_id
-                        found_radar = true
+                        found_radar = True
                 if not found_doi:
                     codemeta.data['identifier'].append(doi_entry)
                 if not found_radar:
