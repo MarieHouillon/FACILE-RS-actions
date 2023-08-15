@@ -45,12 +45,11 @@ def main():
         source_path = Path(settings.PIPELINE_SOURCE).expanduser() / source
         logger.debug('page_path = %s, source_path = %s', page_path, source_path)
 
-        extra_args = ['--bibliography={}'.format(source_path)]
+        extra_args = ['--bibliography={}'.format(source_path), '--citeproc']
         if settings.PIPELINE_CSL:
             extra_args.append('--csl={}'.format(settings.PIPELINE_CSL))
 
         page.content = pypandoc.convert_text(TEMPLATE, to='html', format='md',
-                                             filters=['pandoc-citeproc'],
                                              extra_args=extra_args)
 
         logger.info('writing publications to %s', page_path)
