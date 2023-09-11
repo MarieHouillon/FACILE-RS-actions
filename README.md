@@ -1,16 +1,16 @@
 # openCARP CI
 
-This package contains a set of Python scripts, which can be used to perform tasks around the archival and long term preservation of software repositories. In particular, it can be used to:
+This package contains a set of Python scripts which can be used to perform tasks around the archival and long term preservation of software repositories. In particular, it can be used to:
 
 * create a release in GitLab using the GitLab API,
 * create a DataCite record based on codemeta files present in repositories,
-* create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) format.
+* create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) formats.
 * archive the software using the [RADAR service](https://www.radar-service.eu),
 * use content from markdown files, bibtex files, or python docstrings to create web pages in a [Grav CMS](https://getgrav.org/).
 
-The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used with the GitLab CI to run automatically run on each push to a repository, or when a tag is created.
+The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used within the GitLab CI to run automatically on each push to a repository, or when a tag is created.
 
-An example integration in a CI environment can be found in the [openCARP CI file](https://git.opencarp.org/openCARP/openCARP/-/blob/master/.gitlab-ci.yml) and the [included subscripts](https://git.opencarp.org/openCARP/openCARP/-/tree/master/.gitlab/ci).
+An example of integration in a CI environment can be found in the [openCARP CI file](https://git.opencarp.org/openCARP/openCARP/-/blob/master/.gitlab-ci.yml) and the [included subscripts](https://git.opencarp.org/openCARP/openCARP/-/tree/master/.gitlab/ci).
 
 
 ## Setup
@@ -34,22 +34,21 @@ pip install git+https://git.opencarp.org/openCARP/openCARP-CI
 
 You can adapt the automated pipelines from this repository by copying `.gitlab-ci.yml` and `.gitlab/` to your project.
 
-For the publication in releases you need to add access token. Go to your repository and then in Settings -> Access Tokens choose the name of your token, Expiration date (can be removed) and role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been crated, copy its value and go to your repository Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously.
+For the publication in releases you need to add an access token. Go to your repository and then in Settings -> Access Tokens, choose the name of your token, Expiration date (can be removed), role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been created, copy its value and go to your repository, Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously).
 
 If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/.gitlab-ci.yml#L35).
 
 
 ## Usage
 
-Each of the scripts expects a number of command line arguments. Default values can be set using enviroment variables (using upper case and underscores), i.e. the following lines do the same:
+Each of the scripts expects a number of command line arguments. Default values can be set using environment variables (using upper case and underscores), i.e. the following lines do the same:
 
 ```bash
 create_bag --bag-path=/path/to/bag
 BAG_PATH=/path/to/bag create_bag
 ```
 
-Enviroments variables can be set in the usual way, e.g. the `.gitlab-ci.yml` file, but also in a `.env` file in the directory where the script is invoked. See `.env.sample` for a sample environment file.
-
+Environments variables can be set in the usual way, e.g. the `.gitlab-ci.yml` file, but also in a `.env` file in the directory where the script is invoked.
 
 The following scripts are included:
 
@@ -251,7 +250,7 @@ optional arguments:
 
 ### create_radar
 
-Creates an archive in the [RADAR service](https://www.radar-service.eu) and upload the assets provided as positional arguments. The metadata is created similar to `create_datacite`. If the RADAR ID is already in the CodeMeta file, the existing archive is updated instead. A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
+Creates an archive in the [RADAR service](https://www.radar-service.eu) and uploads the assets provided as positional arguments. The metadata is created similar to `create_datacite`. If the RADAR ID is already in the CodeMeta file, the existing archive is updated instead. A detailed HowTo for releasing datasets on RADAR is provided in the file `HOWTO_release_radar.md` in this directory.
 
 ```
 usage: create_radar [-h] [--codemeta-location CODEMETA_LOCATION]
