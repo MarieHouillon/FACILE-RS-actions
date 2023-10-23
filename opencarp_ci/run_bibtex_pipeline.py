@@ -45,7 +45,7 @@ def main():
         source_path = Path(settings.PIPELINE_SOURCE).expanduser() / source
         logger.debug('page_path = %s, source_path = %s', page_path, source_path)
 
-        extra_args = ['--bibliography={}'.format(source_path), '--citeproc']
+        extra_args = ['--bibliography={}'.format(source_path), '--citeproc', '--wrap=preserve']
         if settings.PIPELINE_CSL:
             extra_args.append('--csl={}'.format(settings.PIPELINE_CSL))
 
