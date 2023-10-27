@@ -164,7 +164,7 @@ def main():
 
                     # create content from the docstring using pandoc
                     # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
-                    body = pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax'])
+                    body = pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax', '--wrap=preserve'])
                     
                     # convert RST section headers to level 2 headings
                     body = body.replace('<h1 id=', '<h2 id=')
