@@ -28,11 +28,8 @@ def main():
     codemeta = CodemetaMetadata()
     codemeta.fetch(settings.CODEMETA_LOCATION)
 
-    if 'version' in codemeta.data:
-        codemeta.data['version'] = settings.VERSION
-
-    if 'dateModified' in codemeta.data:
-        codemeta.data['dateModified'] = settings.DATE or date.today().strftime('%Y-%m-%d')
+    codemeta.data['version'] = settings.VERSION
+    codemeta.data['dateModified'] = settings.DATE or date.today().strftime('%Y-%m-%d')
 
     Path(settings.CODEMETA_LOCATION).expanduser().write_text(codemeta.to_json())
 
