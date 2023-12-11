@@ -11,7 +11,7 @@ You'll need your metadata prepared in a [codemeta.json](https://codemeta.github.
 
 
 ## GitLab Continuous Integration environment
-1. You need access to a GitLab Runner that can run Docker containers. If your project is hosted on KIT's GitLab instance, you will have access to a suitable shared runner. If your project is hosted on GitLab.com, you have access to free runners for a certain amount of minutes per month. If not, see [the GitLab docs](https://docs.gitlab.com/runner/install/) for general information on how to set up your own GitLab runner.  
+1. You need access to a GitLab Runner that can run Docker containers. If your project is hosted on [the Helmholtz Codebase GitLab instance](https://codebase.helmholtz.cloud/), you will have access to a suitable shared runner. If your project is hosted on GitLab.com, you have access to free runners for a certain amount of minutes per month. If not, see [the GitLab docs](https://docs.gitlab.com/runner/install/) for general information on how to set up your own GitLab runner.  
 In general, openCARP-CI should also be comatible with GitHub Actions. We did not test this yet. If you got it running, a merge request extending this documentation would be highly appreciated.
 
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
