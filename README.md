@@ -10,7 +10,7 @@ This package contains a set of Python scripts which can be used to perform tasks
 
 The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used within the GitLab CI to run automatically on each push to a repository, or when a tag is created.
 
-An example of integration in a CI environment can be found in the [openCARP CI file](https://git.opencarp.org/openCARP/openCARP/-/blob/master/.gitlab-ci.yml) and the [included subscripts](https://git.opencarp.org/openCARP/openCARP/-/tree/master/.gitlab/ci).
+An example of integration in a CI environment can be found in the [KIT project template](https://gitlab.kit.edu/kit/fair-rs/public/template-instance). An example of a more complex setup are the [openCARP CI file](https://git.opencarp.org/openCARP/openCARP/-/blob/master/.gitlab-ci.yml) and the [included subscripts](https://git.opencarp.org/openCARP/openCARP/-/tree/master/.gitlab/ci).
 
 
 ## Setup
