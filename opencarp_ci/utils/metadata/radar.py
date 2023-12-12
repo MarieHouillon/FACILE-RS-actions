@@ -257,7 +257,8 @@ class RadarMetadata(object):
             radar_dict['descriptiveMetadata']['resource'] = {
                 'value': self.data['applicationCategory']
             }
-            if self.data.get('@type') == 'SoftwareSourceCode':
+        
+        if self.data.get('@type') == 'SoftwareSourceCode':
                 radar_dict['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
 
         if 'license' in self.data:
