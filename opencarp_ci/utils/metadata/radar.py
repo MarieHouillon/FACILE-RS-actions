@@ -55,7 +55,8 @@ class RadarMetadata(object):
                 }
             },
             'descriptiveMetadata': {
-                'language': 'ENG'
+                'language': 'ENG',
+                'resource': {}
             }
         }
 
