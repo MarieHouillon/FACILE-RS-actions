@@ -56,6 +56,12 @@ variables:
 
 include:
 - local: .gitlab/ci/cff.gitlab-ci.yml
+
+# This configuration must be used if you have runners with other executors than docker available (for example shell runners)
+# To force the jobs to be picked up by docker runners, use the tag associated to the docker runners (usually "docker"):
+# default:
+#   tags:
+#     - docker
 ```
 
 We will then create the CI job configuration in `.gitlab/ci/cff.gitlab-ci.yml`. The content of this file could be integrated directly in the file `.gitlab-ci.yml`, but we prefer to write it in a separate file so that the CI configuration is more readable when more jobs are added.
