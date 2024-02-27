@@ -4,7 +4,7 @@ archive-radar:
   rules:
   - if: ($CI_COMMIT_TAG =~ /^v/ && $ENABLE_RADAR == "true")
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   script:
   - >
     create_radar
@@ -21,7 +21,7 @@ archive-bagpack:
   # setup rsync
   - apt-get update && apt-get install -y curl
   # setup pipelines
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   script:
   - >
     create_bagpack
