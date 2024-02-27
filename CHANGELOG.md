@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Fix `false` to `False` in `prepare_radar.py`
 - Calling citeproc with `--citeproc instead` of as a filter
 
+### Fixed
+- Correctly parse `@type` when converting to RADAR metadata
+- Remove `https://spdx.org/licenses/` from license name for RADAR and CFF
+
 ## v1.5.2
 
 ### Changed

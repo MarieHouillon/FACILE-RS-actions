@@ -266,6 +266,9 @@ class RadarMetadata(object):
             licenseName = ""
             if isinstance(self.data['license'], str):
                 licenseName = self.data['license']
+                # CodeMeta wants the license to be a URL or a creative work, RADAR is only interested in the name
+                if licenseName.startswith("https://spdx.org/licenses/"):
+                    licenseName.replace("https://spdx.org/licenses/", "")
             elif isinstance(self.data['license'], dict) and 'name' in self.data['license']:
                 licenseName = self.data['license']['name']
 
