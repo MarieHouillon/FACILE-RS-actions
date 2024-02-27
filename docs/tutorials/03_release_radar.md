@@ -1,4 +1,4 @@
-# How to set up openCARP CI for a two-step release process and archival on RADAR
+# How to set up FACILE-RS for a two-step release process and archival on RADAR
 
 ## Overview
 This HowTo will guide you through
@@ -12,7 +12,7 @@ You'll need your metadata prepared in a [codemeta.json](https://codemeta.github.
 
 ## GitLab Continuous Integration environment
 1. You need access to a GitLab Runner that can run Docker containers. If your project is hosted on [the Helmholtz Codebase GitLab instance](https://codebase.helmholtz.cloud/), you will have access to a suitable shared runner. If your project is hosted on GitLab.com, you have access to free runners for a certain amount of minutes per month. If not, see [the GitLab docs](https://docs.gitlab.com/runner/install/) for general information on how to set up your own GitLab runner.  
-In general, openCARP-CI should also be comatible with GitHub Actions. We did not test this yet. If you got it running, a merge request extending this documentation would be highly appreciated.
+In general, FACILE-RS should also be compatible with GitHub Actions. We did not test this yet. If you got it running, a merge request extending this documentation would be highly appreciated.
 
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
 3. In your GitLab project, go to `Settings` -> `CI/CD`. Create the following variables which you can all [protect and mask](https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project) to keep them safe:
@@ -68,7 +68,7 @@ variables:
   DATACITE_PATH: ${PROJECT_NAME}.xml
   DATACITE_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}.xml
   DATACITE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-datacite/${CI_COMMIT_TAG}
-  openCARP-CI_REPO: https://git.opencarp.org/openCARP/openCARP-CI.git
+  FACILE-RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
   GIT_SUBMODULE_STRATEGY: recursive
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
@@ -81,7 +81,7 @@ build-datacite:
   stage: build
   image: python:3.7
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - create_datacite
   artifacts:
@@ -126,7 +126,7 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - >
     create_release
@@ -139,7 +139,7 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
@@ -160,7 +160,7 @@ archive-radar:
   rules:
   - if: $CI_COMMIT_TAG =~ /^v/  
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - >
     create_radar

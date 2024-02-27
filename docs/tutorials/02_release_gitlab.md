@@ -1,6 +1,6 @@
 # Creation of a software release
 
-In this tutorial, you will learn how to use openCARP-CI to create a software release on GitLab automatically (using Continuous Integration), in your own GitLab project.
+In this tutorial, you will learn how to use FACILE-RS to create a software release on GitLab automatically (using Continuous Integration), in your own GitLab project.
 
 ## Prerequisites
 
@@ -77,7 +77,7 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
@@ -99,7 +99,7 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - export DEBIAN_FRONTEND="noninteractive"
   - apt update
   - apt-get install -y jq

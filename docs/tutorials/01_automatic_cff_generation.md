@@ -1,6 +1,6 @@
 # Automatic CFF (Citation File Format) file generation
 
-In this tutorial, you will learn how to use openCARP-CI to generate a [Citation File Format (CFF)](https://citation-file-format.github.io) metadata file automatically (using Continuous Integration) in your own GitLab project, from a CodeMeta file that you maintain manually.
+In this tutorial, you will learn how to use FACILE-RS to generate a [Citation File Format (CFF)](https://citation-file-format.github.io) metadata file automatically (using Continuous Integration) in your own GitLab project, from a CodeMeta file that you maintain manually.
 
 
 ## Prerequisites
@@ -11,7 +11,7 @@ Here are the prerequisites to implement this workflow in your own project:
 
 ## Create a metadata file in the CodeMeta format
 
-In order to use the openCARP-CI pipeline, you need to maintain a [CodeMeta](https://codemeta.github.io/) metadata file `codemeta.json` for your software project.
+In order to use the FACILE-RS pipeline, you need to maintain a [CodeMeta](https://codemeta.github.io/) metadata file `codemeta.json` for your software project.
 
 For generating this file, you can use for example [the CodeMeta generator](https://codemeta.github.io/codemeta-generator/).
 
@@ -75,11 +75,11 @@ create-cff:
   rules:
     - if: $CI_COMMIT_BRANCH
   script:
-  # Install openCARP-CI
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  # Install FACILE-RS
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  # See https://git.opencarp.org/openCARP/openCARP-CI#create_cff for more information about this script
+  # See https://git.opencarp.org/openCARP/FACILE-RS#create_cff for more information about this script
   - create_cff
   # Ignore the remaining steps if you don't want to push the generated CFF file to the repository
   # To simply visualize the generated CFF file in the CI job logs, you can use:
