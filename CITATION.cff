@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite the paper describing it as below. Specific
   versions of the software can additionally be referenced using individual DOIs.
 type: software
-title: openCARP CI
+title: FACILE-RS
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
 doi: 10.35097/974
@@ -23,8 +23,8 @@ authors:
   family-names: Stary
   orcid: https://orcid.org/0000-0001-9614-6263
 license: Apache-2.0
-license-url: https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/LICENSE
-repository-code: https://git.opencarp.org/openCARP/openCARP-CI
+license-url: https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/LICENSE
+repository-code: https://git.opencarp.org/openCARP/FACILE-RS
 preferred-citation:
   type: article
   doi: 10.17192/bfdm.2022.1.8368
@@ -56,6 +56,6 @@ preferred-citation:
     given-names: Robert
     orcid: https://orcid.org/0000-0001-9063-2703
 identifiers:
-- description: This is the archived snapshot of version v1.5.2 of openCARP CI
+- description: This is the archived snapshot of version v1.5.2 of FACILE-RS
   type: doi
   value: 10.35097/974

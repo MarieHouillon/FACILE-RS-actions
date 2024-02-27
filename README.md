@@ -1,4 +1,4 @@
-# openCARP CI
+# FACILE-RS
 
 This package contains a set of Python scripts which can be used to perform tasks around the archival and long term preservation of software repositories. In particular, it can be used to:
 
@@ -19,7 +19,7 @@ To use the scripts whithin the GitLab CI, add the following to your job:
 
 ```yaml
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS
 ```
 
 In order to run the scripts on the command line, we recommend to use a [virtual environment](https://docs.python.org/3/library/venv.html):
@@ -27,16 +27,16 @@ In order to run the scripts on the command line, we recommend to use a [virtual 
 ```bash
 python -m venv env
 source env/bin/activate
-pip install git+https://git.opencarp.org/openCARP/openCARP-CI
+pip install git+https://git.opencarp.org/openCARP/FACILE-RS
 ```
 
-### Adapting CI from openCARP-CI
+### Adapting CI from FACILE-RS
 
 You can adapt the automated pipelines from this repository by copying `.gitlab-ci.yml` and `.gitlab/` to your project.
 
 For the publication in releases you need to add an access token. Go to your repository and then in Settings -> Access Tokens, choose the name of your token, Expiration date (can be removed), role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been created, copy its value and go to your repository, Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously).
 
-If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/.gitlab-ci.yml#L35).
+If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/.gitlab-ci.yml#L35).
 
 
 ## Usage
@@ -208,7 +208,7 @@ optional arguments:
 
 ### prepare_radar
 
-Creates an empty archive in the [RADAR service](https://www.radar-service.eu) in order to "reserve" a DOI and an ID in RADAR. Both are stored in the CodeMeta file and can be used by the `create_radar` command below to include the DOI for this release in the deposited CodeMeta file. A detailed HowTo for releasing datasets on RADAR is provided in the file [`HOWTO_release_radar.md`](https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/HOWTO_release_radar.md) in this directory.
+Creates an empty archive in the [RADAR service](https://www.radar-service.eu) in order to "reserve" a DOI and an ID in RADAR. Both are stored in the CodeMeta file and can be used by the `create_radar` command below to include the DOI for this release in the deposited CodeMeta file. A detailed HowTo for releasing datasets on RADAR is provided in the file [`HOWTO_release_radar.md`](https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/HOWTO_release_radar.md) in this directory.
 
 ```
 usage: prepare_radar [-h] [--codemeta-location CODEMETA_LOCATION] [--radar-url RADAR_URL]
