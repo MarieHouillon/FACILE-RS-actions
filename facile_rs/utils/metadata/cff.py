@@ -68,11 +68,17 @@ class CffMetadata(object):
                     cff_json['authors'].append(cff_author)
 
         if 'license' in self.data:
-            if 'name' in self.data['license']:
-                cff_json['license'] = self.data['license']['name']
-
-            if 'url' in self.data['license']:
-                cff_json['license-url'] = self.data['license']['url']
+            if isinstance(self.data['license'], str):
+                cff_json['license'] = self.data['license']
+                # CodeMeta wants the license to be a URL or a creative work, CFF is only interested in the name
+                if cff_json['license'].startswith("https://spdx.org/licenses/"):
+                    cff_json['license'].replace("https://spdx.org/licenses/", "")
+            elif isinstance(self.data['license'], dict):
+                licenseName = self.data['license']['name']
+                if 'name' in self.data['license']:
+                    cff_json['license'] = self.data['license']['name']
+                if 'url' in self.data['license']:
+                    cff_json['license-url'] = self.data['license']['url']
 
         if 'codeRepository' in self.data:
             cff_json['repository-code'] = self.data['codeRepository']
