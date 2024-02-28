@@ -60,10 +60,10 @@ An example output can be found [here](https://git.opencarp.org/openCARP/openCARP
 ```
 usage: create_cff     [-h] [--codemeta-location CODEMETA_LOCATION]
                       [--creators-location CREATORS_LOCATION]
-                      [--contributors-location CONTRIBUTORS_LOCATION] 
-                      [--cff-path CFF_PATH] 
+                      [--contributors-location CONTRIBUTORS_LOCATION]
+                      [--cff-path CFF_PATH]
                       [--log-level LOG_LEVEL] [--log-file LOG_FILE]
-                      
+
 optional arguments:
   -h, --help            show this help message and exit
   --codemeta-location CODEMETA_LOCATION

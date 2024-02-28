@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import argparse
+import json
 import logging
 from pathlib import Path
 
 import frontmatter
 import yaml
-import json
 
 from .utils import settings
 from .utils.grav import collect_pages

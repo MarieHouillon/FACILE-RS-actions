@@ -28,7 +28,7 @@ stages:
 
 variables:
   PROJECT_NAME: foo-project
-  
+
   # Variables for metadata generation that will be used by the script `create_cff`
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -48,7 +48,7 @@ stages:
 
 variables:
   PROJECT_NAME: foo-project
-  
+
   # Variables for metadata generation
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -105,7 +105,7 @@ release-create:
   - apt-get install -y jq
   script:
   - create_release --release-description "$RELEASE_DESCRIPTION" --private-token "$PUSH_TOKEN"
-``` 
+```
 
 ## Create your first release
 

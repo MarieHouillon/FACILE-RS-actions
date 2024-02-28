@@ -30,7 +30,7 @@ To do so:
 - From your repository in GitLab, go to Settings -> Access Tokens, then click on "Add New Token".
 - Choose a name for your token, select the role "Maintainer" and the scopes "api" and "write_repository".
 - Create the token and copy its value.
-- Now go to Settings -> CI/CD -> Variables, and add a new variable with key `PUSH_TOKEN`. Use as value the token copied at the step before. 
+- Now go to Settings -> CI/CD -> Variables, and add a new variable with key `PUSH_TOKEN`. Use as value the token copied at the step before.
 
 > As this variable is a token allowing to push to the repository, make it at least be a masked variable so that it is not displayed in the CI logs.
 > We also advise you to make it protected so that it can only be uses on protected branches and tags.
@@ -47,7 +47,7 @@ stages:
 
 variables:
   PROJECT_NAME: tutorial-metadata
-  
+
   # Variables for metadata generation that will be used by the script `create_cff`
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -94,12 +94,12 @@ create-cff:
 ### Run the CI pipeline
 
 After you have pushed the CI configuration to the repository, a CI pipeline should have been run automatically.
-You can check the CI pipelines by going to Build -> Pipelines in the project menu. 
+You can check the CI pipelines by going to Build -> Pipelines in the project menu.
 
 ![GitLab interface for CI pipelines](images/ci_pipelines.png)
 
 After the pipeline is run, the file `CITATION.cff` should have been generated and pushed to your repository.
 
-If no CI pipeline has been run, it is maybe that no Docker runner is available for your project. 
+If no CI pipeline has been run, it is maybe that no Docker runner is available for your project.
 
 ![CITATION.cff generated in repository](images/generated_cff.png)
