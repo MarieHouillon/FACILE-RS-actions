@@ -3,8 +3,8 @@ import argparse
 from pathlib import Path
 
 from .utils import settings
-from .utils.radar import (fetch_radar_token, create_radar_dataset, prepare_radar_dataset)
-from .utils.metadata import RadarMetadata, CodemetaMetadata
+from .utils.metadata import CodemetaMetadata, RadarMetadata
+from .utils.radar import create_radar_dataset, fetch_radar_token, prepare_radar_dataset
 
 
 def main():

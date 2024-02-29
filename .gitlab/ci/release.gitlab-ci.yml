@@ -6,7 +6,7 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - export DEBIAN_FRONTEND="noninteractive"
   - apt update
   - apt-get install -y jq
@@ -28,7 +28,7 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:

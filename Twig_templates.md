@@ -16,7 +16,7 @@ Based on the `text` modular. See [here](https://opencarp.org/download/citation) 
             <div class="column col-12">
                 {{ content|raw }}{% markdown %}
 		! *{% for author in page.header.codemeta.referencePublication.author|slice(0, 3) %}{{ author.givenName }} {{ author.familyName|replace({'*': "&ast;"}) }}{% if not loop.last %}, {% endif %}{% endfor %} {% if page.header.codemeta.referencePublication.author|length > 3 %} et al{% endif %}. {{ page.header.codemeta.referencePublication.name }}. {{ page.header.codemeta.referencePublication.isPartOf.isPartOf.name }} {{ page.header.codemeta.referencePublication.isPartOf.datePublished }};{{page.header.codemeta.referencePublication.isPartOf.volumeNumber }}:{{page.header.codemeta.referencePublication.pageStart}}{% if page.header.codemeta.referencePublication.pageEnd %}{{ page.header.codemeta.referencePublication.pageEnd }}{% endif %}. [doi:{{ page.header.codemeta.referencePublication['@id']|replace({'https://doi.org/': ""}) }}]({{ page.header.codemeta.referencePublication['@id'] }})*
-			
+
 		```bibtex
 @article{{ '{' }}{{ page.header.codemeta.name }}-paper,
 	author = {{ '{' }}{% for author in page.header.codemeta.referencePublication.author %}{{ author.familyName }}, {{ author.givenName }}{% if not loop.last %} and {% endif %}{% endfor %}},
@@ -25,15 +25,15 @@ Based on the `text` modular. See [here](https://opencarp.org/download/citation) 
 	year = {{ '{' }}{{ page.header.codemeta.referencePublication.isPartOf.datePublished }}},
 	pages = {{ '{' }}{{ page.header.codemeta.referencePublication.pageStart }}{% if page.header.codemeta.referencePublication.pageEnd %}{{ page.header.codemeta.referencePublication.pageEnd }}{% endif %}},
 	volume = {{ '{' }}{{ page.header.codemeta.referencePublication.isPartOf.volumeNumber }}},
-	doi = {{ '{' }}{{ page.header.codemeta.referencePublication['@id']|replace({'https://doi.org/': ""}) }}} 
+	doi = {{ '{' }}{{ page.header.codemeta.referencePublication['@id']|replace({'https://doi.org/': ""}) }}}
 }
 @software{{ '{' }}{{ page.header.codemeta.name }}-sw,
 	author = {{ '{' }}{% for author in page.header.codemeta.author %}{% if author.familyName %}{{ author.familyName }}, {{ author.givenName }}{% if not loop.last %} and {% endif %}{% endif %}{% endfor %}},
 	title = {{ '{' }}{{ page.header.codemeta.name|replace({'openCARP': "{openCARP}"}) }}},
-	year = {{ '{' }}{{ page.header.codemeta.dateModified|substr(0,4) }}},        
+	year = {{ '{' }}{{ page.header.codemeta.dateModified|substr(0,4) }}},
 	doi = {{ '{' }}{{ page.header.codemeta.identifier[0].value }}},
 	version = {{ '{' }}{{ page.header.codemeta.version }}},
-	license = {{ '{' }}{{ page.header.codemeta.license.name }}},	
+	license = {{ '{' }}{{ page.header.codemeta.license.name }}},
 	url	= {{ '{' }}{{ page.header.codemeta.codeRepository }}}
 }
 		```
@@ -75,5 +75,3 @@ Based on the `text` modular. See [here](https://opencarp.org/community/contribut
     </section>
 </section>
 ```
-
-
