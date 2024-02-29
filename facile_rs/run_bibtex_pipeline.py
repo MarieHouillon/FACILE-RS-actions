@@ -4,13 +4,18 @@ import logging
 from pathlib import Path
 
 import frontmatter
-import yaml
-import json
+import pypandoc
 
 from .utils import settings
 from .utils.grav import collect_pages
 
 logger = logging.getLogger(__file__)
+
+TEMPLATE = '''
+---
+nocite: '@*'
+---
+'''
 
 
 def main():
@@ -21,6 +26,8 @@ def main():
     parser.add_argument('--pipeline', dest='pipeline',
                         help='Name of the pipeline as specified in the GRAV metadata.')
     parser.add_argument('--pipeline-source', dest='pipeline_source',
+                        help='Path to the source directory for the pipeline.')
+    parser.add_argument('--pipeline-csl', dest='pipeline_csl',
                         help='Path to the source directory for the pipeline.')
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
@@ -33,25 +40,20 @@ def main():
         'PIPELINE_SOURCE'
     ])
 
-    # loop over the tagged pages and write the content into the files
+    # loop over the found pages and write the content into the files
     for page_path, page, source in collect_pages(settings.GRAV_PATH, settings.PIPELINE):
         source_path = Path(settings.PIPELINE_SOURCE).expanduser() / source
+        logger.debug('page_path = %s, source_path = %s', page_path, source_path)
 
-        # read the source file
-        if source_path.suffix in ['.json']:
-            data = json.loads(source_path.read_text())
-            if source_path.name == 'codemeta.json':
-                page.metadata['codemeta'] = data
-            else:
-                page.metadata['items'] = data
-        elif source_path.suffix in ['.yml', '.yaml']:
-            page.metadata['items'] = yaml.safe_load(source_path.read_text())
-        else:
-            page.content = source_path.read_text()
+        extra_args = [f'--bibliography={source_path}', '--citeproc', '--wrap=preserve']
+        if settings.PIPELINE_CSL:
+            extra_args.append(f'--csl={settings.PIPELINE_CSL}')
 
-        # write the page file
-        logger.info('writing content to %s', page_path)
-        page_path.write_text(frontmatter.dumps(page))
+        page.content = pypandoc.convert_text(TEMPLATE, to='html', format='md',
+                                             extra_args=extra_args)
+
+        logger.info('writing publications to %s', page_path)
+        open(page_path, 'w').write(frontmatter.dumps(page))
 
 
 if __name__ == "__main__":

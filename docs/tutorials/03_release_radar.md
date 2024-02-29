@@ -1,4 +1,4 @@
-# How to set up openCARP CI for a two-step release process and archival on RADAR
+# How to set up FACILE-RS for a two-step release process and archival on RADAR
 
 ## Overview
 This HowTo will guide you through
@@ -11,8 +11,8 @@ You'll need your metadata prepared in a [codemeta.json](https://codemeta.github.
 
 
 ## GitLab Continuous Integration environment
-1. You need access to a GitLab Runner that can run Docker containers. If your project is hosted on [the Helmholtz Codebase GitLab instance](https://codebase.helmholtz.cloud/), you will have access to a suitable shared runner. If your project is hosted on GitLab.com, you have access to free runners for a certain amount of minutes per month. If not, see [the GitLab docs](https://docs.gitlab.com/runner/install/) for general information on how to set up your own GitLab runner.  
-In general, openCARP-CI should also be comatible with GitHub Actions. We did not test this yet. If you got it running, a merge request extending this documentation would be highly appreciated.
+1. You need access to a GitLab Runner that can run Docker containers. If your project is hosted on [the Helmholtz Codebase GitLab instance](https://codebase.helmholtz.cloud/), you will have access to a suitable shared runner. If your project is hosted on GitLab.com, you have access to free runners for a certain amount of minutes per month. If not, see [the GitLab docs](https://docs.gitlab.com/runner/install/) for general information on how to set up your own GitLab runner.
+In general, FACILE-RS should also be compatible with GitHub Actions. We did not test this yet. If you got it running, a merge request extending this documentation would be highly appreciated.
 
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
 3. In your GitLab project, go to `Settings` -> `CI/CD`. Create the following variables which you can all [protect and mask](https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project) to keep them safe:
@@ -22,7 +22,7 @@ In general, openCARP-CI should also be comatible with GitHub Actions. We did not
   * `RADAR_REDIRECT_URL` with the value being a link to a web page of your project or repository, e.g. `https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/`
   * `RADAR_EMAIL` with the value being the mail address of the data steward for this dataset
   * `RADAR_WORKSPACE_ID` with the value being the ID of your RADAR workspace (see the URL to your workspace with the . followed by the name of your workspace)
-  * `RADAR_URL` with the value being the URL to your RADAR instance (talk to your RADAR admin)  
+  * `RADAR_URL` with the value being the URL to your RADAR instance (talk to your RADAR admin)
   * `RADAR_CLIENT_ID` with the value being your RADAR API client ID (talk to your RADAR admin)
   * `RADAR_CLIENT_SECRET` with the value being your RADAR API secret (talk to your RADAR admin)
   * `RADAR_USERNAME` with the value being your RADAR API user name (talk to your RADAR admin)
@@ -37,7 +37,7 @@ Go to `Settings` -> `Repository` -> `Protected tags` and add the following entri
 You can find a minimum template for a two-stage release process below. There are a number of variables that should/can be adapted:
   * `PROJECT_NAME` where you replace `openCARP` with for example the name of your software
   * `RELEASE_DESCRIPTION` where you adapt the search term and can add as many additional release info as desired, see for example [here](https://git.opencarp.org/openCARP/openCARP/-/releases)
-  * `CREATORS_LOCATIONS` and `CONTRIBUTORS_LOCATIONS` (the latter being data curators) with paths or links to raw codemeta.json files. They can also be lists of those links (starting with `|` and then one link per line) or empty. 
+  * `CREATORS_LOCATIONS` and `CONTRIBUTORS_LOCATIONS` (the latter being data curators) with paths or links to raw codemeta.json files. They can also be lists of those links (starting with `|` and then one link per line) or empty.
   * If you want to inform the data steward about the new release ready to be published, set the following variables:
     * `NOTIFICATION_EMAIL: abc@host.com` address of the data steward (can be the same as `RADAR_EMAIL`)
     * `SMTP_SERVER: your.smtpserver.com` (a SMTP server not requiring authentication, e.g. `smarthost.kit.edu`)
@@ -68,7 +68,7 @@ variables:
   DATACITE_PATH: ${PROJECT_NAME}.xml
   DATACITE_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}.xml
   DATACITE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-datacite/${CI_COMMIT_TAG}
-  openCARP-CI_REPO: https://git.opencarp.org/openCARP/openCARP-CI.git
+  FACILE-RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
   GIT_SUBMODULE_STRATEGY: recursive
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
@@ -81,7 +81,7 @@ build-datacite:
   stage: build
   image: python:3.7
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - create_datacite
   artifacts:
@@ -97,7 +97,7 @@ release-datacite:
   needs:
   - build-datacite
   rules:
-  - if: $CI_COMMIT_TAG =~ /^v/  
+  - if: $CI_COMMIT_TAG =~ /^v/
   script:
   - mv $DATACITE_PATH $DATACITE_RELEASE
   - |
@@ -110,7 +110,7 @@ release-datacite:
 #  stage: release
 #  image: mrnonz/alpine-git-curl:alpine3.12
 #  rules:
-#  - if: $CI_COMMIT_TAG =~ /^v/  
+#  - if: $CI_COMMIT_TAG =~ /^v/
 #  script:
 #  - git clone --branch ${CI_COMMIT_TAG} --depth 1 --recurse-submodules ${CI_PROJECT_URL}.git
 #  - rm -rf ${CI_PROJECT_NAME}/.git/
@@ -126,7 +126,7 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - >
     create_release
@@ -139,13 +139,13 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
   - VERSION=`echo $CI_COMMIT_TAG | grep -oP '^pre-\K.*$'`
   - echo "Preparing release of $VERSION"
-  - prepare_release 
+  - prepare_release
   - prepare_radar
   - create_cff
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
@@ -158,9 +158,9 @@ archive-radar:
   stage: archive
   image: python:3.7
   rules:
-  - if: $CI_COMMIT_TAG =~ /^v/  
+  - if: $CI_COMMIT_TAG =~ /^v/
   before_script:
-  - pip install git+${openCARP-CI_REPO}
+  - pip install git+${FACILE-RS_REPO}
   script:
   - >
     create_radar

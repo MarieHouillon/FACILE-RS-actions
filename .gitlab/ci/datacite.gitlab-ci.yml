@@ -2,7 +2,7 @@ build-datacite:
   stage: build
   image: python:3.9
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   script:
   - create_datacite
   artifacts:
