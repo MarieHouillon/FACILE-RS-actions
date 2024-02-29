@@ -16,7 +16,7 @@ repos:
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
-  - repo: https://git.opencarp.org/openCARP/openCARP-CI
+  - repo: https://git.opencarp.org/openCARP/FACILE-RS
     rev: v1.5
     hooks:
     - id: create_cff
