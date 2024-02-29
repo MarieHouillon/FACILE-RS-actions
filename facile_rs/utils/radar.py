@@ -28,7 +28,7 @@ def fetch_radar_token(radar_url, client_id, client_secret, redirect_url, usernam
 
 
 def create_radar_dataset(radar_url, workspace_id, headers, radar_dict):
-    url = radar_url + '/radar/api/workspaces/{}/datasets'.format(workspace_id)
+    url = radar_url + f'/radar/api/workspaces/{workspace_id}/datasets'
     try:
         response = requests.post(url, headers=headers, json=radar_dict)
         response.raise_for_status()
@@ -40,11 +40,11 @@ def create_radar_dataset(radar_url, workspace_id, headers, radar_dict):
 
 
 def prepare_radar_dataset(radar_url, dataset_id, headers):
-    review_url = radar_url + '/radar/api/datasets/{}/startreview'.format(dataset_id)
+    review_url = radar_url + f'/radar/api/datasets/{dataset_id}/startreview'
     try:
         response = requests.post(review_url, headers=headers)
         if response.status_code == 422:
-            dataset_url = radar_url + '/radar/api/datasets/{}/'.format(dataset_id)
+            dataset_url = radar_url + f'/radar/api/datasets/{dataset_id}/'
             response = requests.get(dataset_url, headers=headers)
             response.raise_for_status()
             logger.debug('response = %s', response.json())
@@ -58,7 +58,7 @@ def prepare_radar_dataset(radar_url, dataset_id, headers):
 
 
 def update_radar_dataset(radar_url, dataset_id, headers, radar_dict):
-    url = radar_url + '/radar/api/datasets/{}'.format(dataset_id)
+    url = radar_url + f'/radar/api/datasets/{dataset_id}'
     try:
         response = requests.put(url, headers=headers, json=radar_dict)
         response.raise_for_status()
@@ -70,7 +70,7 @@ def update_radar_dataset(radar_url, dataset_id, headers, radar_dict):
 
 
 def upload_radar_assets(radar_url, dataset_id, headers, assets, path):
-    url = radar_url + '/radar-ingest/upload/{}/file'.format(dataset_id)
+    url = radar_url + f'/radar-ingest/upload/{dataset_id}/file'
     for location in assets:
         target = path / location.split('/')[-1]
         files = {'upload_file': open(target, 'rb')}

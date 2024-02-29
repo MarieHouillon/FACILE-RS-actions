@@ -1,6 +1,6 @@
 # Automatic CFF (Citation File Format) file generation
 
-In this tutorial, you will learn how to use openCARP-CI to generate a [Citation File Format (CFF)](https://citation-file-format.github.io) metadata file automatically (using Continuous Integration) in your own GitLab project, from a CodeMeta file that you maintain manually.
+In this tutorial, you will learn how to use FACILE-RS to generate a [Citation File Format (CFF)](https://citation-file-format.github.io) metadata file automatically (using Continuous Integration) in your own GitLab project, from a CodeMeta file that you maintain manually.
 
 
 ## Prerequisites
@@ -11,7 +11,7 @@ Here are the prerequisites to implement this workflow in your own project:
 
 ## Create a metadata file in the CodeMeta format
 
-In order to use the openCARP-CI pipeline, you need to maintain a [CodeMeta](https://codemeta.github.io/) metadata file `codemeta.json` for your software project.
+In order to use the FACILE-RS pipeline, you need to maintain a [CodeMeta](https://codemeta.github.io/) metadata file `codemeta.json` for your software project.
 
 For generating this file, you can use for example [the CodeMeta generator](https://codemeta.github.io/codemeta-generator/).
 
@@ -30,7 +30,7 @@ To do so:
 - From your repository in GitLab, go to Settings -> Access Tokens, then click on "Add New Token".
 - Choose a name for your token, select the role "Maintainer" and the scopes "api" and "write_repository".
 - Create the token and copy its value.
-- Now go to Settings -> CI/CD -> Variables, and add a new variable with key `PUSH_TOKEN`. Use as value the token copied at the step before. 
+- Now go to Settings -> CI/CD -> Variables, and add a new variable with key `PUSH_TOKEN`. Use as value the token copied at the step before.
 
 > As this variable is a token allowing to push to the repository, make it at least be a masked variable so that it is not displayed in the CI logs.
 > We also advise you to make it protected so that it can only be uses on protected branches and tags.
@@ -47,7 +47,7 @@ stages:
 
 variables:
   PROJECT_NAME: tutorial-metadata
-  
+
   # Variables for metadata generation that will be used by the script `create_cff`
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -75,11 +75,11 @@ create-cff:
   rules:
     - if: $CI_COMMIT_BRANCH
   script:
-  # Install openCARP-CI
-  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
+  # Install FACILE-RS
+  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  # See https://git.opencarp.org/openCARP/openCARP-CI#create_cff for more information about this script
+  # See https://git.opencarp.org/openCARP/FACILE-RS#create_cff for more information about this script
   - create_cff
   # Ignore the remaining steps if you don't want to push the generated CFF file to the repository
   # To simply visualize the generated CFF file in the CI job logs, you can use:
@@ -94,12 +94,12 @@ create-cff:
 ### Run the CI pipeline
 
 After you have pushed the CI configuration to the repository, a CI pipeline should have been run automatically.
-You can check the CI pipelines by going to Build -> Pipelines in the project menu. 
+You can check the CI pipelines by going to Build -> Pipelines in the project menu.
 
 ![GitLab interface for CI pipelines](images/ci_pipelines.png)
 
 After the pipeline is run, the file `CITATION.cff` should have been generated and pushed to your repository.
 
-If no CI pipeline has been run, it is maybe that no Docker runner is available for your project. 
+If no CI pipeline has been run, it is maybe that no Docker runner is available for your project.
 
 ![CITATION.cff generated in repository](images/generated_cff.png)

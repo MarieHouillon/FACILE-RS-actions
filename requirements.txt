@@ -1,8 +1,0 @@
-bagit~=1.7
-pypandoc~=1.6
-python-dotenv~=0.10
-python-frontmatter~=0.4
-PyYaml~=5.3.1
-requests~=2.23.0
-python-resize-image~=1.1.20
-Pillow~=9.4.0
