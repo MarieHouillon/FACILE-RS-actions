@@ -29,7 +29,7 @@ def main():
     # setup the bag
     bag_path = Path(settings.BAG_PATH).expanduser()
     if bag_path.exists():
-        parser.error(f'{bag_path} already exists.')
+        parser.error('{} already exists.'.format(bag_path))
     bag_path.mkdir()
 
     # collect assets

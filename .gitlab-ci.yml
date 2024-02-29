@@ -5,7 +5,7 @@ stages:
 - archive
 
 variables:
-  PROJECT_NAME: FACILE-RS
+  PROJECT_NAME: openCARP-CI
   GIT_SUBMODULE_STRATEGY: recursive
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone

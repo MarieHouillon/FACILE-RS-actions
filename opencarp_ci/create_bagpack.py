@@ -33,7 +33,7 @@ def main():
     # setup the bag
     bag_path = Path(settings.BAG_PATH).expanduser()
     if bag_path.exists():
-        parser.error(f'{bag_path} already exists.')
+        parser.error('{} already exists.'.format(bag_path))
     bag_path.mkdir()
 
     # collect assets
@@ -56,10 +56,10 @@ def main():
     datacite_bag_path.write_text(datacite_xml)
 
     with open(bag_path / 'tagmanifest-sha256.txt', 'a') as f:
-        f.write(f'{get_sha256(datacite_path)} metadata/datacite.xml\n')
+        f.write('{} metadata/datacite.xml\n'.format(get_sha256(datacite_path)))
 
     with open(bag_path / 'tagmanifest-sha512.txt', 'a') as f:
-        f.write(f'{get_sha512(datacite_path)} metadata/datacite.xml\n')
+        f.write('{} metadata/datacite.xml\n'.format(get_sha512(datacite_path)))
 
 
 if __name__ == "__main__":

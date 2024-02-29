@@ -1,6 +1,6 @@
 # Creation of a software release
 
-In this tutorial, you will learn how to use FACILE-RS to create a software release on GitLab automatically (using Continuous Integration), in your own GitLab project.
+In this tutorial, you will learn how to use openCARP-CI to create a software release on GitLab automatically (using Continuous Integration), in your own GitLab project.
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ stages:
 
 variables:
   PROJECT_NAME: foo-project
-
+  
   # Variables for metadata generation that will be used by the script `create_cff`
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -48,7 +48,7 @@ stages:
 
 variables:
   PROJECT_NAME: foo-project
-
+  
   # Variables for metadata generation
   CREATORS_LOCATIONS: codemeta.json
   CODEMETA_LOCATION: codemeta.json
@@ -77,7 +77,7 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
+  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
@@ -99,13 +99,13 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
+  - pip install git+https://git.opencarp.org/openCARP/openCARP-CI.git
   - export DEBIAN_FRONTEND="noninteractive"
   - apt update
   - apt-get install -y jq
   script:
   - create_release --release-description "$RELEASE_DESCRIPTION" --private-token "$PUSH_TOKEN"
-```
+``` 
 
 ## Create your first release
 

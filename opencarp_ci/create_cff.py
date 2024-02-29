@@ -3,7 +3,7 @@ import argparse
 from pathlib import Path
 
 from .utils import settings
-from .utils.metadata import CffMetadata, CodemetaMetadata
+from .utils.metadata import CodemetaMetadata, CffMetadata
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--cff-path', dest='cff_path',
                         help='Path to the cff output file')
     parser.add_argument('--no-sort-authors', dest='sort_authors', action='store_false',
-                        help='Do not sort authors alphabetically, keep order in codemeta.json file')
+                        help='Do not sort authors alphabetically, keep order in codemeta.json file')    
     parser.set_defaults(sort_authors=True)
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
