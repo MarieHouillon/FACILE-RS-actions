@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Changed
 - Fix `false` to `False` in `prepare_radar.py`
 - Calling citeproc with `--citeproc instead` of as a filter
-- Rename openCARP-CI to FACILE-RS
 
 ### Fixed
 - Correctly parse `@type` when converting to RADAR metadata

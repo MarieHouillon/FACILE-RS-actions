@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 logger = logging.getLogger(__file__)
 
 
-class Settings:
+class Settings(object):
 
     _shared_state = {}
 
@@ -52,8 +52,7 @@ class Settings:
         # setup logs
         log_level = self.LOG_LEVEL.upper()
         log_file = Path(self.LOG_FILE).expanduser().as_posix() if self.LOG_FILE else None
-        logging.basicConfig(level=log_level, filename=log_file,
-                            format='[%(asctime)s] %(levelname)s %(name)s: %(message)s')
+        logging.basicConfig(level=log_level, filename=log_file, format='[%(asctime)s] %(levelname)s %(name)s: %(message)s')
 
         # log settings
         logger.debug('settings = %s', self)
@@ -64,7 +63,7 @@ class Settings:
             if getattr(self, key) is None:
                 errors.append(key)
         if len(errors) == 1:
-            parser.error(f'{errors[0]} is missing.')
+            parser.error('{} is missing.'.format(errors[0]))
         elif len(errors) >= 1:
             parser.error('{} are missing.'.format(', '.join(errors)))
 

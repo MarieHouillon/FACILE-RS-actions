@@ -7,7 +7,7 @@ from xml.sax.saxutils import XMLGenerator
 logger = logging.getLogger(__file__)
 
 
-class DataciteMetadata:
+class DataciteMetadata(object):
 
     doi_prefix = 'https://doi.org/'
     orcid_prefix = 'https://orcid.org/'
@@ -213,8 +213,7 @@ class DataciteMetadata:
 
         if any(key in self.data for key in ['referencePublication', 'codeRepository']):
             self.xml.startElement('relatedIdentifiers', {})
-            if 'referencePublication' in self.data and \
-                    self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
+            if 'referencePublication' in self.data and self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
                 self.render_node('relatedIdentifier', {
                     'relatedIdentifierType': 'DOI',
                     'relationType': 'IsDocumentedBy'

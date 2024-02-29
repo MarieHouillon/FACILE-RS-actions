@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 import argparse
-import smtplib
 from pathlib import Path
+import smtplib
 
 from .utils import settings
 from .utils.http import fetch_files
-from .utils.metadata import CodemetaMetadata, RadarMetadata
-from .utils.radar import create_radar_dataset, fetch_radar_token, update_radar_dataset, upload_radar_assets
+from .utils.metadata import RadarMetadata, CodemetaMetadata
+from .utils.radar import (create_radar_dataset, fetch_radar_token,
+                          update_radar_dataset, upload_radar_assets)
 
 
 def main():
@@ -70,7 +71,7 @@ def main():
     # setup the bag directory
     radar_path = Path(settings.RADAR_PATH).expanduser()
     if radar_path.exists():
-        parser.error(f'{radar_path} already exists.')
+        parser.error('{} already exists.'.format(radar_path))
     radar_path.mkdir()
 
     # prepare radar payload
@@ -112,19 +113,12 @@ def main():
 
     if settings.SMTP_SERVER and settings.NOTIFICATION_EMAIL:
         message = """\
-From: {}
-To: {}
-Subject: {}
+From: %s
+To: %s
+Subject: %s
 
-{}
-""".format(
-    settings.RADAR_EMAIL,
-    settings.NOTIFICATION_EMAIL,
-    "New RADAR release ready to publish",
-    "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit"
-    " https://radar.kit.edu/radar/de/workspace/{}.{} to publish this release.".format(
-        settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID
-))
+%s
+""" % (settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, "New RADAR release ready to publish", "A new RADAR release has been uploaded by a CI pipeline.\n\n Please visit https://radar.kit.edu/radar/de/workspace/%s.%s to publish this release."%(settings.RADAR_WORKSPACE_ID,settings.RADAR_CLIENT_ID))
         server = smtplib.SMTP(settings.SMTP_SERVER)
         server.sendmail(settings.RADAR_EMAIL, settings.NOTIFICATION_EMAIL, message)
         server.quit()

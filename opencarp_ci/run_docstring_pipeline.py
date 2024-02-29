@@ -6,12 +6,13 @@ import os
 import re
 import shutil
 from pathlib import Path
+from PIL import Image
+from resizeimage import resizeimage
+
 
 import frontmatter
 import pypandoc
 import yaml
-from PIL import Image
-from resizeimage import resizeimage
 
 from .utils import settings
 from .utils.grav import collect_pages
@@ -110,16 +111,14 @@ def main():
                     # read the __init__.py file and obtain the metadata
                     with open(init_path) as f:
                         metadata = dict(re.findall(METADATA_PATTERN, f.read()))
-
+                    
                     # read the run.py file and obtain the metadata
-                    with open(run_path) as f:
+                    with open(run_path) as f:                    
                         metadata_run = dict(re.findall(METADATA_RUN_PATTERN, f.read()))
                     titleString = ''
                     if 'DESCRIPTIVE_NAME' in metadata_run.keys():
                         titleString = titleString + '<h1>' + metadata_run.get('DESCRIPTIVE_NAME') + '</h1>\n'
-                    titleString = titleString \
-                            + '<i>See <a href="https://git.opencarp.org/openCARP/experiments/-/blob/master/' \
-                            + str(run_path) + '" target="_blank">code</a> in GitLab.</i><br/>\n'
+                    titleString = titleString + '<i>See <a href="https://git.opencarp.org/openCARP/experiments/-/blob/master/' + str(run_path) + '" target="_blank">code</a> in GitLab.</i><br/>\n'    
                     if 'AUTHOR' in metadata_run.keys():
                         titleString = titleString + '<i>Author: ' + metadata_run.get('AUTHOR') + '</i>\n'
 
@@ -135,9 +134,9 @@ def main():
 
                         if ref in refs and refs[ref] is not None:
                             target = refs[ref]
-                            docstring = docstring.replace(m.group(0), f'`{text} <{target}>`_')
+                            docstring = docstring.replace(m.group(0), '`{text} <{target}>`_'.format(text=text, target=target))
                         else:
-                            logger.warning(f'Reference {m.group(0)} missing')
+                            logger.warning('Reference {} missing'.format(m.group(0)))
                             docstring = docstring.replace(m.group(0), text)
 
                     # search for .. figure::
@@ -164,11 +163,9 @@ def main():
                         images.append(thumb_name)
 
                     # create content from the docstring using pandoc
-                    # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't
-                    # seem to be supported by our pandoc version
-                    body = pypandoc.convert_text(docstring, to='html', format='rst',
-                                                 extra_args=['--mathjax', '--wrap=preserve'])
-
+                    # we should probably add '--shift-heading-level-by=1' to extra_args but it doesn't seem to be supported by our pandoc version
+                    body = pypandoc.convert_text(docstring, to='html', format='rst', extra_args=['--mathjax', '--wrap=preserve'])
+                    
                     # convert RST section headers to level 2 headings
                     body = body.replace('<h1 id=', '<h2 id=')
                     body = body.replace('</h1>', '</h2>')
@@ -184,8 +181,8 @@ def main():
                     thumb_name = ''
                     if image:
                         thumb_name = 'thumb_' + image
-
-
+                    
+                    
                     try:
                         page = frontmatter.load(md_path)
                         page.content = content
@@ -211,9 +208,9 @@ def main():
 
                             try:
                                 shutil.copy(source, destination)
-                                logger.debug(f'Copy image {source} to {destination}')
+                                logger.debug('Copy image {} to {}'.format(source, destination))
                             except FileNotFoundError:
-                                logger.warning(f'Image {source} missing')
+                                logger.warning('Image {} missing'.format(source))
 
                 elif '__init__.py' in files:
                     # create directories in the grav tree

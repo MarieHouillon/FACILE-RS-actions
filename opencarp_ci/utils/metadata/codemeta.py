@@ -6,7 +6,7 @@ from ..http import fetch_dict
 logger = logging.getLogger(__file__)
 
 
-class CodemetaMetadata:
+class CodemetaMetadata(object):
 
     def __init__(self):
         self.data = {}

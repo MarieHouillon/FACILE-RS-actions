@@ -18,8 +18,8 @@ def main():
     parser.add_argument('--datacite-path', dest='datacite_path',
                         help='Path to the DataCite XML output file')
     parser.add_argument('--no-sort-authors', dest='sort_authors', action='store_false',
-                        help='Do not sort authors alphabetically, keep order in codemeta.json file')
-    parser.set_defaults(sort_authors=True)
+                        help='Do not sort authors alphabetically, keep order in codemeta.json file')    
+    parser.set_defaults(sort_authors=True)    
     parser.add_argument('--log-level', dest='log_level',
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',

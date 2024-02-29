@@ -6,7 +6,7 @@ from datetime import datetime
 logger = logging.getLogger(__file__)
 
 
-class RadarMetadata:
+class RadarMetadata(object):
 
     doi_prefix = 'https://doi.org/'
     orcid_prefix = 'https://orcid.org/'
@@ -98,8 +98,7 @@ class RadarMetadata:
             radar_dict['descriptiveMetadata']['relatedIdentifiers'] = {
                 'relatedIdentifier': []
             }
-            if 'referencePublication' in self.data and \
-                    self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
+            if 'referencePublication' in self.data and self.data['referencePublication'].get('@id', '').startswith(self.doi_prefix):
                 radar_dict['descriptiveMetadata']['relatedIdentifiers']['relatedIdentifier'].append({
                     'value': self.data['referencePublication']['@id'].replace(self.doi_prefix, ''),
                     'relatedIdentifierType': 'DOI',
@@ -252,14 +251,14 @@ class RadarMetadata:
                     'nameIdentifier': self.data['publisher']['@id'],
                     'nameIdentifierScheme': 'ROR'
                 })
-
+            
             radar_dict['descriptiveMetadata']['publishers']['publisher'].append(radar_publisher)
 
         if 'applicationCategory' in self.data:
             radar_dict['descriptiveMetadata']['resource'] = {
                 'value': self.data['applicationCategory']
             }
-
+        
         if self.data.get('@type') == 'SoftwareSourceCode':
                 radar_dict['descriptiveMetadata']['resource']['resourceType'] = self.radar_value('Software')
 

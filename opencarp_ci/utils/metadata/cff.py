@@ -6,7 +6,7 @@ import yaml
 logger = logging.getLogger(__file__)
 
 
-class CffMetadata:
+class CffMetadata(object):
 
     doi_prefix = 'https://doi.org/'
     orcid_prefix = 'https://orcid.org/'
@@ -74,7 +74,7 @@ class CffMetadata:
                 if cff_json['license'].startswith("https://spdx.org/licenses/"):
                     cff_json['license'].replace("https://spdx.org/licenses/", "")
             elif isinstance(self.data['license'], dict):
-                self.data['license']['name']
+                licenseName = self.data['license']['name']
                 if 'name' in self.data['license']:
                     cff_json['license'] = self.data['license']['name']
                 if 'url' in self.data['license']:
@@ -90,10 +90,8 @@ class CffMetadata:
                 if self.data['referencePublication']['@type'] == 'ScholarlyArticle':
                     cff_json['preferred-citation']['type'] = 'article'
 
-            if '@id' in self.data['referencePublication'] and \
-                    self.data['referencePublication']['@id'].startswith(self.doi_prefix):
-                cff_json['preferred-citation']['doi'] = \
-                    self.data['referencePublication']['@id'].replace(self.doi_prefix, '')
+            if '@id' in self.data['referencePublication'] and self.data['referencePublication']['@id'].startswith(self.doi_prefix):
+                cff_json['preferred-citation']['doi'] = self.data['referencePublication']['@id'].replace(self.doi_prefix, '')
 
             if 'name' in self.data['referencePublication']:
                 cff_json['preferred-citation']['title'] = self.data['referencePublication']['name']
@@ -101,20 +99,17 @@ class CffMetadata:
             if 'isPartOf' in self.data['referencePublication']:
                 if 'isPartOf' in self.data['referencePublication']['isPartOf']:
                     if 'name' in self.data['referencePublication']['isPartOf']['isPartOf']:
-                        cff_json['preferred-citation']['journal'] = \
-                            self.data['referencePublication']['isPartOf']['isPartOf']['name']
+                        cff_json['preferred-citation']['journal'] = self.data['referencePublication']['isPartOf']['isPartOf']['name']
 
                 if 'volumeNumber' in self.data['referencePublication']['isPartOf']:
-                    cff_json['preferred-citation']['volume'] = \
-                        int(self.data['referencePublication']['isPartOf']['volumeNumber'])
+                    cff_json['preferred-citation']['volume'] = int(self.data['referencePublication']['isPartOf']['volumeNumber'])
 
                 if 'datePublished' in self.data['referencePublication']['isPartOf']:
-                    cff_json['preferred-citation']['year'] = \
-                        int(self.data['referencePublication']['isPartOf']['datePublished'])
+                    cff_json['preferred-citation']['year'] = int(self.data['referencePublication']['isPartOf']['datePublished'])
 
             if 'pageStart' in self.data['referencePublication']:
                 cff_json['preferred-citation']['pages'] = self.data['referencePublication']['pageStart']
-
+            
             if 'pageEnd' in self.data['referencePublication']:
                 cff_json['preferred-citation']['pages'] += "-" + self.data['referencePublication']['pageEnd']
 
@@ -140,9 +135,7 @@ class CffMetadata:
                 if 'propertyID' in identifier and identifier['propertyID'] == "DOI":
                     cff_identifier = {}
                     if 'title' in cff_json and 'version' in cff_json:
-                        cff_identifier['description'] = "This is the archived snapshot of version {} of {}".format(
-                            cff_json['version'], cff_json['title']
-                        )
+                        cff_identifier['description'] = "This is the archived snapshot of version %s of %s"%(cff_json['version'], cff_json['title'])
                     cff_identifier['type'] = 'doi'
                     if 'value' in identifier:
                         cff_identifier['value'] = identifier['value']

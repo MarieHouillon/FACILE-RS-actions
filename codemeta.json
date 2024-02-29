@@ -4,17 +4,17 @@
     "http://schema.org"
   ],
   "@type": "SoftwareSourceCode",
-  "name": "FACILE-RS",
+  "name": "openCARP CI",
   "version": "v1.5.2",
   "dateModified": "2023-03-21",
-  "alternateName": "Findability and Accessibility through Continuous Integration With Less Effort for Research Software",
+  "alternateName": "openCARP Continuous Integration Toolkit",
   "applicationCategory": "Development tools",
   "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories.",
-  "codeRepository": "https://git.opencarp.org/openCARP/FACILE-RS",
+  "codeRepository": "https://git.opencarp.org/openCARP/openCARP-CI",
   "license": {
     "@type": "CreativeWork",
     "name": "Apache-2.0",
-    "url": "https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/LICENSE"
+    "url": "https://git.opencarp.org/openCARP/openCARP-CI/-/blob/master/LICENSE"
   },
   "referencePublication": {
     "@type": "ScholarlyArticle",
