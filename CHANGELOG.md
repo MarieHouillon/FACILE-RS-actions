@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Fix `false` to `False` in `prepare_radar.py`
 - Calling citeproc with `--citeproc instead` of as a filter
 - Rename openCARP-CI to FACILE-RS
+- FACILE-RS now requires Python>=3.8
+- Use Python 3.11 in CI
 
 ### Added
 - Add pyproject.toml
