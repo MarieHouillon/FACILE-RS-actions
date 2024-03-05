@@ -5,8 +5,8 @@
   ],
   "@type": "SoftwareSourceCode",
   "name": "FACILE-RS",
-  "version": "v1.5.2",
-  "dateModified": "2023-03-21",
+  "version": "v2.0.0",
+  "dateModified": "2024-03-05",
   "alternateName": "Findability and Accessibility through Continuous Integration With Less Effort for Research Software",
   "applicationCategory": "Development tools",
   "description": "A set of Python scripts for tasks around the archival and long term preservation of software repositories.",
@@ -258,17 +258,17 @@
       }
     }
   ],
-  "@id": "https://doi.org/10.35097/974",
+  "@id": "https://doi.org/10.35097/1951",
   "identifier": [
     {
       "@type": "PropertyValue",
       "propertyID": "DOI",
-      "value": "10.35097/974"
+      "value": "10.35097/1951"
     },
     {
       "@type": "PropertyValue",
       "propertyID": "RADAR",
-      "value": "GJgFVkOXVgXLsjbe"
+      "value": "RifIsPphadpmIWyk"
     }
   ]
 }

@@ -1,29 +1,25 @@
 cff-version: 1.2.0
 message: If you use this software, please cite the paper describing it as below. Specific
   versions of the software can additionally be referenced using individual DOIs.
-type: Software
+type: software
 title: FACILE-RS
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
-doi: 10.35097/974
-version: v1.5.2
-date-released: 2023-03-21
+doi: 10.35097/1951
+version: v2.0.0
+date-released: 2024-03-05
 authors:
 - name: openCARP consortium
-- name: Marie Houillon
-  given-names: Marie
+- given-names: Marie
   family-names: Houillon
   orcid: https://orcid.org/0000-0002-6584-0233
-- name: Jochen Klar
-  given-names: Jochen
+- given-names: Jochen
   family-names: Klar
   orcid: https://orcid.org/0000-0002-5883-4273
-- name: Axel Loewe
-  given-names: Axel
+- given-names: Axel
   family-names: Loewe
   orcid: https://orcid.org/0000-0002-2487-4744
-- name: Tomas Stary
-  given-names: Tomas
+- given-names: Tomas
   family-names: Stary
   orcid: https://orcid.org/0000-0001-9614-6263
 license: Apache-2.0
@@ -40,26 +36,26 @@ preferred-citation:
   authors:
   - family-names: Bach
     given-names: Felix
-    orcid: 0000-0002-5035-7978
+    orcid: https://orcid.org/0000-0002-5035-7978
   - family-names: Klar
     given-names: Jochen
-    orcid: 0000-0002-5883-4273
+    orcid: https://orcid.org/0000-0002-5883-4273
   - family-names: Loewe
     given-names: Axel
-    orcid: 0000-0002-2487-4744
+    orcid: https://orcid.org/0000-0002-2487-4744
   - family-names: Sánchez
     given-names: Jorge
-    orcid: 0000-0002-0824-2691
+    orcid: https://orcid.org/0000-0002-0824-2691
   - family-names: Seemann
     given-names: Gunnar
-    orcid: 0000-0001-7111-7992
+    orcid: https://orcid.org/0000-0001-7111-7992
   - family-names: Huang
     given-names: Yung-Lin (Cary)
-    orcid: 0000-0003-4307-3907
+    orcid: https://orcid.org/0000-0003-4307-3907
   - family-names: Ulrich
     given-names: Robert
-    orcid: 0000-0001-9063-2703
+    orcid: https://orcid.org/0000-0001-9063-2703
 identifiers:
-- description: This is the archived snapshot of version v1.5.2 of FACILE-RS
+- description: This is the archived snapshot of version v2.0.0 of FACILE-RS
   type: doi
-  value: 10.35097/974
+  value: 10.35097/1951
