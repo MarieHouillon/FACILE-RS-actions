@@ -258,17 +258,17 @@
       }
     }
   ],
-  "@id": "https://doi.org/10.35097/1951",
+  "@id": "https://doi.org/10.35097/1952",
   "identifier": [
     {
       "@type": "PropertyValue",
       "propertyID": "DOI",
-      "value": "10.35097/1951"
+      "value": "10.35097/1952"
     },
     {
       "@type": "PropertyValue",
       "propertyID": "RADAR",
-      "value": "RifIsPphadpmIWyk"
+      "value": "gNzfgsCdFVucufDC"
     }
   ]
 }
