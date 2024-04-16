@@ -36,7 +36,6 @@ class TestCffMetadata:
         assert schema_org_identifier_to_cff(schemaorg_id[0]) == expected_result_0
         assert schema_org_identifier_to_cff(schemaorg_id[1]) == {}
 
-
     def test_init(self, create_metadata):
         codemeta, metadata = create_metadata
         assert metadata.data == codemeta.data
