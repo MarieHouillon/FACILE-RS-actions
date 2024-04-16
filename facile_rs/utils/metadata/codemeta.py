@@ -9,13 +9,24 @@ logger = logging.getLogger(__file__)
 class CodemetaMetadata:
 
     def __init__(self):
+        """Initialize metadata set as an empty dictionary."""
         self.data = {}
 
     def fetch(self, location):
+        """ Update metadata set from data in a CodeMeta file
+        
+        :param location: URL or path to the CodeMeta JSON file
+        :type location: str
+        """
         if location:
             self.data.update(fetch_dict(location))
 
     def fetch_authors(self, locations):
+        """Fetch authors from CodeMeta files and update metadata set
+
+        :param locations: list of URL or paths to CodeMeta files
+        :param locations: list
+        """
         if locations:
             if 'author' not in self.data:
                 self.data['author'] = []
@@ -23,6 +34,11 @@ class CodemetaMetadata:
                 self.data['author'] += fetch_dict(location).get('author', [])
 
     def fetch_contributors(self, locations):
+        """Fetch contributors from CodeMeta files and update metadata set
+
+        :param locations: list of URL or paths to CodeMeta files
+        :param locations: list
+        """
         if locations:
             if 'contributor' not in self.data:
                 self.data['contributor'] = []
@@ -30,6 +46,9 @@ class CodemetaMetadata:
                 self.data['contributor'] += fetch_dict(location).get('author', [])
 
     def compute_names(self):
+        """
+        Add full name of authors and contributors in metadata set from given name and family name.
+        """
         for key in ['author', 'contributor']:
             if key in self.data:
                 for thing in self.data[key]:
@@ -37,6 +56,9 @@ class CodemetaMetadata:
                         thing['name'] = '{} {}'.format(thing['givenName'], thing['familyName'])
 
     def remove_doubles(self):
+        """
+        Remove duplicates in authors and contributors lists, comparing names and ids.
+        """
         for key in ['author', 'contributor']:
             if key in self.data:
                 ids = set()
@@ -56,6 +78,7 @@ class CodemetaMetadata:
                 self.data[key] = things
 
     def sort_persons(self):
+        """Sort authors and contributors alphabetically based on family name."""
         def get_key(item):
             key = item.get('familyName', item.get('name', ''))
 
@@ -74,4 +97,9 @@ class CodemetaMetadata:
             self.data['contributor'] = sorted(self.data['contributor'], key=get_key)
 
     def to_json(self):
+        """Dump metadata set as JSON-formatted string.
+
+        :return: metadata set as JSON-formatted string
+        :rtype: str
+        """
         return json.dumps(self.data, indent=2, ensure_ascii=False)

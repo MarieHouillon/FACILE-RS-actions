@@ -27,6 +27,13 @@ def fetch_files(locations, path):
 
 
 def fetch_dict(location):
+    """Fetch data from a JSON or YAML file and return it as a dictionary.  
+    
+    :param location: URL or path to the file (allowed extensions: .json, .yml, .yaml)
+    :type location: str
+    :return: Dictionary containing file data
+    :rtype: dict 
+    """
     parsed_url = urlparse(location)
     if parsed_url.scheme:
         logger.debug('location = %s', location)
