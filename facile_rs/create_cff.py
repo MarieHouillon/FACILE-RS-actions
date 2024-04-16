@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+"""Create a CFF citation file from a CodeMeta metadata file.
+"""
+
 import argparse
 from pathlib import Path
 
