@@ -163,6 +163,7 @@ class CffMetadata:
 
         return yaml.dump(cff_json, allow_unicode=True, sort_keys=False, default_flow_style=False)
 
+
 def schema_org_identifier_to_cff(identifier, cff_json=None):
     """ Converts schema.org identifier to CFF identifier.
     Supports only DOI identifiers for now. Returns an empty dict if identifier is not a schema.org-compliant
