@@ -23,9 +23,9 @@ class TestCodemeta:
         self.metadata.fetch(path.join(SCRIPT_DIR, 'codemeta_test.json'))
         self.metadata.fetch_authors([
             path.join(SCRIPT_DIR, 'codemeta_test.json'),
-            path.join(SCRIPT_DIR, 'authors_test.json')
+            path.join(SCRIPT_DIR, 'codemeta_authors_test.json')
             ])
-        with open(path.join(SCRIPT_DIR, 'authors_test.json')) as f:
+        with open(path.join(SCRIPT_DIR, 'codemeta_authors_test.json')) as f:
             for author in json.load(f)['author']:
                 assert author in self.metadata.data['author']
 
@@ -33,8 +33,8 @@ class TestCodemeta:
         """Test fetching contributors when initial dataset contains a unique contributor
         """
         self.metadata.fetch(path.join(SCRIPT_DIR, 'codemeta_test.json'))
-        self.metadata.fetch_contributors([path.join(SCRIPT_DIR, 'contributors_test.json')])
-        with open(path.join(SCRIPT_DIR, 'contributors_test.json')) as f:
+        self.metadata.fetch_contributors([path.join(SCRIPT_DIR, 'codemeta_contributors_test.json')])
+        with open(path.join(SCRIPT_DIR, 'codemeta_contributors_test.json')) as f:
             for contributor in json.load(f)['contributor']:
                 print(contributor)
                 print(self.metadata.data['contributor'])
