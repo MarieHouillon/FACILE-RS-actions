@@ -8,12 +8,14 @@ logger = logging.getLogger(__file__)
 
 class CodemetaMetadata:
 
+    """A class for storing and manipulating metadata in the CodeMeta format"""
+
     def __init__(self):
         """Initialize metadata set as an empty dictionary."""
         self.data = {}
 
     def fetch(self, location):
-        """ Update metadata set from data in a CodeMeta file
+        """Update metadata set with data fetched from a CodeMeta file
         
         :param location: URL or path to the CodeMeta JSON file
         :type location: str
@@ -30,6 +32,9 @@ class CodemetaMetadata:
         if locations:
             if 'author' not in self.data:
                 self.data['author'] = []
+            # Case when there is a unique author not contained in a list
+            elif isinstance(self.data['author'], dict):
+                self.data['author'] = [self.data['author']]
             for location in locations:
                 self.data['author'] += fetch_dict(location).get('author', [])
 
@@ -42,12 +47,15 @@ class CodemetaMetadata:
         if locations:
             if 'contributor' not in self.data:
                 self.data['contributor'] = []
+            # Case when there is a unique contributor not contained in a list
+            elif isinstance(self.data['contributor'], dict):
+                self.data['contributor'] = [self.data['contributor']]
             for location in locations:
-                self.data['contributor'] += fetch_dict(location).get('author', [])
+                self.data['contributor'] += fetch_dict(location).get('contributor', [])
 
     def compute_names(self):
-        """
-        Add full name of authors and contributors in metadata set from given name and family name.
+        """Add full name of authors and contributors in metadata set from given name and family name,
+        under the dictionary key 'name'.
         """
         for key in ['author', 'contributor']:
             if key in self.data:
@@ -56,8 +64,8 @@ class CodemetaMetadata:
                         thing['name'] = '{} {}'.format(thing['givenName'], thing['familyName'])
 
     def remove_doubles(self):
-        """
-        Remove duplicates in authors and contributors lists, comparing names and ids.
+        """Remove duplicates in authors and contributors lists, comparing names (key: name)
+        and ids (key: @id).
         """
         for key in ['author', 'contributor']:
             if key in self.data:
