@@ -2,7 +2,7 @@ pytest:
   stage: test
   image: python:3.11
   before_script:
-  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
+  - pip install .
   - pip install pytest
   script:
   - pytest -v
