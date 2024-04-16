@@ -35,7 +35,7 @@
         "type": "Organization",
         "name": "Karlsruhe Institute of Technology"
     },
-    "identifier": "10.151.xxxxx",
+    "identifier": "https://doi.org/10.151.xxxxx",
     "keywords": [
         "testing",
         "software development"
