@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## Unreleased
+
+### Added
+- Create pytest test suite for metadata conversion
+- Add CI job for pytest
+
+### Fixed
+- Fix prefix replacements in strings in CFF conversion
+- Improve compatibility with both CodeMeta and Schema.org metadata schemes
+- Handle cases when CodeMeta values are single elements and not lists
+
 ## v2.0.0
 
 ### Changed
