@@ -11,8 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 - Fix prefix replacements in strings in CFF conversion
-- Improve compatibility with both CodeMeta and Schema.org metadata schemes
-- Handle cases when CodeMeta values are single elements and not lists
+- Handle CodeMeta schema for funding metadata
+- Support CodeMeta or Schema.org metadata values being single elements and not lists
 
 ## v2.0.0
 
