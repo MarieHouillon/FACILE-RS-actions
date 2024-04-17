@@ -130,7 +130,14 @@ class DataciteMetadata:
                         self.render_node('subject', subject_args, keyword['name'])
             self.xml.endElement('subjects')
 
-        contributors = self.data.get('contributor', []) + self.data.get('copyrightHolder', [])
+        contributors = self.data.get('contributor', [])
+        # Case of a unique contributor
+        if isinstance(contributors, dict):
+            contributors = [contributors]
+        copyright_holders = self.data.get('copyrightHolder', [])
+        if isinstance(copyright_holders, dict):
+            copyright_holders = [copyright_holders]
+        contributors += copyright_holders
         if contributors:
             self.xml.startElement('contributors', {})
             for contributor in contributors:
