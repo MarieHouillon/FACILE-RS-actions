@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Create pytest test suite for metadata conversion
 - Add CI job for pytest
+- Support 'funder' keyword in CodeMeta
 
 ### Fixed
 - Fix prefix replacements in strings in CFF conversion
