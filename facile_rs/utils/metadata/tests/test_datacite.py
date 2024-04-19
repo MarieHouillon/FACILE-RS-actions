@@ -6,6 +6,7 @@ from xml.sax.saxutils import XMLGenerator
 
 from facile_rs.utils.metadata import DataciteMetadata, CodemetaMetadata
 
+
 # Get current script location
 SCRIPT_DIR = path.dirname(path.realpath(__file__))
 
