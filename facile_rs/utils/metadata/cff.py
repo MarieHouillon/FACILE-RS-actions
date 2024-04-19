@@ -8,6 +8,8 @@ logger = logging.getLogger(__file__)
 
 class CffMetadata:
 
+    """A class for creating CFF citation files from CodeMeta metadata"""
+
     doi_prefix = 'https://doi.org/'
     orcid_prefix = 'https://orcid.org/'
     ror_prefix = 'https://ror.org/'
@@ -18,10 +20,20 @@ class CffMetadata:
     }
 
     def __init__(self, data):
+        """Initialization from a CodeMeta metadata dictionary.
+        
+        :param data: data attribute of a class:CodemetaMetadata instance
+        :type data: dict
+        """
         self.data = data
         logger.debug('data = %s', self.data)
 
     def to_yaml(self):
+        """Convert metadata to CFF format.
+        
+        :return: Content of the CFF file
+        :rtype: str
+        """
         cff_json = {
             'cff-version': '1.2.0',
             'message': 'If you use this software, please cite the paper describing it as below. '
@@ -35,8 +47,13 @@ class CffMetadata:
         if 'description' in self.data:
             cff_json['abstract'] = self.data['description']
 
-        if '@id' in self.data and self.data['@id'].startswith(self.doi_prefix):
-            cff_json['doi'] = self.data['@id'].replace(self.doi_prefix, '')
+        # Check if a DOI is provided
+        id_keys = ['@id', 'identifier', 'id']
+        for id_key in id_keys:
+            if id_key in self.data and isinstance(self.data[id_key], str):
+                if self.data[id_key].startswith(self.doi_prefix):
+                    cff_json['doi'] = self.data[id_key].replace(self.doi_prefix, '')
+                    break
 
         if 'sameAs' in self.data:
             cff_json['url'] = self.data['sameAs']
@@ -72,7 +89,7 @@ class CffMetadata:
                 cff_json['license'] = self.data['license']
                 # CodeMeta wants the license to be a URL or a creative work, CFF is only interested in the name
                 if cff_json['license'].startswith("https://spdx.org/licenses/"):
-                    cff_json['license'].replace("https://spdx.org/licenses/", "")
+                    cff_json['license'] = cff_json['license'].replace("https://spdx.org/licenses/", "")
             elif isinstance(self.data['license'], dict):
                 self.data['license']['name']
                 if 'name' in self.data['license']:
@@ -93,7 +110,7 @@ class CffMetadata:
             if '@id' in self.data['referencePublication'] and \
                     self.data['referencePublication']['@id'].startswith(self.doi_prefix):
                 cff_json['preferred-citation']['doi'] = \
-                    self.data['referencePublication']['@id'].replace(self.doi_prefix, '')
+                    self.data['referencePublication']['@id'] = self.data['referencePublication']['@id'].replace(self.doi_prefix, '')
 
             if 'name' in self.data['referencePublication']:
                 cff_json['preferred-citation']['title'] = self.data['referencePublication']['name']
@@ -134,21 +151,40 @@ class CffMetadata:
 
                     cff_json['preferred-citation']['authors'].append(cff_citation_author)
 
-        if 'identifier' in self.data:
+        # Case when identifier follows https://schema.org/identifier schema
+        if 'identifier' in self.data and isinstance(self.data['identifier'], dict):
+            cff_json['identifiers'] = [schema_org_identifier_to_cff(identifier, cff_json)]
+        elif 'identifier' in self.data and isinstance(self.data['identifier'], list):
             cff_json['identifiers'] = []
             for identifier in self.data['identifier']:
-                if 'propertyID' in identifier and identifier['propertyID'] == "DOI":
-                    cff_identifier = {}
-                    if 'title' in cff_json and 'version' in cff_json:
-                        cff_identifier['description'] = "This is the archived snapshot of version {} of {}".format(
-                            cff_json['version'], cff_json['title']
-                        )
-                    cff_identifier['type'] = 'doi'
-                    if 'value' in identifier:
-                        cff_identifier['value'] = identifier['value']
+                cff_identifier = schema_org_identifier_to_cff(identifier, cff_json)
+                if cff_identifier:
                     cff_json['identifiers'].append(cff_identifier)
 
-
-
-
         return yaml.dump(cff_json, allow_unicode=True, sort_keys=False, default_flow_style=False)
+
+
+def schema_org_identifier_to_cff(identifier, cff_json=None):
+    """ Converts schema.org identifier to CFF identifier.
+    Supports only DOI identifiers for now. Returns an empty dict if identifier is not a schema.org-compliant
+    DOI identifier.
+
+    :param identifier: schema.org compliant DOI identifier
+    :type identifier: dict
+    :param cff_json: dictionary containing CFF-formatted metadata
+    :type cff_json: dict, optional
+    :return: CFF-formatted DOI identifier or empty dict if identifier was not compliant.
+    :rtype: dict
+    """
+    cff_identifier = {}
+    if cff_json is None:
+        cff_json = {}
+    if 'propertyID' in identifier and identifier['propertyID'] == "DOI":
+        if 'title' in cff_json and 'version' in cff_json:
+            cff_identifier['description'] = "This is the archived snapshot of version {} of {}".format(
+                cff_json['version'], cff_json['title']
+            )
+        cff_identifier['type'] = 'doi'
+        if 'value' in identifier:
+            cff_identifier['value'] = identifier['value']
+    return cff_identifier

@@ -1,0 +1,8 @@
+pytest:
+  stage: test
+  image: python:3.11
+  before_script:
+  - pip install -e .
+  - pip install pytest
+  script:
+  - pytest -v

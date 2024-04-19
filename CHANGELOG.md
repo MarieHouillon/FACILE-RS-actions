@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## Unreleased
+
+### Added
+- Create pytest test suite for metadata conversion
+- Add CI job for pytest
+- Support 'funder' keyword in CodeMeta
+
+### Fixed
+- Fix prefix replacements in strings in CFF conversion
+- Handle CodeMeta schema for funding metadata
+- Support CodeMeta or Schema.org metadata values being single elements and not lists
+
 ## v2.0.0
 
 ### Changed

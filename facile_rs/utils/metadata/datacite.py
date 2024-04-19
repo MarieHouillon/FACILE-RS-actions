@@ -80,7 +80,11 @@ class DataciteMetadata:
                                 'schemeURI': 'http://orcid.org'
                             }, author['@id'].replace(self.orcid_prefix, ''))
 
-                    for affiliation in author.get('affiliation', []):
+                    affiliations = author.get('affiliation', [])
+                    # Case when there is only one affiliation that is not stored in a list
+                    if isinstance(affiliations, dict):
+                        affiliations = [affiliations]
+                    for affiliation in affiliations:
                         affiliation_attrs = {}
 
                         if '@id' in affiliation:
@@ -126,7 +130,14 @@ class DataciteMetadata:
                         self.render_node('subject', subject_args, keyword['name'])
             self.xml.endElement('subjects')
 
-        contributors = self.data.get('contributor', []) + self.data.get('copyrightHolder', [])
+        contributors = self.data.get('contributor', [])
+        # Case of a unique contributor
+        if isinstance(contributors, dict):
+            contributors = [contributors]
+        copyright_holders = self.data.get('copyrightHolder', [])
+        if isinstance(copyright_holders, dict):
+            copyright_holders = [copyright_holders]
+        contributors += copyright_holders
         if contributors:
             self.xml.startElement('contributors', {})
             for contributor in contributors:
@@ -242,31 +253,72 @@ class DataciteMetadata:
                 'descriptionType': 'Abstract'
             }, self.data['description'])
             self.xml.endElement('descriptions')
-
-        if 'funding' in self.data:
-            self.xml.startElement('fundingReferences', {})
-            for funding in self.data['funding']:
-                self.xml.startElement('fundingReference', {})
-
-                if 'funder' in funding:
-                    if 'name' in funding['funder']:
-                        self.render_node('funderName', {}, funding['funder']['name'])
-
-                    if '@id' in funding['funder'] and funding['funder']['@id'].startswith(self.ror_prefix):
-                        self.render_node('funderIdentifier', {
-                            'funderIdentifierType': 'ROR',
-                            'schemeURI': 'https://ror.org'
-                        }, funding['funder']['@id'])
-
-                if 'identifier' in funding:
-                    self.render_node('awardNumber', {
-                        'awardURI': funding.get('url')
-                    }, funding['identifier'])
-
-                if 'name' in funding:
-                    self.render_node('awardTitle', {}, funding['name'])
-
-                self.xml.endElement('fundingReference')
-            self.xml.endElement('fundingReferences')
+        
+        self.render_funding_references()
 
         self.xml.endElement('resource')
+
+
+    def render_funding_references(self):
+        """DataCite XML rendering of funding references.
+        See https://datacite-metadata-schema.readthedocs.io/en/4.5/properties/fundingreference/.
+        
+        According to the CodeMeta standard:
+        - 'funder' is a (list of) Organization or Person (identical as schema.org).
+        - 'funding' is a (list of) Text describing the funding grants.
+        According to the schema.org standard:
+        - 'funding' is a (list of) Grant (see https://schema.org/Grant)
+        """
+
+        if 'funder' not in self.data and 'funding' not in self.data:
+            return
+
+        self.xml.startElement('fundingReferences', {})            
+        
+        # Create one funding reference per funder
+        if 'funder' in self.data:
+            funders = self.data['funder']
+            # Turn unique element to list
+            if isinstance(self.data['funder'], dict):
+                funders = [funders]
+            for funder in funders:
+                self.xml.startElement('fundingReference', {})
+                if 'name' in funder:
+                    self.render_node('funderName', {}, funder['name'])
+                if '@id' in funder and funder['@id'].startswith(self.ror_prefix):
+                    self.render_node('funderIdentifier', {
+                        'funderIdentifierType': 'ROR',
+                        'schemeURI': 'https://ror.org'
+                    }, funder['@id'])
+                self.xml.endElement('fundingReference')
+            
+        # Create one funding reference per funding
+        if 'funding' in self.data:
+            fundings = self.data['funding']
+            # Turn unique element to list
+            if isinstance(self.data['funding'], (str, dict)):
+                fundings = [fundings]
+            for funding in fundings:
+                self.xml.startElement('fundingReference', {})
+                if isinstance(funding, str):
+                    # Field funderName is mandatory
+                    self.render_node('funderName', {}, funding)
+                else:                
+                    if 'funder' in funding:
+                        if 'name' in funding['funder']:
+                            self.render_node('funderName', {}, funding['funder']['name'])
+                        if '@id' in funding['funder'] and funding['funder']['@id'].startswith(self.ror_prefix):
+                            self.render_node('funderIdentifier', {
+                                'funderIdentifierType': 'ROR',
+                                'schemeURI': 'https://ror.org'
+                            }, funding['funder']['@id'])
+                    if 'identifier' in funding:
+                        self.render_node('awardNumber', {
+                            'awardURI': funding.get('url')
+                        }, funding['identifier'])
+                    if 'name' in funding:
+                        self.render_node('awardTitle', {}, funding['name'])
+                self.xml.endElement('fundingReference')
+        
+        self.xml.endElement('fundingReferences')
+
