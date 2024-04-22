@@ -59,26 +59,23 @@ While the scripts can be run manually, they are designed to be used within [GitL
 
 # Statement of need
 
-Research software development is a fundamental aspect in research [@anzt2021sustainable],
-and it is now acknowledged that the FAIR principles (Findable, Accessible, Interoperable,
-Reproducible; [@wilkinson2016fair]), historically established for research data, should
+Research software development is a fundamental aspect of academic research [@anzt2021sustainable],
+and it has now been acknowledged that the FAIR principles (Findable, Accessible, Interoperable,
+Reusable; [@wilkinson2016fair]), historically established to improve the reusability of research data, should
 also be applied to research software [@ChueHong2021FAIR]. In particular, reproducible
-research requires that software and its associated metadata can be found easily by both
+research requires that software and their associated metadata can be found easily by both
 machines and humans, and that they are retrievable via standardised protocols. In this
 context, several metadata standards are widely used across the scientific community:
 
-- the Citation File Format (CFF) [@Druskat2021CFF] aims to indicate to users how to cite a software package
-- DataCite [@DataCite2021] is a standard Metadata schema for archiving digital assets
+- the Citation File Format (CFF) [@Druskat2021CFF] aims to indicate to users how to cite a software package,
+- DataCite [@DataCite2021] is a standard Metadata schema for archiving digital assets,
 - CodeMeta [@jones2017codemeta] is an extension of schema.org created to standardize
-the exchange of software metadata across repositories and organizations
+the exchange of software metadata across repositories and organizations.
 
 All of these standards serve specific purposes and several of them are required to cover
-the whole software lifecycle. However, research software developers should ideally not
-be burdened with maintaining multiple metadata files in different formats and largely
-overlapping content. This poses a risk to data consistency and to adoption of good
-software publication practices.
+the whole software lifecycle. However, maintaining multiple metadata files in different formats represents a burden for research software developers, and can prevent them from adopting good software publication practices. In addition, as the content of the different metadata files is largely overlapping, maintaining these files manually can pose a risk to data consistency.
 
-FACILE-RS aims to overcome this difficulties by making it easy to create and maintain the metadata associated to research software, as well as to publish it according to the FAIR principles.
+FACILE-RS aims to overcome these difficulties by making it easy to create and maintain the metadata associated to research software, as well as to publish software releases according to the FAIR principles on reputable research data repositories.
 
 # Functionality
 
