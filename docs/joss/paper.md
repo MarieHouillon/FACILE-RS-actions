@@ -43,16 +43,18 @@ docker run --rm \
 
 # Summary
 
-The FACILE-RS package contains a set of Python scripts which can be used to perform tasks around the archival and long term preservation of software repositories. In particular, FACILE-RS allows to:
+The FACILE-RS Python package allows to perform tasks around the archival and long term preservation of research software repositories. It consists in a set of Python scripts which facilitate the maintenance of software metadata by automating the generation of metadata in various formats from a unique metadata file that is maintained manually. FACILE-RS also makes it easier to publish and archive software releases according to the Open Science paradigm and the FAIR (Findable, Accessible, Interoperable, Reusable) principles for Research Software, by offering tools to automate the creation of releases and the upload to persistent research data repositories.
 
-* create a release in GitLab using the GitLab API,
-* create a [DataCite](http://schema.datacite.org/) record based on CodeMeta files present in repositories,
-* create a [CFF (Citation File Format) file](https://citation-file-format.github.io) from CodeMeta files
-* create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) formats.
+In particular, FACILE-RS allows to:
+
+* create a [DataCite](http://schema.datacite.org/) record based on [CodeMeta](https://codemeta.github.io/) files present in repositories,
+* create a [CFF (Citation File Format) file](https://citation-file-format.github.io) from CodeMeta files,
+* create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) formats,
+* create a release on the Develpment platform GitLab using the GitLab API,
 * archive software releases using the [RADAR service](https://www.radar-service.eu),
 * use content from markdown files, bibtex files, or python docstrings to create web pages within the [Grav CMS](https://getgrav.org/).
 
-While the scripts can be run manually, they are designed to be used within [GitLab CI/CD](https://docs.gitlab.com/ee/ci/), in order to automate the process of maintaining metadata and releasing software.
+While the scripts can be run manually, they are designed to be used within [GitLab CI/CD](https://docs.gitlab.com/ee/ci/) or another workflow automation system, in order to automate the process of maintaining metadata and creating persistent software releases.
 
 
 # Statement of need
@@ -66,7 +68,7 @@ machines and humans, and that they are retrievable via standardised protocols. I
 context, several metadata standards are widely used across the scientific community:
 
 - the Citation File Format (CFF) [@Druskat2021CFF] aims to indicate to users how to cite a software package
-- DataCite [@DataCite2021] is a standard Metadata schema for archiving digital assets.
+- DataCite [@DataCite2021] is a standard Metadata schema for archiving digital assets
 - CodeMeta [@jones2017codemeta] is an extension of schema.org created to standardize
 the exchange of software metadata across repositories and organizations
 
