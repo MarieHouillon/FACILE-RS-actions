@@ -17,19 +17,19 @@ authors:
     surname: Loewe
     orcid: 0000-0002-2487-4744
     affiliation: 2
+  - given-names: Ziad
+    surname: Boutanios
+    affiliation: 2
   - given-names: Tomas
     surname: Stary
     orcid: 0000-0001-9614-6263
-    affiliation: 2
-  - given-names: Ziad
-    surname: Boutanios
     affiliation: 2
 affiliations:
  - name: Independent Software Developer, Germany
    index: 1
  - name: Karlsruhe Institute of Technology, Germany
    index: 2
-date: 19 April 2024
+date: 24 April 2024
 bibliography: paper.bib
 ---
 
@@ -75,48 +75,55 @@ the exchange of software metadata across repositories and organizations.
 All of these standards serve specific purposes and several of them are required to cover
 the whole software lifecycle. However, maintaining multiple metadata files in different formats represents a burden for research software developers, and can prevent them from adopting good software publication practices. In addition, as the content of the different metadata files is largely overlapping, maintaining these files manually can pose a risk to data consistency.
 
+<!-- Maybe: add something about the fact that each software version should be released according to the FAIR principles and assigned a persistent identifier, and that this is laborious to do if no streamlined process exists. -->
+
 FACILE-RS aims to overcome these difficulties by making it easy to create and maintain the metadata associated to research software, as well as to publish software releases according to the FAIR principles on reputable research data repositories.
+
 
 # Functionality
 
-Refer to \autoref{tab:cluster}
+The main prerequisite for using FACILE-RS in a software repository is to create a CodeMeta metadata file, for example using the [CodeMeta generator](https://codemeta.github.io/codemeta-generator/). This metadata format is specifically tailored for describing scientific software.
+
+The Python scripts that compose FACILE-RS are gathered in \autoref{tab:cluster}. While each of these scripts can be used individually and run manually, FACILE-RS was designed to be used within an automated workflow, for example using [GitLab CI/CD](https://about.gitlab.com/topics/ci-cd/), a tool for automating software development workflows via a continuous and iterative process. 
 
 \begin{table}[!ht]
 \vspace{5mm}
 \centering
-\begin{tabular}{llll}
+\begin{tabular}{ll}
 \hline
 Script & Functionality \\
 \hline\hline
 \texttt{create\_cff}              & generates Citation File Format (CFF) metadata file \\
-\texttt{prepare\_release}         & updates \textit{version} and \textit{dateModified} in metadata \\
+\texttt{prepare\_release}         & updates \textit{version} and \textit{dateModified} fields in metadata \\
 \texttt{create\_release}          & creates release in GitLab \\
 \texttt{create\_datacite}         & generates DataCite metadata file \\
 \texttt{create\_bag}              & creates BagIt package \\
-\texttt{create\_bagpack}          & adds DataCite XML to BagIt \\
+\texttt{create\_bagpack}          & adds DataCite XML to BagIt package \\
 \texttt{prepare\_radar}           & reserves DOI on RADAR \\
 \texttt{create\_radar}            & creates archive and uploads it to RADAR\\
 \texttt{run\_markdown\_pipeline}  & updates Grav CMS website \\
-\texttt{run\_bibtex\_pipeline}    & treats BibTex file for publications on website \\
-\texttt{run\_docstring\_pipeline} & extracts docstrings from Python scripts \\
+\texttt{run\_bibtex\_pipeline}    & converts BibTex files and publishes references on \\
+ & Grav CMS website \\
+\texttt{run\_docstring\_pipeline} & extracts docstrings from Python scripts and publishes \\
+ & them on Grav CMS website \\
 \hline
 \end{tabular}
-\caption{\small Components of openCARP-CI}\label{tab:cluster}
+\caption{\small Components of FACILE-RS}\label{tab:cluster}
 \end{table}
 
+A typical FACILE-RS workflow in GitLab CI/CD is illustrated on figure \autoref{fig:facile-rs-workflow}. In this example, each time a commit is published, the different metadata files are automatically updated from the CodeMeta file.
 
-# Figures
+This workflow also includes an automated process for creating software releases, both on GitLab and on the research repository RADAR.
+This process is triggered by creating a _pre-release_ tag, which would be `pre-v0.1.0` for creating the release of version `v0.1.0`.
+During the _pre-release_ phase, a DOI is reserved on RADAR and the software metadata associated with the release is updated. Once this is done, the proper release tag is automatically created, and the GitLab and RADAR releases are created.
 
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
+[Several tutorials](https://git.opencarp.org/openCARP/FACILE-RS/-/tree/master/docs/tutorials?ref_type=heads) for implementing such a workflow are provided within the FACILE-RS repository.
 
-Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+![Typical structure of an automated FACILE-RS workflow\label{fig:facile-rs-workflow}](images/facile-rs-workflow.png){ width=95% }
+
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+We acknowledge ...
 
 # References
