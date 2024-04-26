@@ -24,11 +24,21 @@ authors:
     surname: Stary
     orcid: 0000-0001-9614-6263
     affiliation: 2
+  - given-names: Terry
+    surname: Cojean
+    orcid: 0000-0002-1560-921X
+    affiliation: 3
+  - given-names: Hartwig
+    surname: Anzt
+    orcid: 0000-0003-2177-952X
+    affiliation: 3
 affiliations:
  - name: Independent Software Developer, Germany
    index: 1
  - name: Karlsruhe Institute of Technology, Germany
    index: 2
+ - name: Technical University of Munich, Germany
+   index: 3
 date: 24 April 2024
 bibliography: paper.bib
 ---
