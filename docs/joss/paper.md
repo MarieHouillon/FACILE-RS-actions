@@ -53,7 +53,7 @@ docker run --rm \
 
 # Summary
 
-The FACILE-RS Python package allows to perform tasks pertining to the archival and long term preservation of research software repositories. It consists in a set of Python scripts which facilitate the maintenance of software metadata, by automating its generation in various formats from a unique metadata file that is maintained manually. FACILE-RS also makes it easier to publish and archive software releases according to the Open Science paradigm and the FAIR (Findable, Accessible, Interoperable, Reusable) principles for Research Software, by offering tools to automate the creation of releases and the upload to persistent research data repositories.
+The FACILE-RS (Findability and Accessibility through Continuous Integration with Less Effort for Research Software) Python package allows to facilitate the archival and long term preservation of research software repositories. It consists in a set of Python scripts which simplify the maintenance of software metadata, by automating its generation in various formats from a unique metadata file that is maintained manually. FACILE-RS also makes it easier to publish and archive software releases according to the Open Science paradigm and the FAIR (Findable, Accessible, Interoperable, Reusable) principles for Research Software, by offering tools to automate the creation of releases and the upload to persistent research data repositories.
 
 In particular, FACILE-RS allows the following:
 
@@ -77,7 +77,7 @@ In this context, several metadata standards are widely used across the scientifi
 
 - The Citation File Format (CFF) [@Druskat2021CFF] is a human- and machine-readable format that indicates how to cite software.
 - The DataCite Metadata Schema [@DataCite2021] consists of core metadata properties selected for accurate and consistent identification of research outputs for citation and retrieval purposes, with instructions for recommended use.
-- CodeMeta [@jones2017codemeta], an extension of schema.org, is a JSON and XML metadata schema for scientific software that aims to standardize the exchange of software metadata across repositories and organizations.
+- CodeMeta [@jones2017codemeta], an extension of [Schema.org](https://schema.org/), is a JSON and XML metadata schema for scientific software that aims to standardize the exchange of software metadata across repositories and organizations. In particular, it provides mappings between metadata fields used by a large range of software registries and package managers.
 
 All of these standards serve specific purposes, and several are required to cover the whole software lifecycle.
 However, maintaining multiple metadata files in different formats can be a significant burden for research software developers, and an obstacle to the adoption of good software publication practices.
@@ -125,10 +125,15 @@ This workflow also includes an automated process for creating software releases,
 During the _pre-release_ phase, a DOI is reserved on RADAR and the software metadata associated with the release is updated.
 Once this is done, the proper release tag is automatically created, and the GitLab and RADAR releases are created.
 
-[Several tutorials](https://git.opencarp.org/openCARP/FACILE-RS/-/tree/master/docs/tutorials?ref_type=heads) for implementing such a workflow are provided within the FACILE-RS repository.
+For more information on the implementation of such a workflow, refer to [the tutorials](https://git.opencarp.org/openCARP/FACILE-RS/-/tree/master/docs/tutorials?ref_type=heads) provided within the FACILE-RS repository.
 
 ![Typical structure of an automated FACILE-RS workflow\label{fig:facile-rs-workflow}](images/facile-rs-workflow.png){ width=95% }
 
+In this paper, we propose FACILE-RS, a tool to facilitate research software metadata management and archival. FACILE-RS helps researchers follow the FAIR principles for research software through a set of scripts which are easily deployed within CI/CD workflows.
+
+# Conclusion
+
+In this paper, we propose FACILE-RS, a tool to facilitate research software metadata management and archival. FACILE-RS helps researchers follow the FAIR principles for research software through a set of scripts which can be easily deployed within CI/CD workflows.
 
 # Acknowledgements
 
