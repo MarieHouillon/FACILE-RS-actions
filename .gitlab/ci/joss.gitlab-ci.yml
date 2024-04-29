@@ -7,4 +7,4 @@ generate-pdf:
   - JOURNAL=joss /usr/local/bin/inara -o pdf docs/joss/paper.md
   artifacts:
     paths:
-    - paper.pdf
+    - docs/joss/paper.pdf
