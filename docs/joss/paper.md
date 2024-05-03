@@ -53,7 +53,7 @@ docker run --rm \
 
 # Summary
 
-The FACILE-RS (Findability and Accessibility through Continuous Integration with Less Effort for Research Software) Python package facilitates the archival and long term preservation of research software repositories. It consists in a set of Python scripts, which simplify the maintenance of software metadata by automating its generation and synchronization in various formats from a unique metadata file that is manually maintained. FACILE-RS also makes it easier to publish and archive software releases according to the Open Science paradigm and the FAIR (Findable, Accessible, Interoperable, Reusable) principles for Research Software by offering tools to automate the creation of releases and the upload to persistent research data repositories.
+The FACILE-RS (Findability and Accessibility through Continuous Integration with Less Effort for Research Software) Python package facilitates the archival and long term preservation of research software repositories. It consists of a set of scripts, which simplify the maintenance of software metadata by automating its generation and synchronization in various formats from a single manually maintained metadata file. FACILE-RS also makes it easier to publish and archive software releases according to the Open Science paradigm and the FAIR (Findable, Accessible, Interoperable, Reusable) principles for Research Software by offering tools to automate the creation of releases and the upload to persistent research data repositories.
 
 In particular, FACILE-RS automates:
 
@@ -74,7 +74,7 @@ and it has now been acknowledged that the FAIR principles (Findable, Accessible,
 Reusable [@wilkinson2016fair]), historically established to improve the reusability of research data, should also be applied to research software.
 Due to some specificities of software compared to research data, like executability or evolution over time, these guidelines had to be adapted to the particular case of scientific software, and the FAIR principles for Research Software (FAIR4RS) have been introduced [@ChueHong2021FAIR].
 
-In particular, reproducible research requires that software and associated metadata are easily findable by both machines and humans, and retrievable via standardised protocols.
+In particular, reproducible research requires that software and associated metadata are easily findable by both machines and humans, and retrievable via standardised communication protocols.
 In this context, several metadata standards are widely used across the scientific community:
 
 * The Citation File Format (CFF) [@Druskat2021CFF] is a human- and machine-readable format that indicates how to cite software.
@@ -85,7 +85,7 @@ All of these standards serve specific purposes, and several are required to cove
 However, maintaining multiple metadata files in different formats can be a significant burden for research software developers, and an obstacle to the adoption of good software publication practices.
 In addition, as the content of the different metadata files is largely overlapping, maintaining these files manually can pose a risk to data consistency.
 
-Another requirement for FAIR scholarly software is that all software releases are published according to the FAIR4RS principles and assigned a persistent identifier, which can be difficult to implement without an automated process.
+Another requirement for FAIR scholarly software is that all software releases are published according to the FAIR4RS principles and assigned a persistent identifier, which can be tedious and prone to errors without an automated process.
 
 Along with other initiatives such as the HERMES project [@druskat2022software], FACILE-RS aims to overcome these difficulties by making it easy to create and maintain the metadata associated to research software, as well as to publish software releases according to the FAIR principles on reputable research data repositories.
 
