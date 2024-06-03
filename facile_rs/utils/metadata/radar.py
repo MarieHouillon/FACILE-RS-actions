@@ -36,7 +36,8 @@ class RadarMetadata:
         logger.debug('data = %s', self.data)
 
     def radar_value(self, string):
-        # converts CamelCase to all caps and underscores, e.g. HostingInstitution -> HOSTING_INSTITUTION
+        """converts CamelCase to all caps and underscores, e.g. HostingInstitution -> HOSTING_INSTITUTION
+        """
         return '_'.join([s.upper() for s in re.findall('([A-Z][a-z]+)', string)])
 
     def as_dict(self):

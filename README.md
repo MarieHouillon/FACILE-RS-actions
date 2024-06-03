@@ -39,6 +39,19 @@ For the publication in releases you need to add an access token. Go to your repo
 If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/.gitlab-ci.yml#L35).
 
 
+## Documentation
+
+The API documentation in HTML format is available at https://git.opencarp.org/openCARP/facile-rs-doc.
+
+It can also be generated using Sphinx from [docs/sphinxdocs](./docs/sphinxdocs) by running:
+```
+make html
+```
+The following Python packages are required to generate the documentation:
+```
+sphinx myst-parser sphinx-autodoc2 sphinx-pyproject
+```
+
 ## Usage
 
 Each of the scripts expects a number of command line arguments. Default values can be set using environment variables (using upper case and underscores), i.e. the following lines do the same:
