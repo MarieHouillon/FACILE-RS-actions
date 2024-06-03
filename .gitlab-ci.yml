@@ -44,6 +44,7 @@ include:
 - local: .gitlab/ci/datacite.gitlab-ci.yml
 - local: .gitlab/ci/release.gitlab-ci.yml
 - local: .gitlab/ci/pytest.gitlab-ci.yml
+- local: .gitlab/ci/doc.gitlab-ci.yml
 
 default:
   tags:

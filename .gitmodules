@@ -1,0 +1,3 @@
+[submodule "docs/sphinxdocs/html_doc"]
+	path = docs/sphinxdocs/html_doc
+	url = https://git.opencarp.org/openCARP/facile-rs-doc.git
