@@ -68,7 +68,7 @@ variables:
   DATACITE_PATH: ${PROJECT_NAME}.xml
   DATACITE_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}.xml
   DATACITE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-datacite/${CI_COMMIT_TAG}
-  FACILE-RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
+  FACILE_RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
   GIT_SUBMODULE_STRATEGY: recursive
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
@@ -79,9 +79,9 @@ variables:
 
 build-datacite:
   stage: build
-  image: python:3.7
+  image: python:3.9
   before_script:
-  - pip install git+${FACILE-RS_REPO}
+  - pip install git+${FACILE_RS_REPO}
   script:
   - create_datacite
   artifacts:
@@ -120,13 +120,13 @@ release-datacite:
 
 release-create:
   stage: release
-  image: python:3.7
+  image: python:3.9
   rules:
   - if: $CI_COMMIT_TAG =~ /^v/
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+${FACILE-RS_REPO}
+  - pip install git+${FACILE_RS_REPO}
   script:
   - >
     create_release
@@ -134,12 +134,12 @@ release-create:
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
 prepare-release:
-  image: python:3.7
+  image: python:3.9
   stage: release
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+${FACILE-RS_REPO}
+  - pip install git+${FACILE_RS_REPO}
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
@@ -156,11 +156,11 @@ prepare-release:
 
 archive-radar:
   stage: archive
-  image: python:3.7
+  image: python:3.9
   rules:
   - if: $CI_COMMIT_TAG =~ /^v/
   before_script:
-  - pip install git+${FACILE-RS_REPO}
+  - pip install git+${FACILE_RS_REPO}
   script:
   - >
     create_radar
