@@ -1,4 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create a BagIt bag from a list of assets.
+
+Description
+-----------
+
+This script creates a BagIt bag using the bagit-python package.
+The assets to be included in the bag are given as positional arguments.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.create_bag
+    :func: create_parser
+    :prog: create_bag.py
+
+"""
+
 import argparse
 from pathlib import Path
 
@@ -7,8 +26,7 @@ import bagit
 from .utils import settings
 from .utils.http import fetch_dict, fetch_files
 
-
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('assets', nargs='*', default=[],
@@ -21,6 +39,12 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'BAG_PATH'

@@ -1,4 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Compile and copy the content of bibtex files to a Grav CMS repository.
+
+Description
+-----------
+
+This script compiles and copies the content of bibtex files in a similar way as run_markdown_pipeline.
+A CSL can be provided.
+Please refer to https://git.opencarp.org/openCARP/publications for an example setup.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.run_bibtex_pipeline
+    :func: create_parser
+    :prog: run_bibtex_pipeline.py
+
+"""
+
 import argparse
 import logging
 from pathlib import Path
@@ -18,7 +38,7 @@ nocite: '@*'
 '''
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--grav-path', dest='grav_path',
@@ -33,6 +53,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'GRAV_PATH',

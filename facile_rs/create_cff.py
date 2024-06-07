@@ -1,6 +1,34 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-"""Create a CFF citation file from a CodeMeta metadata file.
+"""Create a CFF citation file from a CodeMeta metadata file
+
+Description
+-----------
+
+This script takes a CodeMeta metadata file as input and generates a CFF (Citation File Format) citation file.
+The CFF file contains information about the software, including its authors, contributors, and other metadata.
+
+The script accepts command-line arguments to specify the locations of the CodeMeta metadata file, additional
+codemeta JSON files for creators and contributors and the path to the output CFF file.
+
+Usage
+-----
+
+.. argparse::
+   :module: facile_rs.create_cff
+   :func: create_parser
+   :prog: create_cff.py
+
+Example usage
+-------------
+
+.. code-block:: bash
+
+    python3 create_cff.py \\
+        --codemeta-location /path/to/codemeta.json \\
+        --creators-location /path/to/creators.json \\
+        --cff-path /path/to/output.cff
+
 """
 
 import argparse
@@ -10,7 +38,7 @@ from .utils import settings
 from .utils.metadata import CffMetadata, CodemetaMetadata
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--codemeta-location', dest='codemeta_location',
@@ -28,6 +56,10 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'CODEMETA_LOCATION'

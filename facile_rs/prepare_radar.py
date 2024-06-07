@@ -1,4 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create an empty archive in the RADAR service to reserve a DOI and a RADAR ID.
+
+Description
+-----------
+
+This script creates an empty archive in the RADAR service in order to reserve a DOI and a RADAR ID.
+Both are stored in the CodeMeta metadata file provided as input and can be later used by the script ``create_radar.py``
+to populate the RADAR archive. 
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.prepare_radar
+    :func: create_parser
+    :prog: prepare_radar.py
+
+"""
+
 import argparse
 from pathlib import Path
 
@@ -7,7 +27,7 @@ from .utils.metadata import CodemetaMetadata, RadarMetadata
 from .utils.radar import create_radar_dataset, fetch_radar_token, prepare_radar_dataset
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--codemeta-location', dest='codemeta_location',
                         help='Location of the main codemeta.json JSON file')
@@ -35,6 +55,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'RADAR_URL',

@@ -39,6 +39,7 @@ extensions = [
   'autodoc2',
   'sphinx.ext.autosummary',
   'myst_parser',
+  'sphinxarg.ext'
   ]
 
 autodoc2_packages = ["../../../facile_rs",]
