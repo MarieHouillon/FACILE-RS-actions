@@ -1,4 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create a release in GitLab using the GitLab API.
+
+Description
+-----------
+
+This script creates a release in GitLab using the GitLab API.
+A tag for the release needs to be created beforehand and provided to the script.
+
+Usage
+-----
+
+.. argparse::
+   :module: facile_rs.create_release
+   :func: create_parser
+   :prog: create_release.py
+
+"""
+
 import argparse
 import logging
 
@@ -6,10 +25,11 @@ import requests
 
 from .utils import settings
 
+
 logger = logging.getLogger(__file__)
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('assets', nargs='*', default=[],
@@ -28,6 +48,12 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'RELEASE_TAG',

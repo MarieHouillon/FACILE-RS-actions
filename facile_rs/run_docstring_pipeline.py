@@ -1,4 +1,34 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Extract and copy the content of reStructuredText docstrings of Python scripts to a Grav CMS repository.
+
+Description
+-----------
+
+This script extracts and copies the content of reStructuredText docstrings of Python scripts to a Grav CMS repository.
+
+Contrary to the other pipelines, this script does not copy one file to one page in Grav, but creates a tree of pages
+below one page (given by the pipeline header). it processes all ``run.py`` and ``__init__.py`` files.
+
+The PIPELINE and PIPELINE_SOURCE options are used in the same way as in ``run_markdown_pipeline.py``.
+
+In addition, PIPELINE_IMAGES specifies a directory where the images from the docstrings are located and PIPELINE_HEADER
+and PIPELINE_FOOTER options point to templates which are prepended and appended to each page.
+
+With the PIPELINE_REFS YML file, you can specify replacements for the references in the rst code.
+
+Please refer to https://git.opencarp.org/openCARP/experiments for an example setup.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.run_docstring_pipeline
+    :func: create_parser
+    :prog: run_docstring_pipeline.py
+
+"""
+
 import argparse
 import ast
 import logging
@@ -26,7 +56,7 @@ METADATA_PATTERN = r'__(.*)__ = [\']([^\']*)[\']'
 METADATA_RUN_PATTERN = r'EXAMPLE_(.*) = [\']([^\']*)[\']'
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--grav-path', dest='grav_path',
@@ -49,7 +79,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
 
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'GRAV_PATH',

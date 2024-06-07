@@ -2,7 +2,9 @@ build-doc:
   stage: build
   image: python:3.11
   before_script:
-  - pip install sphinx myst-parser sphinx-autodoc2 sphinx-pyproject
+  - pip install sphinx myst-parser sphinx-autodoc2 sphinx-pyproject sphinx-argparse python-dotenv setuptools
+  # argparse extension of Sphinx needs the FACILE-RS dependencies to be installed.
+  - pip install .
   script:
   - cd docs/sphinxdocs
   - make html

@@ -1,4 +1,24 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create a BagIt bag including a DataCite XML file.
+
+Description
+-----------
+
+This script creates a BagIt bag using the bagit-python package, but also includes a DataCite XML file
+as recommended by the RDA Research Data Repository Interoperability WG.
+The assets to be included in the bag are given as positional arguments.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.create_bagpack
+    :func: create_parser
+    :prog: create_bagpack.py
+
+"""
+
 import argparse
 from pathlib import Path
 
@@ -9,10 +29,10 @@ from .utils.checksum import get_sha256, get_sha512
 from .utils.http import fetch_dict, fetch_files
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('assets', nargs='*',
+    parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the bag.')
     parser.add_argument('--bag-path', dest='bag_path',
                         help='Path to the Bag directory')
@@ -24,6 +44,12 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'BAG_PATH',
