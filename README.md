@@ -49,7 +49,7 @@ make html
 ```
 The following Python packages are required to generate the documentation:
 ```
-sphinx myst-parser sphinx-autodoc2 sphinx-pyproject
+sphinx myst-parser sphinx-autodoc2 sphinx-pyproject sphinx-argparse
 ```
 
 ## Usage
