@@ -96,8 +96,6 @@ DIVAID [@Goetz2023DIVAID], a tool to divide clinically important regions in bi-a
 
 The main prerequisite for using FACILE-RS in a software repository is a CodeMeta metadata file, which can for example be generated using the [CodeMeta generator](https://codemeta.github.io/codemeta-generator/).
 
-The Python scripts that compose FACILE-RS are detailed in \autoref{tab:cluster}. While each of these scripts can be used individually and executed manually, FACILE-RS was designed to be used within an automated workflow like [GitLab CI/CD pipelines](https://about.gitlab.com/topics/ci-cd/), used for automating software development workflow via a continuous and iterative process. 
-
 \begin{table}[!ht]
 \vspace{5mm}
 \centering
@@ -121,7 +119,10 @@ Script & Functionality \\
  & them on Grav CMS website \\
 \hline
 \end{tabular}
+\vspace{5mm}
 \end{table}
+
+The Python scripts that compose FACILE-RS are detailed in \autoref{tab:cluster}. While each of these scripts can be used individually and executed manually, FACILE-RS was designed to be used within an automated workflow like [GitLab CI/CD pipelines](https://about.gitlab.com/topics/ci-cd/), used for automating software development workflow via a continuous and iterative process. 
 
 A typical GitLab CI/CD workflow for FACILE-RS is illustrated in \autoref{fig:facile-rs-workflow}. In this example, each time a commit is published, the different metadata files are automatically updated from the CodeMeta file.
 
