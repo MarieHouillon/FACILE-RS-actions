@@ -39,11 +39,10 @@ extensions = [
   'autodoc2',
   'sphinx.ext.autosummary',
   'myst_parser',
+  'sphinxarg.ext'
   ]
 
 autodoc2_packages = ["../../../facile_rs",]
-
-autodoc2_render_plugin = "myst"  # render files as Markdown with ".md" extension
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -51,7 +50,6 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-# html_theme = 'traditional'
 html_theme = 'classic'
 html_theme_options = {
   # 'nosidebar': False,

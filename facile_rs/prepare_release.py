@@ -1,4 +1,20 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Updates the CodeMeta file with the given ``version`` and ``date``.
+
+Useful to automatically get the version from a git tag and inject it into the repository's metadata file.
+The current date is used if no date is provided.
+
+Usage
+-----
+
+.. argparse::
+   :module: facile_rs.prepare_release
+   :func: create_parser
+   :prog: prepare_release.py
+
+"""
+
 import argparse
 from datetime import date
 from pathlib import Path
@@ -6,8 +22,7 @@ from pathlib import Path
 from .utils import settings
 from .utils.metadata import CodemetaMetadata
 
-
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--codemeta-location', dest='codemeta_location',
                         help='Location of the main codemeta.json JSON file')
@@ -19,6 +34,10 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'CODEMETA_LOCATION',

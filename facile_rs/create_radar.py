@@ -1,4 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create an archive in the RADAR service.
+
+Description
+-----------
+
+This script creates an archive in the RADAR service and uploads the assets provided as positional arguments.
+The metadata is created similar to create_datacite.
+
+If the RADAR ID is already present in the CodeMeta file, the existing RADAR archive is updated instead.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.create_radar
+    :func: create_parser
+    :prog: create_radar.py
+
+"""
+
 import argparse
 import smtplib
 from pathlib import Path
@@ -8,8 +29,7 @@ from .utils.http import fetch_files
 from .utils.metadata import CodemetaMetadata, RadarMetadata
 from .utils.radar import create_radar_dataset, fetch_radar_token, update_radar_dataset, upload_radar_assets
 
-
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the repository.')
@@ -52,6 +72,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'CODEMETA_LOCATION',

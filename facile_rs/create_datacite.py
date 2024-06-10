@@ -1,12 +1,30 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Create a DataCite XML file from a CodeMeta JSON file.
+
+Description
+-----------
+
+Create a DataCite XML file following the DataCite Metadata Schema 4.3, from one or several CodeMeta metadata files.
+The metadata can be provided via a (list of) location(s) given as URL or local file path.
+
+Usage
+-----
+
+.. argparse::
+   :module: facile_rs.create_datacite
+   :func: create_parser
+   :prog: create_datacite.py
+
+"""
+
 import argparse
 from pathlib import Path
 
 from .utils import settings
 from .utils.metadata import CodemetaMetadata, DataciteMetadata
 
-
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--codemeta-location', dest='codemeta_location',
@@ -24,6 +42,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+
+    return parser
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'CODEMETA_LOCATION'

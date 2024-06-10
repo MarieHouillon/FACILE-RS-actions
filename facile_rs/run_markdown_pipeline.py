@@ -1,4 +1,30 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+"""Copy the content of Markdown files to a Grav CMS repository.
+
+Description
+-----------
+
+This script copies the content of markdown files in the PIPELINE_SOURCE to a Grav CMS repository given by GRAV_PATH.
+The Grav repository is created by the Git-Sync Plugin.
+
+The pages need to be already existing in Grav and contain a ``pipeline`` and a ``source`` field in their frontmatter.
+The script will find all pages which match the provided PIPELINE and will overwrite content part of the page with the markdown file given by source.
+If source is ``codemeta.json``, the content will be added to the frontmatter entry ``codemeta`` rather than overwriting the page content.
+Twig templates digesting the metadata can be found in the file ``Twig_templates.md`` in this directory.
+After running the script, the changes to the Grav CMS repository can be committed and pushed, and the Git-Sync Plugin will update the public pages.
+See openCARP citation info or code of conduct for examples.
+
+Usage
+-----
+
+.. argparse::
+    :module: facile_rs.run_markdown_pipeline
+    :func: create_parser
+    :prog: run_markdown_pipeline.py
+
+"""
+
 import argparse
 import json
 import logging
@@ -13,7 +39,7 @@ from .utils.grav import collect_pages
 logger = logging.getLogger(__file__)
 
 
-def main():
+def create_parser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--grav-path', dest='grav_path',
@@ -26,6 +52,11 @@ def main():
                         help='Log level (ERROR, WARN, INFO, or DEBUG)')
     parser.add_argument('--log-file', dest='log_file',
                         help='Path to the log file')
+    return parser
+
+
+def main():
+    parser = create_parser()
 
     settings.setup(parser, validate=[
         'GRAV_PATH',
