@@ -89,6 +89,8 @@ Another requirement for FAIR scholarly software is that all software releases ar
 
 Along with other initiatives such as the HERMES project [@druskat2022software], FACILE-RS aims to overcome these difficulties by making it easy to create and maintain the metadata associated to research software, as well as to publish software releases according to the FAIR principles on reputable research data repositories.
 
+FACILE-RS has already been integrated in several research software projects such as the openCARP electrophysiology simulator [@openCARP2024v15; @PLANK2021106223], the 3D visualizer meshalyzer [@Vigmond2023meshalyzer]  and 
+DIVAID [@Goetz2023DIVAID], a tool to divide clinically important regions in bi-atrial geometries.
 
 # Functionality
 
