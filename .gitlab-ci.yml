@@ -44,8 +44,6 @@ include:
 - local: .gitlab/ci/datacite.gitlab-ci.yml
 - local: .gitlab/ci/release.gitlab-ci.yml
 - local: .gitlab/ci/pytest.gitlab-ci.yml
-# Generates draft JOSS PDF and exports it as artifact
-- local: .gitlab/ci/joss.gitlab-ci.yml
 - local: .gitlab/ci/doc.gitlab-ci.yml
 
 default:
