@@ -41,6 +41,8 @@ If you don't want to trigger releases on RADAR, you can deactivate the RADAR job
 
 ## Documentation
 
+[![Documentation Status](https://readthedocs.org/projects/facile-rs/badge/?version=latest)](https://facile-rs.readthedocs.io/en/latest/?badge=latest)
+
 The API documentation is available at https://facile-rs.readthedocs.io/.
 
 It can also be generated using Sphinx from [docs/sphinxdocs](./docs/sphinxdocs) by running:
