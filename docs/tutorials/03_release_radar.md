@@ -163,7 +163,7 @@ archive-radar:
   - pip install git+${FACILE_RS_REPO}
   script:
   - >
-    create_radar
+    create_radar --no-sort-authors
     $RELEASE_ARCHIVE_URL
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 ```
