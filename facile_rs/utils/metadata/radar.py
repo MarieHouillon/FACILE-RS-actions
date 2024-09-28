@@ -295,12 +295,12 @@ class RadarMetadata:
             
             if licenseName in list(self.radar_licenses.values()):
                 radar_dict['descriptiveMetadata']['rights'] = {
-                    'controlledRights': licenseName.replace("https://spdx.org/licenses/", "")
+                    'controlledRights': licenseName
                 }
             else:
                 radar_dict['descriptiveMetadata']['rights'] = {
                     'controlledRights': 'OTHER',
-                    'additionalRights': licenseName.replace("https://spdx.org/licenses/", "")
+                    'additionalRights': licenseName
                 }
 
         if 'copyrightHolder' in self.data:
