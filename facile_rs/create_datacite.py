@@ -24,6 +24,7 @@ from pathlib import Path
 from .utils import settings
 from .utils.metadata import CodemetaMetadata, DataciteMetadata
 
+
 def create_parser():
     parser = argparse.ArgumentParser()
 

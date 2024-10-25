@@ -22,6 +22,7 @@ from pathlib import Path
 from .utils import settings
 from .utils.metadata import CodemetaMetadata
 
+
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--codemeta-location', dest='codemeta_location',

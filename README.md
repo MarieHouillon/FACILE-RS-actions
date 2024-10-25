@@ -6,6 +6,7 @@ This package (previously known as openCARP-CI) contains a set of Python scripts 
 * create a DataCite record based on codemeta files present in repositories,
 * create archive packages in the [BagIt](https://tools.ietf.org/html/rfc8493) or [BagPack](https://www.rd-alliance.org/system/files/Research%20Data%20Repository%20Interoperability%20WG%20-%20Final%20Recommendations_reviewed_0.pdf) formats.
 * archive the software using the [RADAR service](https://www.radar-service.eu),
+* archive the software on [Zenodo](https://zenodo.org)
 * use content from markdown files, bibtex files, or python docstrings to create web pages in a [Grav CMS](https://getgrav.org/).
 
 The scripts were created for the [openCARP](https://opencarp.org) simulation software, but can be adopted for arbitray projects. While they can be used on the command line, the scripts are mainly used within the GitLab CI to run automatically on each push to a repository, or when a tag is created.
@@ -37,6 +38,8 @@ You can adapt the automated pipelines from this repository by copying `.gitlab-c
 For the publication in releases you need to add an access token. Go to your repository and then in Settings -> Access Tokens, choose the name of your token, Expiration date (can be removed), role as a Maintainer and Scopes as `api` and `write_repository`. After the token has been created, copy its value and go to your repository, Settings -> CI/CD -> Variables and choose Add Variable. As a key write `PUSH_TOKEN` and as value paste the copied token. Then create a variable with key `PRIVATE_TOKEN` and as value enter `$PUSH_TOKEN` (which will be expanded to the value defined previously).
 
 If you don't want to trigger releases on RADAR, you can deactivate the RADAR jobs by setting `ENABLE_RADAR` to "false" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/.gitlab-ci.yml#L35).
+
+For triggering releases on Zenodo, you can set the environment variable `ENABLE_ZENODO` to "true" in [`.gitlab-ci.yml`](https://git.opencarp.org/openCARP/FACILE-RS/-/blob/master/.gitlab-ci.yml#L35).
 
 
 ## Documentation
@@ -315,6 +318,73 @@ optional arguments:
                         Email for the RADAR metadata.
   --radar-backlink RADAR_BACKLINK
                         Backlink for the RADAR metadata.
+  --dry                 Perform a dry run, do not upload anything.
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
+
+### prepare_zenodo
+
+Creates an empty archive on [Zenodo](https://zenodo.org) in order to "reserve" a DOI and an ID in Zenodo. Both are stored in the CodeMeta file and can be used by the `create_zenodo` command below to include the DOI for this release in the deposited CodeMeta file. A detailed HowTo for releasing datasets on Zenodo is provided in the tutorial [`04_release_zenodo.md`](./docs/tutorials/04_release_zenodo.md).
+
+```
+usage: prepare_zenodo [-h] [--codemeta-location CODEMETA_LOCATION] [--zenodo-url ZENODO_URL]
+                      [--zenodo-token ZENODO_TOKEN] [--dry] [--log-level LOG_LEVEL]
+                      [--log-file LOG_FILE]
+
+options:
+  -h, --help            show this help message and exit
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the main codemeta.json JSON file
+  --zenodo-url ZENODO_URL
+                        URL of the Zenodo service. Test environment available at
+                        https://sandbox.zenodo.org
+  --zenodo-token ZENODO_TOKEN
+                        Zenodo personal token.
+  --dry                 Perform a dry run, do not upload anything.
+  --log-level LOG_LEVEL
+                        Log level (ERROR, WARN, INFO, or DEBUG)
+  --log-file LOG_FILE   Path to the log file
+```
+
+### create_zenodo
+
+Creates an archive on [Zenodo](https://zenodo.org) and uploads the assets provided as positional arguments. The metadata is created similar to `create_datacite`. If the Zenodo ID is already in the CodeMeta file, the existing archive is updated instead. A detailed HowTo for releasing datasets on Zenodo is provided in the tutorial [`04_release_zenodo.md`](./docs/tutorials/04_release_zenodo.md).
+
+```
+usage: create_zenodo [-h] [--codemeta-location CODEMETA_LOCATION]
+                     [--creators-location CREATORS_LOCATIONS]
+                     [--contributors-location CONTRIBUTORS_LOCATIONS] [--no-sort-authors]
+                     [--zenodo-path ZENODO_PATH] [--zenodo-url ZENODO_URL]
+                     [--zenodo-token ZENODO_TOKEN] [--smtp-server SMTP_SERVER]
+                     [--notification-email NOTIFICATION_EMAIL] [--dry] [--log-level LOG_LEVEL]
+                     [--log-file LOG_FILE]
+                     [assets ...]
+
+positional arguments:
+  assets                Assets to be added to the repository.
+
+options:
+  -h, --help            show this help message and exit
+  --codemeta-location CODEMETA_LOCATION
+                        Location of the main codemeta.json JSON file
+  --creators-location CREATORS_LOCATIONS
+                        Locations of codemeta JSON files for additional creators
+  --contributors-location CONTRIBUTORS_LOCATIONS
+                        Locations of codemeta JSON files for additional contributors
+  --no-sort-authors     Do not sort authors alphabetically, keep order in codemeta.json file
+  --zenodo-path ZENODO_PATH
+                        Path to the directory where the assets are collected before upload to Zenodo.
+  --zenodo-url ZENODO_URL
+                        URL of the Zenodo service. Test environment available at
+                        https://sandbox.zenodo.org
+  --zenodo-token ZENODO_TOKEN
+                        Zenodo personal token.
+  --smtp-server SMTP_SERVER
+                        SMTP server used to inform about new relase. No mail sent if empty.
+  --notification-email NOTIFICATION_EMAIL
+                        Recipient address to inform about new relase. No mail sent if empty.
   --dry                 Perform a dry run, do not upload anything.
   --log-level LOG_LEVEL
                         Log level (ERROR, WARN, INFO, or DEBUG)

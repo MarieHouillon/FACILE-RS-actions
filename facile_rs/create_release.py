@@ -25,7 +25,6 @@ import requests
 
 from .utils import settings
 
-
 logger = logging.getLogger(__file__)
 
 

@@ -26,6 +26,7 @@ import bagit
 from .utils import settings
 from .utils.http import fetch_dict, fetch_files
 
+
 def create_parser():
     parser = argparse.ArgumentParser()
 
