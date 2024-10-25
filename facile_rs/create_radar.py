@@ -29,6 +29,7 @@ from .utils.http import fetch_files
 from .utils.metadata import CodemetaMetadata, RadarMetadata
 from .utils.radar import create_radar_dataset, fetch_radar_token, update_radar_dataset, upload_radar_assets
 
+
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('assets', nargs='*', default=[],

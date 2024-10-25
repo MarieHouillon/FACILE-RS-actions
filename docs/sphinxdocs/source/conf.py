@@ -9,13 +9,13 @@
 import pathlib
 import sys
 
+# 3rd party
+from sphinx_pyproject import SphinxConfig
+
+from facile_rs import __version__ as myproject_version
+
 FACILERS = pathlib.Path(__file__).parents[3]
 sys.path.insert(0, FACILERS.resolve().as_posix())
-
-# 3rd party
-
-from sphinx_pyproject import SphinxConfig
-from facile_rs import __version__ as myproject_version
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information

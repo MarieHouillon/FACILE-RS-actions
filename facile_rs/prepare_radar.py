@@ -7,7 +7,7 @@ Description
 
 This script creates an empty archive in the RADAR service in order to reserve a DOI and a RADAR ID.
 Both are stored in the CodeMeta metadata file provided as input and can be later used by the script ``create_radar.py``
-to populate the RADAR archive. 
+to populate the RADAR archive.
 
 Usage
 -----

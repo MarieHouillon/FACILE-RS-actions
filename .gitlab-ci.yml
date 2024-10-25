@@ -10,6 +10,7 @@ variables:
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
   GIT_DEPTH: 1
+  FACILE_RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
 
   # DataCite XML
   DATACITE_PATH: ${PROJECT_NAME}.xml
@@ -35,8 +36,13 @@ variables:
   ENABLE_RADAR: "true"
   RADAR_PATH: ${PROJECT_NAME}-${CI_COMMIT_TAG}
   RADAR_BACKLINK: ${CI_PROJECT_URL}/-/releases
+  # Zenodo
+  ENABLE_ZENODO: "false"
+  ZENODO_PATH: ${PROJECT_NAME}-${CI_COMMIT_TAG}
+  ZENODO_URL: https://sandbox.zenodo.org
+  # Notification email configuration
   SMTP_SERVER: smarthost.kit.edu
-  NOTIFICATION_EMAIL: tomas.stary@kit.edu
+  NOTIFICATION_EMAIL: marie.houillon@kit.edu
 
 include:
 - local: .gitlab/ci/checkReadme.gitlab-ci.yml # Example CI job to check for existence of a README.
