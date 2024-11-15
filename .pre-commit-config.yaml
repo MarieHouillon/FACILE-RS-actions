@@ -21,3 +21,7 @@ repos:
     rev: v1.5
     hooks:
     - id: create_cff
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.26.0
+    hooks:
+    - id: typos
