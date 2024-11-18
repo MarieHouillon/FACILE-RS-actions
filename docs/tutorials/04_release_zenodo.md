@@ -15,8 +15,7 @@ In general, FACILE-RS should also be compatible with GitHub Actions. We did not 
 
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
 3. In your GitLab project, go to `Settings` -> `CI/CD`. Create the following variables which you can all [protect and mask](https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project) to keep them safe:
-  * `PUSH_TOKEN` with the value being the token created in step 2
-  * `PRIVATE_TOKEN` with the value `$PUSH_TOKEN`: this variable name will be recognized and used in the script `create_release`.
+  * `PRIVATE_TOKEN` with the value being the token created in step 2: this variable name will be recognized and used in the script `create_release`, and the token will be used to push changes to the repository.
   * `ZENODO_TOKEN`: a Zenodo personal access token with scope `deposit:write` (can be created on Zenodo in My Account > Applications)
 
 4. Protect the tags triggering the release process so that they can access the protected variables.
@@ -143,9 +142,9 @@ prepare-release:
   - create_cff
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
   - git commit -m "Release ${VERSION}"
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
   - git tag $VERSION
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
 
 archive-zenodo:
   stage: archive
