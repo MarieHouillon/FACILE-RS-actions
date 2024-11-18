@@ -10,7 +10,7 @@ In this tutorial, we will assume that you have already implemented the automatic
 
 ### Protect the release tags
 
-In order to prevent the release pipeline from being triggered from other branches than the main one, it is advised to make the Access Token `PUSH_TOKEN` that was created earlier _protected_. This means that this token can only be used in protected branches and tags.
+In order to prevent the release pipeline from being triggered from other branches than the main one, it is advised to make the Access Token `PRIVATE_TOKEN` that was created earlier _protected_. This means that this token can only be used in protected branches and tags.
 
 As a consequence, we need to make the release tags that we will create _protected_, otherwise we won't be able to push to the repository from the CI pipeline triggered from this tag.
 
@@ -87,9 +87,9 @@ prepare-release:
   - create_cff
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
   - git commit -m "Release ${VERSION}"
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
   - git tag $VERSION
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
 
 release-create:
   stage: release
@@ -104,7 +104,7 @@ release-create:
   - apt update
   - apt-get install -y jq
   script:
-  - create_release --release-description "$RELEASE_DESCRIPTION" --private-token "$PUSH_TOKEN"
+  - create_release --release-description "$RELEASE_DESCRIPTION" --private-token "$PRIVATE_TOKEN"
 ```
 
 ## Create your first release

@@ -16,8 +16,7 @@ In general, FACILE-RS should also be compatible with GitHub Actions. We did not 
 
 2. In your GitLab project, go to `Settings` -> `Access Tokens` and create a token with name `release`, role `Maintainer`, scopes `api` and `write_repository`. Copy this token to a safe place, we'll need it in the next step.
 3. In your GitLab project, go to `Settings` -> `CI/CD`. Create the following variables which you can all [protect and mask](https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-a-project) to keep them safe:
-  * `PUSH_TOKEN` with the value being the token created in step 2
-  * `PRIVATE_TOKEN` with the value `$PUSH_TOKEN`: this variable name will be recognized and used in the script `create_release`.
+  * `PRIVATE_TOKEN` with the value being the token created in step 2: this variable name will be recognized and used in the script `create_release`, and the token will be used to push changes to the repository.
   * `RADAR_BACKLINK` with the value being a link to a web page of your project's releases, e.g. `https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/releases`
   * `RADAR_REDIRECT_URL` with the value being a link to a web page of your project or repository, e.g. `https://git.opencarp.org/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/`
   * `RADAR_EMAIL` with the value being the mail address of the data steward for this dataset
@@ -150,9 +149,9 @@ prepare-release:
   - create_cff
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
   - git commit -m "Release ${VERSION}"
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
   - git tag $VERSION
-  - git push "https://PUSH_TOKEN:${PUSH_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
+  - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" --tags
 
 archive-radar:
   stage: archive
