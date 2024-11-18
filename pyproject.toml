@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools", "setuptools_scm", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -68,6 +68,9 @@ prepare_zenodo = "facile_rs.prepare_zenodo:main"
 run_bibtex_pipeline = "facile_rs.run_bibtex_pipeline:main"
 run_docstring_pipeline = "facile_rs.run_docstring_pipeline:main"
 run_markdown_pipeline = "facile_rs.run_markdown_pipeline:main"
+
+[tool.setuptools_scm]
+version_file = "facile_rs/_version.py"
 
 [tool.setuptools.packages.find]
 include = ["facile_rs*"]

@@ -1,6 +1,7 @@
 stages:
 - build
 - test
+- publish-pypi
 - release
 - archive
 
@@ -31,6 +32,7 @@ variables:
   ENABLE_BAGPACK: "true"
   BAG_PATH: ${PROJECT_NAME}-${CI_COMMIT_TAG}
   BAGPACK_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-bagpack/${CI_COMMIT_TAG}
+
   # RADAR
   # Set ENABLE_RADAR to "false" to deactivate release on RADAR
   ENABLE_RADAR: "true"
@@ -44,6 +46,11 @@ variables:
   SMTP_SERVER: smarthost.kit.edu
   NOTIFICATION_EMAIL: marie.houillon@kit.edu
 
+  # PyPI variables for FACILE-RS
+  ENABLE_PYPI: "true"
+  PYPI_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi
+  PYPI_WHEEL_NAME: ${PROJECT_NAME}-${CI_COMMIT_TAG}-py3-none-any.whl
+
 include:
 - local: .gitlab/ci/checkReadme.gitlab-ci.yml # Example CI job to check for existence of a README.
 - local: .gitlab/ci/archive.gitlab-ci.yml
@@ -51,6 +58,7 @@ include:
 - local: .gitlab/ci/release.gitlab-ci.yml
 - local: .gitlab/ci/pytest.gitlab-ci.yml
 - local: .gitlab/ci/doc.gitlab-ci.yml
+- local: .gitlab/ci/pypi.gitlab-ci.yml
 
 default:
   tags:
