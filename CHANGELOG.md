@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Added
 - Add feature for archiving on Zenodo via the scripts `prepare_zenodo.py` and `create_zenodo.py`
+- Workflow for publishing releases on PyPI and integrating the Python wheel to the GitLab release.
 
 ### Fixed
 - Consequently remove SPDX URL from RADAR license metadata
