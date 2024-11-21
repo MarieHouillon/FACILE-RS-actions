@@ -22,13 +22,13 @@ Usage
 import argparse
 from pathlib import Path
 
-from .utils import settings
+from .utils import cli, settings
 from .utils.metadata import CodemetaMetadata, RadarMetadata
 from .utils.radar import create_radar_dataset, fetch_radar_token, prepare_radar_dataset
 
 
-def create_parser():
-    parser = argparse.ArgumentParser()
+def create_parser(add_help=True):
+    parser = argparse.ArgumentParser(add_help=add_help)
     parser.add_argument('--codemeta-location', dest='codemeta_location',
                         help='Location of the main codemeta.json JSON file')
     parser.add_argument('--radar-url', dest='radar_url',
@@ -130,5 +130,9 @@ def main():
             print(dataset)
 
 
+def main_deprecated():
+    cli.cli_call_deprecated(main)
+
+
 if __name__ == "__main__":
-    main()
+    main_deprecated()

@@ -284,7 +284,7 @@ class ZenodoMetadata:
         """
         Validate a funder identifier against the Zenodo API. If funder could be validated,
         return the funder identifier, otherwise return None.
-        Suuports plain identifier or full ROR URL.
+        Supports plain identifier or full ROR URL.
         """
         funder_identifier = funder_identifier.replace(self.prefixes['ror'], '')
         r = requests.get('https://zenodo.org/api/funders',

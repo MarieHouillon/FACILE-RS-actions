@@ -7,7 +7,7 @@ archive-radar:
   - pip install git+${FACILE_RS_REPO}
   script:
   - >
-    create_radar
+    facile-rs radar upload
     $RELEASE_ARCHIVE_URL
 
 archive-zenodo:
@@ -19,7 +19,7 @@ archive-zenodo:
   - pip install git+${FACILE_RS_REPO}
   script:
   - >
-    create_zenodo
+    facile-rs zenodo upload
     $RELEASE_ARCHIVE_URL
 
 archive-bagpack:
@@ -36,6 +36,6 @@ archive-bagpack:
   - pip install git+${FACILE_RS_REPO}
   script:
   - >
-    create_bagpack
+    facile-rs bagpack create
     $RELEASE_ARCHIVE_URL
   - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${BAG_PATH} ${BAGPACK_REGISTRY_URL}/${BAG_PATH}'

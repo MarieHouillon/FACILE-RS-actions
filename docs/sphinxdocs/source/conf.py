@@ -8,12 +8,10 @@
 
 import pathlib
 import sys
+from importlib.metadata import version as get_version
 
 # 3rd party
 from sphinx_pyproject import SphinxConfig
-
-from importlib.metadata import version as get_version
-
 
 FACILERS = pathlib.Path(__file__).parents[3]
 sys.path.insert(0, FACILERS.resolve().as_posix())

@@ -4,7 +4,7 @@ build-datacite:
   before_script:
   - pip install git+${FACILE_RS_REPO}
   script:
-  - create_datacite
+  - facile-rs datacite create
   artifacts:
     paths:
     - $DATACITE_PATH
