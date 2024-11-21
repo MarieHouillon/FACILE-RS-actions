@@ -3,7 +3,7 @@
 ## Overview
 This HowTo will guide you through
  * setting up the GitLab CI environment for your project
- * establishing a release processs based on pre-release tags
+ * establishing a release process based on pre-release tags
  * archiving your release on a Zenodo repository
 
 ## Prepare your codemeta file
@@ -32,7 +32,7 @@ You can find a minimum template for a two-stage release process below. There are
     * `NOTIFICATION_EMAIL: abc@host.com` address of the data steward
     * `SMTP_SERVER: your.smtpserver.com` (a SMTP server not requiring authentication, e.g. `smarthost.kit.edu`)
   * Commented content in the code below can be uncommented in order to include all submodules in the archived release. If your repository doesn't include submodules, this content can be removed.
-  * You can add further artifacts to be included in the archive by simply adding additional arguments to the `create_release` call in the the `release-create` pipeline.
+  * You can add further artifacts to be included in the archive by simply adding additional arguments to the `facile-rs gitlab publish` call in the the `release-create` pipeline.
 
 ```
 stages:
@@ -72,9 +72,9 @@ build-datacite:
   stage: build
   image: python:3.11
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
-  - create_datacite
+  - facile-rs datacite create
   artifacts:
     paths:
     - $DATACITE_PATH
@@ -117,10 +117,10 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
   - >
-    create_release
+    facile-rs gitlab publish
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
@@ -130,16 +130,16 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
   - VERSION=`echo $CI_COMMIT_TAG | grep -oP '^pre-\K.*$'`
   - echo "Preparing release of $VERSION"
-  - prepare_release --version=$VERSION
+  - facile-rs release prepare --version=$VERSION
   - echo "preparing Zenodo release, make sure the Zenodo token is defined as gitlab CI/CD variables"
-  - prepare_zenodo
-  - create_cff
+  - facile-rs zenodo prepare
+  - facile-rs cff create
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
   - git commit -m "Release ${VERSION}"
   - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
@@ -152,10 +152,10 @@ archive-zenodo:
   rules:
   - if: $CI_COMMIT_TAG =~ /^v/
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
   - >
-    create_zenodo --no-sort-authors
+    facile-rs zenodo upload --no-sort-authors
     $RELEASE_ARCHIVE_URL
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 ```

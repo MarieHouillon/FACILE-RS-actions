@@ -40,6 +40,7 @@ dependencies = [
     "requests~=2.23",
     "python-resize-image~=1.1.20",
     "Pillow~=9.4.0",
+    "setuptools",
 ]
 dynamic = ["version"]
 
@@ -55,19 +56,20 @@ dev = [
 repository = "https://git.opencarp.org/openCARP/FACILE-RS"
 
 [project.scripts]
-create_bag = "facile_rs.create_bag:main"
-create_bagpack = "facile_rs.create_bagpack:main"
-create_cff = "facile_rs.create_cff:main"
-create_datacite = "facile_rs.create_datacite:main"
-create_radar = "facile_rs.create_radar:main"
-create_release = "facile_rs.create_release:main"
-create_zenodo = "facile_rs.create_zenodo:main"
-prepare_radar = "facile_rs.prepare_radar:main"
-prepare_release = "facile_rs.prepare_release:main"
-prepare_zenodo = "facile_rs.prepare_zenodo:main"
-run_bibtex_pipeline = "facile_rs.run_bibtex_pipeline:main"
-run_docstring_pipeline = "facile_rs.run_docstring_pipeline:main"
-run_markdown_pipeline = "facile_rs.run_markdown_pipeline:main"
+facile-rs = "facile_rs.main:main"
+create_bag = "facile_rs.create_bag:main_deprecated"
+create_bagpack = "facile_rs.create_bagpack:main_deprecated"
+create_cff = "facile_rs.create_cff:main_deprecated"
+create_datacite = "facile_rs.create_datacite:main_deprecated"
+create_radar = "facile_rs.create_radar:main_deprecated"
+create_release = "facile_rs.create_release:main_deprecated"
+create_zenodo = "facile_rs.create_zenodo:main_deprecated"
+prepare_radar = "facile_rs.prepare_radar:main_deprecated"
+prepare_release = "facile_rs.prepare_release:main_deprecated"
+prepare_zenodo = "facile_rs.prepare_zenodo:main_deprecated"
+run_bibtex_pipeline = "facile_rs.run_bibtex_pipeline:main_deprecated"
+run_docstring_pipeline = "facile_rs.run_docstring_pipeline:main_deprecated"
+run_markdown_pipeline = "facile_rs.run_markdown_pipeline:main_deprecated"
 
 [tool.setuptools_scm]
 version_file = "facile_rs/_version.py"

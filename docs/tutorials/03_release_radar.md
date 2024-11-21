@@ -3,7 +3,7 @@
 ## Overview
 This HowTo will guide you through
  * setting up the GitLab CI environment for your project
- * establishing a release processs based on pre-release tags
+ * establishing a release process based on pre-release tags
  * archiving your release on a RADAR repository
 
 ## Prepare your codemeta file
@@ -67,7 +67,6 @@ variables:
   DATACITE_PATH: ${PROJECT_NAME}.xml
   DATACITE_RELEASE: ${PROJECT_NAME}-${CI_COMMIT_TAG}.xml
   DATACITE_REGISTRY_URL: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PROJECT_NAME}-datacite/${CI_COMMIT_TAG}
-  FACILE_RS_REPO: https://git.opencarp.org/openCARP/FACILE-RS.git
   GIT_SUBMODULE_STRATEGY: recursive
   DOCKER_DRIVER: overlay
   GIT_STRATEGY: clone
@@ -80,9 +79,9 @@ build-datacite:
   stage: build
   image: python:3.9
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
-  - create_datacite
+  - facile-rs datacite create
   artifacts:
     paths:
     - $DATACITE_PATH
@@ -125,10 +124,10 @@ release-create:
   before_script:
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
   - >
-    create_release
+    facile-rs gitlab publish
     ${DATACITE_REGISTRY_URL}/${DATACITE_RELEASE}
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 
@@ -138,15 +137,15 @@ prepare-release:
   rules:
   - if: $CI_COMMIT_TAG =~ /^pre/
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
   script:
   - VERSION=`echo $CI_COMMIT_TAG | grep -oP '^pre-\K.*$'`
   - echo "Preparing release of $VERSION"
-  - prepare_release
-  - prepare_radar
-  - create_cff
+  - facile-rs release prepare
+  - facile-rs radar prepare
+  - facile-rs cff create
   - git add ${CODEMETA_LOCATION} ${CFF_PATH}
   - git commit -m "Release ${VERSION}"
   - git push "https://PUSH_TOKEN:${PRIVATE_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_DEFAULT_BRANCH}"
@@ -159,10 +158,10 @@ archive-radar:
   rules:
   - if: $CI_COMMIT_TAG =~ /^v/
   before_script:
-  - pip install git+${FACILE_RS_REPO}
+  - pip install FACILE-RS
   script:
   - >
-    create_radar --no-sort-authors
+    facile-rs radar upload --no-sort-authors
     $RELEASE_ARCHIVE_URL
   #  ${INCLSUBMODULES_REGISTRY_URL}/${INCLSUBMODULES_RELEASE}
 ```

@@ -76,11 +76,11 @@ create-cff:
     - if: $CI_COMMIT_BRANCH
   script:
   # Install FACILE-RS
-  - pip install git+https://git.opencarp.org/openCARP/FACILE-RS.git
+  - pip install FACILE-RS
   - git config --global user.name "${GITLAB_USER_NAME}"
   - git config --global user.email "${GITLAB_USER_EMAIL}"
-  # See https://git.opencarp.org/openCARP/FACILE-RS#create_cff for more information about this script
-  - create_cff
+  # See https://facile-rs.readthedocs.io/en/latest/apidocs/facile_rs/facile_rs.create_cff.html for more information about this command
+  - facile-rs cff create
   # Ignore the remaining steps if you don't want to push the generated CFF file to the repository
   # To simply visualize the generated CFF file in the CI job logs, you can use:
   #- cat ${CFF_PATH}

@@ -24,14 +24,14 @@ import argparse
 import smtplib
 from pathlib import Path
 
-from .utils import settings
+from .utils import cli, settings
 from .utils.http import fetch_files
 from .utils.metadata import CodemetaMetadata, ZenodoMetadata
 from .utils.zenodo import create_zenodo_dataset, update_zenodo_dataset, upload_zenodo_assets
 
 
-def create_parser():
-    parser = argparse.ArgumentParser()
+def create_parser(add_help=True):
+    parser = argparse.ArgumentParser(add_help=add_help)
     parser.add_argument('assets', nargs='*', default=[],
                         help='Assets to be added to the repository.')
     parser.add_argument('--codemeta-location', dest='codemeta_location',
@@ -50,9 +50,9 @@ def create_parser():
     parser.add_argument('--zenodo-token', dest='zenodo_token',
                         help='Zenodo personal token.')
     parser.add_argument('--smtp-server', dest='smtp_server',
-                        help='SMTP server used to inform about new relase. No mail sent if empty.')
+                        help='SMTP server used to inform about new release. No mail sent if empty.')
     parser.add_argument('--notification-email', dest='notification_email',
-                        help='Recipient address to inform about new relase. No mail sent if empty.')
+                        help='Recipient address to inform about new release. No mail sent if empty.')
     parser.add_argument('--dry', action='store_true',
                         help='Perform a dry run, do not upload anything.')
     parser.add_argument('--log-level', dest='log_level',
@@ -132,5 +132,10 @@ def main():
             server.sendmail(settings.NOTIFICATION_EMAIL, settings.NOTIFICATION_EMAIL, message)
             server.quit()
 
+
+def main_deprecated():
+    cli.cli_call_deprecated(main)
+
+
 if __name__ == "__main__":
-    main()
+    main_deprecated()
