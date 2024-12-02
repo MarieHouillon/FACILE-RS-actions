@@ -1,6 +1,9 @@
 name: Create CFF file
 on:
   push:
+    tags-ignore:
+      - 'v*'
+      - 'pre-v*'
   workflow_call:
 
 jobs:
