@@ -24,3 +24,18 @@ jobs:
         with:
           name: CFF-file
           path: ${{ env.CFF_PATH }}
+
+  create-datacite:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setvars
+      - name: Install FACILE-RS
+        run: pip install FACILE-RS==3.0.0
+      - name: Create DataCite metadata
+        run: facile-rs datacite create
+      - name: Upload DataCite metadata as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DataCite-file
+          path: ${{ env.DATACITE_PATH }}
