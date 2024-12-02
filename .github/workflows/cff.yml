@@ -1,6 +1,11 @@
 name: Create CFF file
 on: [push]
 jobs:
+  set-env:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setvars
   create-cff:
     runs-on: ubuntu-22.04
     steps:
@@ -12,9 +17,9 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "marie.houillon@kit.edu"
       - name: Create CFF file
-        run: create_cff --codemeta-location codemeta.json --cff-path CITATION.cff
+        run: create_cff
       - name: Archive CFF file
         uses: actions/upload-artifact@v4
         with:
           name: CFF-file
-          path: CITATION.cff
+          path: {{ $CFF_PATH }}

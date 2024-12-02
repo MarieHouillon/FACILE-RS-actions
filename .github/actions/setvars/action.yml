@@ -1,0 +1,13 @@
+name: 'Set environment variables'
+description: 'Configures environment variables for a job'
+inputs:
+  dotenv:
+    description: 'Path to variable file. Defaults to .env if none specified.'
+    required: false
+    default: github.env
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        sed "" ${{ inputs.dotenv }} >> $GITHUB_ENV
+      shell: bash
