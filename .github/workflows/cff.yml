@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - '**'
-    workflow_call:
+  workflow_call:
 
 jobs:
   create-cff:
