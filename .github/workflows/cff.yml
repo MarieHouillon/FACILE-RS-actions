@@ -12,7 +12,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "marie.houillon@kit.edu"
       - name: Create CFF file
-        run: create_cff --cff-path CITATION.cff
+        run: create_cff --codemeta-location codemeta.json --cff-path CITATION.cff
       - name: Archive CFF file
         uses: actions/upload-artifact@v4
         with:
