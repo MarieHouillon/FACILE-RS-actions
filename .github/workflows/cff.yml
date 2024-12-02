@@ -2,7 +2,7 @@ name: Create CFF file
 on: [push]
 jobs:
   create-cff:
-    runs-on: python:3.11
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install FACILE-RS
