@@ -1,5 +1,8 @@
 name: Create CFF file
-on: [push]
+on:
+  push:
+  workflow_call:
+
 jobs:
   create-cff:
     runs-on: ubuntu-22.04
