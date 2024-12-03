@@ -36,3 +36,5 @@ jobs:
                 https://github.com/MarieHouillon/FACILE-RS-actions/archive/refs/tags/vtest.tar.gz \
                 ${{ env.DATACITE_PATH }}
           fi
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
