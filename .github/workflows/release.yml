@@ -27,13 +27,13 @@ jobs:
               --generate-notes \
               ${{ env.DATACITE_PATH }}
       - name: Install FACILE-RS
-        run: pip install FACILE-RS==3.0.0
+        run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
       - name: Upload on Zenodo
         run: |
           if [ $ENABLE_ZENODO = true ];
           then
               facile-rs zenodo upload \
-                https://github.com/MarieHouillon/FACILE-RS-actions/archive/refs/tags/vtest.tar.gz \
+                ${{ env.RELEASE_ARCHIVE_URL }} \
                 ${{ env.DATACITE_PATH }}
           fi
         env:

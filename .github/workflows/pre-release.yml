@@ -5,6 +5,7 @@ on:
       - 'pre-v*'
 
 jobs:
+  # Create metadata files and export them as artifacts
   generate-metadata:
     uses: ./.github/workflows/create-metadata.yml
   prepare-release:
@@ -15,7 +16,7 @@ jobs:
           ssh-key: ${{ secrets.PRIVATE_KEY }}
       - uses: ./.github/actions/setvars
       - name: Install FACILE-RS
-        run: pip install FACILE-RS==3.0.0
+        run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
       - name: Get version
         # Extract <version> from refs/tags/pre-<version>
         run: echo "VERSION=$(echo $GITHUB_REF | grep -oP '^refs/tags/pre-\K.*$')" >> $GITHUB_ENV

@@ -1,4 +1,4 @@
-name: Create CFF file
+name: Create metadata files
 on:
   push:
     branches:
@@ -6,32 +6,33 @@ on:
   workflow_call:
 
 jobs:
+  # Create CFF file and export it as an artifact
   create-cff:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setvars
       - name: Install FACILE-RS
-        run: pip install FACILE-RS==3.0.0
+        run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
       - name: Configure git
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "marie.houillon@kit.edu"
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
       - name: Create CFF file
         run: facile-rs cff create
-      - name: Archive CFF file
+      - name: Upload CFF file as artifact
         uses: actions/upload-artifact@v4
         with:
           name: CFF-file
           path: ${{ env.CFF_PATH }}
-
+  # Create DataCite XML and export it as an artifact
   create-datacite:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setvars
       - name: Install FACILE-RS
-        run: pip install FACILE-RS==3.0.0
+        run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
       - name: Create DataCite metadata
         run: facile-rs datacite create
       - name: Upload DataCite metadata as artifact
