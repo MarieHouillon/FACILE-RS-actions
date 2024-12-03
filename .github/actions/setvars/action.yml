@@ -10,7 +10,7 @@ runs:
   steps:
     - run: |
         set -a && . ${{ inputs.dotenv }} && set +a
-        cat ${{ inputs.dotenv }} | envsubst >> $GITHUB_ENV
+        cat ${{ inputs.dotenv }} | sed '/^#/d' | envsubst >> $GITHUB_ENV
       shell: bash
     - run: |
         if [ -z "$RELEASE_BRANCH" ];
