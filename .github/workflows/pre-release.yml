@@ -1,0 +1,25 @@
+name: Pre-release workflow
+on:
+  push:
+    tags:
+      - 'pre-v*'
+
+jobs:
+  generate-metadata:
+    uses: ./.github/workflows/create-metadata.yml
+  prepare-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setvars
+      - name: Install FACILE-RS
+        run: pip install FACILE-RS==3.0.0
+      - name: Get version
+        run: echo "VERSION=$(echo $GITHUB_REF | grep -oP '^pre-\K.*$')" >> $GITHUB_ENV
+      - name: Configure git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+      - run: echo "Preparing release of $VERSION"
+      #- name: Prepare release
+      #  run: facile-rs release prepare
