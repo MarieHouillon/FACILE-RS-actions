@@ -10,10 +10,12 @@ jobs:
   github-release:
     runs-on: ubuntu-22.04
     steps:
+      - uses: ./.github/actions/setvars
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: DataCite-file
-      - name: Create release
+      - name: Create GitHub release
         env:
           tag: ${{ github.ref_name }}
         run: |
@@ -21,13 +23,11 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --generate-notes \
               ${{ env.DATACITE_PATH }}
-  archive-zenodo:
-    runs-on: ubuntu-22.04
-    if: env.ENABLE_ZENODO == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setvars
       - name: Install FACILE-RS
         run: pip install FACILE-RS==3.0.0
-      - name: Prepare release
-        run: facile-rs release prepare
+      - name: Upload on Zenodo
+        run: |
+          if [ $ENABLE_ZENODO = true ];
+          then
+              echo facile-rs zenodo create 
+          fi
