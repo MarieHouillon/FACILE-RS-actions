@@ -20,6 +20,14 @@ jobs:
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
       - name: Create CFF file
         run: facile-rs cff create
+      - name: Push CFF file
+        run: |
+          if [ $PUSH_CFF = true ];
+          then
+              git add ${{ env.CFF_PATH }}
+              git diff-index --quiet HEAD || git commit -m "Update CFF file"
+              git push -o ci.skip
+          fi
       - name: Upload CFF file as artifact
         uses: actions/upload-artifact@v4
         with:
