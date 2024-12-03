@@ -23,9 +23,18 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y jq
           DOI_URL=`jq -r ".[\"@id\"]" ${CODEMETA_LOCATION}`
+          echo DOI_URL=$DOI_URL >> $GITHUB_ENV
           echo DOI=${DOI_URL#"https://doi.org/"} >> $GITHUB_ENV
-      - name: Test DOI
-        run: echo $DOI
+      - name: Create release description
+        run: |
+          if [ $ENABLE_RADAR = true ];
+          then
+            RELEASE_DESCRIPTION="${RELEASE_DESCRIPTION}<br/>Find the archived version of the ${CI_COMMIT_TAG} release in the RADAR4KIT repository - [doi:${DOI}](${DOI_URL}).";
+          elif [ $ENABLE_ZENODO = true ];
+          then
+            RELEASE_DESCRIPTION="${RELEASE_DESCRIPTION}<br/>Find the archived version of the ${CI_COMMIT_TAG} release on Zenodo - [doi:${DOI}](${DOI_URL}).";
+          fi
+          echo RELEASE_DESCRIPTION=$RELEASE_DESCRIPTION >> $GITHUB_ENV
       - name: Create GitHub release
         env:
           tag: ${{ github.ref_name }}
@@ -33,7 +42,7 @@ jobs:
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --generate-notes \
+              --notes="$RELEASE_DESCRIPTION" \
               ${{ env.DATACITE_RELEASE }}
       - name: Install FACILE-RS
         run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
