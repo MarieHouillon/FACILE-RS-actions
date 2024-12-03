@@ -48,8 +48,12 @@ jobs:
               echo "RADAR skipped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
           fi
         env:
-          # TODO: RADAR credentials
-          RADAR_USER: ${{ secrets.RADAR_USER }}
+          RADAR_EMAIL: ${{ secrets.RADAR_EMAIL }}
+          RADAR_WORKSPACE_ID: ${{ secrets.RADAR_WORKSPACE_ID }}
+          RADAR_URL: ${{ secrets.RADAR_URL }}
+          RADAR_CLIENT_ID: ${{ secrets.RADAR_CLIENT_ID }}
+          RADAR_CLIENT_SECRET: ${{ secrets.RADAR_CLIENT_SECRET }}
+          RADAR_USERNAME: ${{ secrets.RADAR_USERNAME }}
           RADAR_PASSWORD: ${{ secrets.RADAR_PASSWORD }}
       - name: Generate CFF file
         run: facile-rs cff create

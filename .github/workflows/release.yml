@@ -40,3 +40,19 @@ jobs:
           fi
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+      - name: Upload on RADAR
+        run: |
+          if [ $ENABLE_RADAR = true ];
+          then
+              facile-rs radar upload \
+                ${{ env.RELEASE_ARCHIVE_URL }} \
+                ${{ env.DATACITE_RELEASE }}
+          fi
+        env:
+          RADAR_EMAIL: ${{ secrets.RADAR_EMAIL }}
+          RADAR_WORKSPACE_ID: ${{ secrets.RADAR_WORKSPACE_ID }}
+          RADAR_URL: ${{ secrets.RADAR_URL }}
+          RADAR_CLIENT_ID: ${{ secrets.RADAR_CLIENT_ID }}
+          RADAR_CLIENT_SECRET: ${{ secrets.RADAR_CLIENT_SECRET }}
+          RADAR_USERNAME: ${{ secrets.RADAR_USERNAME }}
+          RADAR_PASSWORD: ${{ secrets.RADAR_PASSWORD }}
