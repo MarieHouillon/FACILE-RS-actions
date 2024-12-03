@@ -22,7 +22,6 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
       - run: echo "Preparing release of $VERSION"
-      - run: echo "$RELEASE_BRANCH"
       - name: Prepare release
         run: facile-rs release prepare
       - name: Prepare Zenodo release
@@ -30,7 +29,7 @@ jobs:
           if [ $ENABLE_ZENODO = true ];
           then
               echo "preparing Zenodo release, make sure the Zenodo token is defined as gitlab CI/CD variables";
-              prepare_zenodo;
+              facile-rs zenodo prepare
           else
               echo "Zenodo skipped, change ENABLE_ZENODO in .gitlab-ci.yml if you want to do a Zenodo release";
           fi
@@ -41,7 +40,7 @@ jobs:
           if [ $ENABLE_RADAR = true ];
           then
               echo "preparing RADAR release, make sure the credentials are defined as gitlab CI/CD variables";
-              prepare_radar;
+              facile-rs radar prepare;
           else
               echo "RADAR skipped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
           fi
