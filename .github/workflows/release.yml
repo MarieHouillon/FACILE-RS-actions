@@ -17,6 +17,8 @@ jobs:
         with:
           name: DataCite-file
           pattern: '*.xml'
+      - name: Rename DataCite file
+        run: mv ${{ env.DATACITE_PATH }} ${{ env.DATACITE_RELEASE }}
       - name: Create GitHub release
         env:
           tag: ${{ github.ref_name }}
@@ -25,7 +27,7 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --generate-notes \
-              ${{ env.DATACITE_PATH }}
+              ${{ env.DATACITE_RELEASE }}
       - name: Install FACILE-RS
         run: pip install FACILE-RS==${{ env.FACILE_RS_VERSION }}
       - name: Upload on Zenodo
@@ -34,7 +36,7 @@ jobs:
           then
               facile-rs zenodo upload \
                 ${{ env.RELEASE_ARCHIVE_URL }} \
-                ${{ env.DATACITE_PATH }}
+                ${{ env.DATACITE_RELEASE }}
           fi
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
