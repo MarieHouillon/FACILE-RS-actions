@@ -25,7 +25,7 @@ jobs:
           DOI_URL=`jq -r ".[\"@id\"]" ${CODEMETA_LOCATION}`
           echo DOI_URL=$DOI_URL >> $GITHUB_ENV
           echo DOI=${DOI_URL#"https://doi.org/"} >> $GITHUB_ENV
-      - name: Create release description
+      - name: Update release description
         run: |
           if [ $ENABLE_RADAR = true ];
           then
