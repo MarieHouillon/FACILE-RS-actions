@@ -6,4 +6,4 @@ on:
 
 jobs:
   generate-metadata:
-    uses: ./.github/workflows/cff.yml
+    uses: ./.github/workflows/create-metadata.yml
