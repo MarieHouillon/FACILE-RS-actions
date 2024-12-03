@@ -9,6 +9,7 @@ jobs:
     uses: ./.github/workflows/create-metadata.yml
   create-release:
     runs-on: ubuntu-22.04
+    needs: generate-metadata
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setvars
@@ -18,6 +19,7 @@ jobs:
       - name: Create GitHub release
         env:
           tag: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
