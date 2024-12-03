@@ -17,4 +17,4 @@ runs:
         then
           RELEASE_BRANCH=${{ github.event.repository.default_branch }} >> $GITHUB_ENV
         fi
-        
+      shell: bash
