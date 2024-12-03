@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y jq
           DOI_URL=`jq -r ".[\"@id\"]" ${CODEMETA_LOCATION}`
-          DOI=${DOI_URL#"https://doi.org/"}
+          echo DOI=${DOI_URL#"https://doi.org/"} >> $GITHUB_ENV
       - name: Test DOI
         run: echo $DOI
       - name: Create GitHub release
