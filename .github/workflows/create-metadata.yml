@@ -22,7 +22,7 @@ jobs:
         run: facile-rs cff create
       - name: Push CFF file
         run: |
-          if [ $PUSH_CFF = true ];
+          if [ $PUSH_CFF = true && $GITHUB_REF_TYPE = 'branch' ];
           then
               git add ${{ env.CFF_PATH }}
               git diff-index --quiet HEAD || git commit -m "Update CFF file"
