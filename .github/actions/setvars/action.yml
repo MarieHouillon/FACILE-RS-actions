@@ -9,5 +9,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        sed "" ${{ inputs.dotenv }} >> $GITHUB_ENV
+        while IFS= read -r line
+        do
+          echo $line >> $GITHUB_ENV
+        done < ${{ inputs.dotenv }}
       shell: bash
