@@ -258,17 +258,22 @@
       }
     }
   ],
-  "@id": "https://doi.org/10.35097/sm56x1e27ebsr4fu",
+  "@id": "https://doi.org/10.5072/zenodo.138908",
   "identifier": [
     {
       "@type": "PropertyValue",
       "propertyID": "DOI",
-      "value": "10.35097/sm56x1e27ebsr4fu"
+      "value": "10.5072/zenodo.138908"
     },
     {
       "@type": "PropertyValue",
       "propertyID": "RADAR",
       "value": "sm56x1e27ebsr4fu"
+    },
+    {
+      "@type": "PropertyValue",
+      "propertyID": "Zenodo",
+      "value": 138908
     }
   ]
 }
