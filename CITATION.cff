@@ -5,8 +5,8 @@ type: software
 title: FACILE-RS
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
-doi: 10.35097/9q7jb755pnt0f5ez
-version: vtest
+doi: 10.5072/zenodo.139089
+version: v1.0.0
 date-released: 2024-12-03
 authors:
 - name: openCARP consortium
@@ -56,6 +56,6 @@ preferred-citation:
     given-names: Robert
     orcid: https://orcid.org/0000-0001-9063-2703
 identifiers:
-- description: This is the archived snapshot of version vtest of FACILE-RS
+- description: This is the archived snapshot of version v1.0.0 of FACILE-RS
   type: doi
-  value: 10.35097/9q7jb755pnt0f5ez
+  value: 10.5072/zenodo.139089

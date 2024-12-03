@@ -5,7 +5,7 @@
   ],
   "@type": "SoftwareSourceCode",
   "name": "FACILE-RS",
-  "version": "vtest",
+  "version": "v1.0.0",
   "dateModified": "2024-12-03",
   "alternateName": "Findability and Accessibility through Continuous Integration With Less Effort for Research Software",
   "applicationCategory": "Development tools",
@@ -258,12 +258,12 @@
       }
     }
   ],
-  "@id": "https://doi.org/10.35097/9q7jb755pnt0f5ez",
+  "@id": "https://doi.org/10.5072/zenodo.139089",
   "identifier": [
     {
       "@type": "PropertyValue",
       "propertyID": "DOI",
-      "value": "10.35097/9q7jb755pnt0f5ez"
+      "value": "10.5072/zenodo.139089"
     },
     {
       "@type": "PropertyValue",
@@ -273,7 +273,7 @@
     {
       "@type": "PropertyValue",
       "propertyID": "Zenodo",
-      "value": 139027
+      "value": 139089
     }
   ]
 }
