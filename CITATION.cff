@@ -5,7 +5,7 @@ type: software
 title: FACILE-RS
 abstract: A set of Python scripts for tasks around the archival and long term preservation
   of software repositories.
-doi: 10.5072/zenodo.138962
+doi: 10.5072/zenodo.139003
 version: vtest
 date-released: 2024-12-03
 authors:
@@ -58,4 +58,4 @@ preferred-citation:
 identifiers:
 - description: This is the archived snapshot of version vtest of FACILE-RS
   type: doi
-  value: 10.5072/zenodo.138962
+  value: 10.5072/zenodo.139003
