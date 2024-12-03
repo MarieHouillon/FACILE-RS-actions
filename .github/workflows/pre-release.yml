@@ -15,7 +15,7 @@ jobs:
       - name: Install FACILE-RS
         run: pip install FACILE-RS==3.0.0
       - name: Get version
-        run: echo "VERSION=`echo $GITHUB_REF | grep -oP '^pre-\K.*$'`" >> $GITHUB_ENV
+        run: echo "VERSION=$(echo $GITHUB_REF) >> $GITHUB_ENV
       - name: Configure git
         run: |
           git config --global user.name "${{ github.actor }}"
