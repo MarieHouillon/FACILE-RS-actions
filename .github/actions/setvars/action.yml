@@ -12,3 +12,9 @@ runs:
         set -a && . ${{ inputs.dotenv }} && set +a
         cat ${{ inputs.dotenv }} | envsubst >> $GITHUB_ENV
       shell: bash
+    - run: |
+        if [ -z "$RELEASE_BRANCH" ];
+        then
+          RELEASE_BRANCH=${{ github.event.repository.default_branch }} >> $GITHUB_ENV
+        fi
+        
