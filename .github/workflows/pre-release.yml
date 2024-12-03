@@ -22,6 +22,7 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
       - run: echo "Preparing release of $VERSION"
+      - run: echo "$RELEASE_BRANCH"
       - name: Prepare release
         run: facile-rs release prepare
       - name: Generate CFF file
