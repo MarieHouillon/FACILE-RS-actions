@@ -21,7 +21,7 @@ jobs:
         run: mv ${{ env.DATACITE_PATH }} ${{ env.DATACITE_RELEASE }}
       - name: Retrieve DOI
         run: |
-          apt update && apt install -y jq
+          sudo apt update && sudo apt install -y jq
           DOI_URL=`jq -r ".[\"@id\"]" ${CODEMETA_LOCATION}`
           DOI=${DOI_URL#"https://doi.org/"}
       - name: Test DOI
