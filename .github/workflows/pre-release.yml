@@ -48,7 +48,8 @@ jobs:
       - name: Push updated metadata
         run : |
           git add ${CODEMETA_LOCATION} ${CFF_PATH}
-          git commit -m "Release ${VERSION}"
+          # Commit only if there are changes
+          git diff-index --quiet HEAD || git commit -m "Release ${VERSION}"
           git push origin HEAD:${RELEASE_BRANCH}
       - name: Create release tag
         run: |
