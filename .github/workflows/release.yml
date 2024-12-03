@@ -32,5 +32,7 @@ jobs:
         run: |
           if [ $ENABLE_ZENODO = true ];
           then
-              echo facile-rs zenodo create 
+              facile-rs zenodo upload \
+                https://github.com/MarieHouillon/FACILE-RS-actions/archive/refs/tags/vtest.tar.gz \
+                ${{ env.DATACITE_PATH }}
           fi
