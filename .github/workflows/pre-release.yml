@@ -34,6 +34,8 @@ jobs:
           else
               echo "Zenodo skipped, change ENABLE_ZENODO in .gitlab-ci.yml if you want to do a Zenodo release";
           fi
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
       - name: Prepare RADAR release
         run: |
           if [ $ENABLE_RADAR = true ];
@@ -43,6 +45,10 @@ jobs:
           else
               echo "RADAR skipped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
           fi
+        env:
+          # TODO: RADAR credentials
+          RADAR_USER: ${{ secrets.RADAR_USER }}
+          RADAR_PASSWORD: ${{ secrets.RADAR_PASSWORD }}
       - name: Generate CFF file
         run: facile-rs cff create
       - name: Push updated metadata
