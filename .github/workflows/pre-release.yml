@@ -25,6 +25,24 @@ jobs:
       - run: echo "$RELEASE_BRANCH"
       - name: Prepare release
         run: facile-rs release prepare
+      - name: Prepare Zenodo release
+        run: |
+          if [ $ENABLE_ZENODO = true ];
+          then
+              echo "preparing Zenodo release, make sure the Zenodo token is defined as gitlab CI/CD variables";
+              prepare_zenodo;
+          else
+              echo "Zenodo skipped, change ENABLE_ZENODO in .gitlab-ci.yml if you want to do a Zenodo release";
+          fi
+      - name: Prepare RADAR release
+        run: |
+          if [ $ENABLE_RADAR = true ];
+          then
+              echo "preparing RADAR release, make sure the credentials are defined as gitlab CI/CD variables";
+              prepare_radar;
+          else
+              echo "RADAR skipped, change ENABLE_RADAR in .gitlab-ci.yml if you have the credentials";
+          fi
       - name: Generate CFF file
         run: facile-rs cff create
       - name: Push updated metadata
@@ -32,6 +50,7 @@ jobs:
           git add ${CODEMETA_LOCATION} ${CFF_PATH}
           git commit -m "Release ${VERSION}"
           git push origin HEAD:${RELEASE_BRANCH}
+      - name: Create release tag
+        run: |
           git tag $VERSION
           git push origin HEAD:${RELEASE_BRANCH} --tags
-      
