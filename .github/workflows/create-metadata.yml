@@ -5,8 +5,7 @@ on:
       - '**'
   workflow_call:
 
-permissions:
-  contents: write
+permissions: write-all
 
 jobs:
   # Create CFF file and export it as an artifact
