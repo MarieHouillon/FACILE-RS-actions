@@ -9,7 +9,7 @@ jobs:
   # Create CFF file and export it as an artifact
   create-cff:
     runs-on: ubuntu-22.04
-    environment: release
+    environment: facile-rs
     steps:
       - uses: actions/checkout@v4
         with:
